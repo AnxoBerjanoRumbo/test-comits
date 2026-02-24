@@ -64,3 +64,62 @@ header {
     transform: translateY(-5px); 
     border-color: #00ffcc;
 }
+
+/* ESTILOS PARA LA PAGINA DETALLE*/
+
+/* Contenedor principal responsive */
+.contenedor-detalle {
+    width: 95%; 
+    max-width: 800px; 
+    margin: 20px auto;
+}
+
+.ficha-principal {
+    background: #2c2c2c;
+    padding: 20px;
+    border-radius: 12px;
+    border-left: 5px solid #00ffcc;
+    margin-bottom: 20px;
+}
+
+.nombre-dino {
+    color: #00ffcc;
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+}
+
+/* Grid que se vuelve una columna en móviles */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 15px;
+}
+
+@media (max-width: 600px) {
+    .info-grid {
+        grid-template-columns: 1fr; 
+    }
+}
+
+/* Tags de mapas estilo */
+.lista-mapas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.tag-mapa {
+    background: #444;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    border: 1px solid #00ffcc;
+}
+
+.boton-volver {
+    display: inline-block;
+    margin-top: 10px;
+    color: #aaa;
+    text-decoration: none;
+}
