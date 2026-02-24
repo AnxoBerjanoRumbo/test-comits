@@ -1,7 +1,40 @@
-"Proyecto de Wiki de ARK en desarrollo"
+# ARK Survival Hub - Wiki Project
 
-## 🗄️ Base de Datos (MariaDB)
-Se ha implementado la estructura inicial con 5 tablas para cumplir con los requisitos intermodulares:
-- **Entidades:** Usuarios, Dinosaurios, Mapas y Comentarios.
-- **Relaciones:** - 1:N entre Usuarios y Comentarios.
-  - N:M entre Dinosaurios y Mapas (mediante tabla intermedia `dino_mapas`).
+Proyecto de Wiki dinámica sobre el universo de **ARK: Survival Ascended**, desarrollada como proyecto integrador intermodular.
+
+---
+
+## Base de Datos (MariaDB)
+Se ha implementado una estructura relacional sólida para gestionar el contenido y la interacción:
+
+* **Entidades:** Usuarios, Dinosaurios, Mapas y Comentarios.
+* **Relaciones:**
+    * **1:N (Uno a Muchos):** Entre Usuarios y Comentarios (un usuario puede realizar múltiples aportaciones).
+    * **N:M (Muchos a Muchos):** Entre Dinosaurios y Mapas mediante la tabla intermedia `dino_mapas`, permitiendo gestionar avistamientos de una criatura en múltiples localizaciones.
+
+
+---
+
+## Tecnologías Utilizadas
+* **Backend:** PHP 8.x utilizando **PDO** (PHP Data Objects) para una conexión segura y preparada contra inyecciones SQL.
+* **Base de Datos:** MariaDB (XAMPP).
+* **Frontend:** HTML5 y CSS3 siguiendo la metodología de separación de responsabilidades.
+* **Control de Versiones:** Git y GitHub.
+
+---
+
+## Características Implementadas
+* **Navegación Dinámica:** Sistema de rutas mediante parámetros **GET** para visualizar fichas técnicas individuales (`detalle.php?id=X`).
+* **Consultas Relacionales:** Uso de `INNER JOIN` para cruzar datos entre criaturas y sus localizaciones geográficas en tiempo real.
+* **Diseño Responsive:** Interfaz adaptativa optimizada para dispositivos móviles y escritorio mediante **CSS Grid** y **Media Queries**.
+* **Seguridad:** Consultas preparadas con `bindParam` para proteger la integridad de la base de datos.
+
+
+
+---
+
+## Instalación y Uso
+1. **Clonar** el repositorio en la carpeta `htdocs` de tu servidor local (XAMPP).
+2. **Importar** el archivo SQL (ubicado en la carpeta `database/`) a través de **phpMyAdmin**.
+3. **Configurar** las credenciales de acceso a la base de datos en el archivo `config/db.php`.
+4. **Acceder** a `localhost/ark-survival-hub` desde cualquier navegador.
