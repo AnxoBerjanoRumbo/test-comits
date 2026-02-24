@@ -2,7 +2,7 @@
 include 'config/db.php';
 
 // Preparamos la consulta para traer los dinos
-$sql = "SELECT nombre, especie, dieta FROM dinosaurios";
+$sql = "SELECT id, nombre, especie, dieta FROM dinosaurios";
 $stmt = $conexion->prepare($sql);
 $stmt->execute();
 $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -26,7 +26,11 @@ $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="contenedor-dinos">
             <?php foreach ($dinos as $dino): ?>
                 <div class="dino-card">
-                    <h3><?php echo $dino['nombre']; ?></h3>
+                    <h3>
+                        <a href="detalle.php?id=<?php echo $dino['id']; ?>" class="enlace-dino">
+                            <?php echo $dino['nombre']; ?>
+                        </a>
+                    </h3>
                     <p><strong>Especie:</strong> <?php echo $dino['especie']; ?></p>
                     <p><strong>Dieta:</strong> <?php echo $dino['dieta']; ?></p>
                 </div>
