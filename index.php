@@ -45,17 +45,23 @@ $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <main>
         <h2>Diccionario de Criaturas</h2>
         <div class="contenedor-dinos">
-            <?php foreach ($dinos as $dino): ?>
-                <div class="dino-card">
-                    <h3>
-                        <a href="detalle.php?id=<?php echo $dino['id']; ?>" class="enlace-dino">
-                            <?php echo $dino['nombre']; ?>
-                        </a>
-                    </h3>
-                    <p><strong>Especie:</strong> <?php echo $dino['especie']; ?></p>
-                    <p><strong>Dieta:</strong> <?php echo $dino['dieta']; ?></p>
-                </div>
-            <?php endforeach; ?>
+            <?php if (count($dinos) > 0): ?>
+                <?php foreach ($dinos as $dino): ?>
+                    <div class="dino-card">
+                        <h3>
+                            <a href="detalle.php?id=<?php echo $dino['id']; ?>" class="enlace-dino">
+                                <?php echo $dino['nombre']; ?>
+                            </a>
+                        </h3>
+                        <p><strong>Especie:</strong> <?php echo $dino['especie']; ?></p>
+                        <p><strong>Dieta:</strong> <?php echo $dino['dieta']; ?></p>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p style="grid-column: 1/-1; text-align: center; color: #888;">
+                No se han encontrado criaturas que coincidan con "<strong><?php echo htmlspecialchars($busqueda); ?></strong>".
+                </p>
+            <?php endif; ?>
         </div>
     </main>
 </body>
