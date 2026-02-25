@@ -30,7 +30,7 @@ $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <p><strong>Especie:</strong> <?php echo $dino['especie']; ?></p>
                     <p><strong>Dieta:</strong> <?php echo $dino['dieta']; ?></p>
                 </div>
-            <?php <?php endforeach; ?>
+            <?php endforeach; ?>
         </div>
     </main>
 </body>
