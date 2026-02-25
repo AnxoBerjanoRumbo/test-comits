@@ -37,3 +37,30 @@ header {
     color: #00ffcc;
     margin-top: 0;
 }
+
+/* Estilo para los títulos con enlace */
+.enlace-dino {
+    color: #00ffcc; 
+    text-decoration: none; 
+    font-weight: bold;
+    transition: all 0.3s ease; 
+}
+
+.enlace-dino:hover {
+    color: #ffffff; 
+    text-shadow: 0 0 10px #00ffcc; 
+}
+
+/* Ajuste para que la tarjeta entera se vea mejor */
+.dino-card {
+    background-color: #2c2c2c;
+    border: 1px solid #444;
+    padding: 20px;
+    border-radius: 12px;
+    transition: transform 0.2s;
+}
+
+.dino-card:hover {
+    transform: translateY(-5px); 
+    border-color: #00ffcc;
+}
