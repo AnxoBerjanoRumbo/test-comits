@@ -1,9 +1,21 @@
 <?php
 include 'config/db.php';
 
-// Preparamos la consulta para traer los dinos
-$sql = "SELECT id, nombre, especie, dieta FROM dinosaurios";
-$stmt = $conexion->prepare($sql);
+// 1. Miramos si el usuario ha escrito algo en el buscador
+$busqueda = isset($_GET['buscar']) ? $_GET['buscar'] : '';
+
+// 2. Preparamos la consulta SQL con filtro o sin él
+if ($busqueda != '') {
+    $sql = "SELECT id, nombre, especie, dieta FROM dinosaurios 
+            WHERE nombre LIKE :busqueda OR especie LIKE :busqueda";
+    $stmt = $conexion->prepare($sql);
+    $termino = "%$busqueda%";
+    $stmt->bindParam(':busqueda', $termino);
+} else {
+    $sql = "SELECT id, nombre, especie, dieta FROM dinosaurios";
+    $stmt = $conexion->prepare($sql);
+}
+
 $stmt->execute();
 $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
