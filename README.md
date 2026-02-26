@@ -29,7 +29,11 @@ Se ha implementado una estructura relacional sólida para gestionar el contenido
 * **Diseño Responsive:** Interfaz adaptativa optimizada para dispositivos móviles y escritorio mediante **CSS Grid** y **Media Queries**.
 * **Seguridad:** Consultas preparadas con `bindParam` para proteger la integridad de la base de datos.
 
-
+# Motor de Búsqueda y Filtrado
+* **Búsqueda por Texto:** Implementación del operador `LIKE` en SQL para localizar criaturas por nombre o especie de forma parcial.
+* **Filtros por Dieta:** Menú desplegable para filtrar dinosaurios según su tipo de alimentación (Carnívoro, Herbívoro, etc.).
+* **Consultas Dinámicas:** Lógica en PHP que permite combinar el buscador de texto con el filtro de dieta simultáneamente.
+* **Gestión de Errores:** Sistema de control que muestra un mensaje personalizado cuando una búsqueda no devuelve resultados.
 
 ---
 
