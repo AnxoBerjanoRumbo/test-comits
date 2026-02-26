@@ -33,14 +33,23 @@ $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <h1>ARK Survival Hub</h1>
     </header>
     <section class="buscador">
-    <form action="index.php" method="GET">
-        <input type="text" name="buscar" placeholder="Busca tu criatura..." 
-               value="<?php echo isset($_GET['buscar']) ? $_GET['buscar'] : ''; ?>">
-        <button type="submit">Buscar</button>
-        <?php if(isset($_GET['buscar'])): ?>
-            <a href="index.php" class="boton-limpiar">Limpiar</a>
-        <?php endif; ?>
-    </form>
+        <form action="index.php" method="GET">
+            <input type="text" name="buscar" placeholder="Busca tu criatura..." 
+                value="<?php echo isset($_GET['buscar']) ? htmlspecialchars($_GET['buscar']) : ''; ?>">
+
+            <select name="dieta">
+                <option value="">Todas las dietas</option>
+                <option value="Carnívoro" <?php echo (isset($_GET['dieta']) && $_GET['dieta'] == 'Carnívoro') ? 'selected' : ''; ?>>Carnívoro</option>
+                <option value="Herbívoro" <?php echo (isset($_GET['dieta']) && $_GET['dieta'] == 'Herbívoro') ? 'selected' : ''; ?>>Herbívoro</option>
+                <option value="Omnívoro" <?php echo (isset($_GET['dieta']) && $_GET['dieta'] == 'Omnívoro') ? 'selected' : ''; ?>>Omnívoro</option>
+            </select>
+
+            <button type="submit">Filtrar</button>
+            
+            <?php if(isset($_GET['buscar']) || isset($_GET['dieta'])): ?>
+                <a href="index.php" class="boton-limpiar">Limpiar</a>
+            <?php endif; ?>
+        </form>
     </section>
     <main>
         <h2>Diccionario de Criaturas</h2>
