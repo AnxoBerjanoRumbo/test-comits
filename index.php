@@ -1,19 +1,30 @@
 <?php
 include 'config/db.php';
 
-// 1. Miramos si el usuario ha escrito algo en el buscador
 $busqueda = isset($_GET['buscar']) ? $_GET['buscar'] : '';
+$dieta = isset($_GET['dieta']) ? $_GET['dieta'] : '';
 
-// 2. Preparamos la consulta SQL con filtro o sin él
+$sql = "SELECT * FROM dinosaurios WHERE 1=1";
+
+// Si hay búsqueda por texto, añadimos la condición
 if ($busqueda != '') {
-    $sql = "SELECT id, nombre, especie, dieta FROM dinosaurios 
-            WHERE nombre LIKE :busqueda OR especie LIKE :busqueda";
-    $stmt = $conexion->prepare($sql);
+    $sql .= " AND (nombre LIKE :busqueda OR especie LIKE :busqueda)";
+}
+
+// Si hay filtro por dieta, añadimos la condición
+if ($dieta != '') {
+    $sql .= " AND dieta = :dieta";
+}
+
+$stmt = $conexion->prepare($sql);
+
+// Pasamos los parámetros solo si existen
+if ($busqueda != '') {
     $termino = "%$busqueda%";
     $stmt->bindParam(':busqueda', $termino);
-} else {
-    $sql = "SELECT id, nombre, especie, dieta FROM dinosaurios";
-    $stmt = $conexion->prepare($sql);
+}
+if ($dieta != '') {
+    $stmt->bindParam(':dieta', $dieta);
 }
 
 $stmt->execute();
