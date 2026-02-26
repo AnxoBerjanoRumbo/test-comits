@@ -20,7 +20,16 @@ $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <header>
         <h1>ARK Survival Hub</h1>
     </header>
-
+    <section class="buscador">
+    <form action="index.php" method="GET">
+        <input type="text" name="buscar" placeholder="Busca tu criatura..." 
+               value="<?php echo isset($_GET['buscar']) ? $_GET['buscar'] : ''; ?>">
+        <button type="submit">Buscar</button>
+        <?php if(isset($_GET['buscar'])): ?>
+            <a href="index.php" class="boton-limpiar">Limpiar</a>
+        <?php endif; ?>
+    </form>
+    </section>
     <main>
         <h2>Diccionario de Criaturas</h2>
         <div class="contenedor-dinos">
