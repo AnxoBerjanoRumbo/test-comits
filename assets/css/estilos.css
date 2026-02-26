@@ -213,3 +213,79 @@ header {
     color: #aaa;
     text-decoration: none;
 }
+
+/* -------------- ESTILOS PARA EL PANEL DE ADMINISTRACIÓN ----------------- */
+
+.contenedor-formulario {
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: #2c2c2c; /* Tu gris de las cards */
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #444;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.contenedor-formulario h2 {
+    color: #00ffcc; /* Tu verde cian */
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.form-ark .campo {
+    margin-bottom: 20px;
+}
+
+.form-ark label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.form-ark input, 
+.form-ark select, 
+.form-ark textarea {
+    width: 100%;
+    padding: 12px;
+    background-color: #1a1a1a; /* Tu color de fondo de body */
+    border: 1px solid #444;
+    color: white;
+    border-radius: 8px;
+    outline: none;
+}
+
+.form-ark input:focus, 
+.form-ark select:focus {
+    border-color: #00ffcc;
+    box-shadow: 0 0 5px #00ffcc;
+}
+
+.boton-insertar {
+    width: 100%;
+    padding: 15px;
+    background-color: #00ffcc; /* Tu color de botones */
+    color: #1a1a1a;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.boton-insertar:hover {
+    background-color: #00ccaa;
+    transform: scale(1.02);
+}
+
+/* Estilo para la alerta de error de duplicado */
+.alerta-error {
+    background-color: rgba(255, 0, 0, 0.1);
+    color: #ff4444;
+    padding: 15px;
+    border: 1px solid #ff4444;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+}

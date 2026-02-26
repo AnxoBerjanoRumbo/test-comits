@@ -13,7 +13,7 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administración - Añadir Criatura</title>
-    <link rel="stylesheet" href="../assets/css/estilos.css?v=1.1">
+    <link rel="stylesheet" href="../assets/css/estilos.css?v=1.2">
 </head>
 <body class="admin-body">
     <header>
@@ -29,7 +29,7 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
                 ⚠️ El dinosaurio <strong><?php echo htmlspecialchars($_GET['nombre']); ?></strong> ya existe en el sistema.
             </div>
         <?php endif; ?>
-        
+
         <form action="procesar_insertar.php" method="POST" class="form-ark">
             <div class="campo">
                 <label>Nombre de la criatura:</label>
