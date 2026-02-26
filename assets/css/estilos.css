@@ -126,6 +126,19 @@ header {
     color: white;
 }
 
+/* Estilos para el mensaje del buscador cuando no sale nada */
+
+.sin-resultados {
+    grid-column: 1 / -1; 
+    text-align: center;
+    padding: 50px;
+    color: #888;
+}
+
+.sin-resultados strong {
+    color: #00ffcc;
+}
+
 /* ------------------ ESTILOS PARA LA PAGINA DETALLE ----------------------*/
 
 /* Contenedor principal responsive */
