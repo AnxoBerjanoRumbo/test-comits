@@ -31,7 +31,7 @@ header {
     border: 1px solid #444;
     padding: 15px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .dino-card h3 {
@@ -41,15 +41,15 @@ header {
 
 /* Estilo para los títulos con enlace */
 .enlace-dino {
-    color: #00ffcc; 
-    text-decoration: none; 
+    color: #00ffcc;
+    text-decoration: none;
     font-weight: bold;
-    transition: all 0.3s ease; 
+    transition: all 0.3s ease;
 }
 
 .enlace-dino:hover {
-    color: #ffffff; 
-    text-shadow: 0 0 10px #00ffcc; 
+    color: #ffffff;
+    text-shadow: 0 0 10px #00ffcc;
 }
 
 /* Ajuste para que la tarjeta entera se vea mejor */
@@ -62,7 +62,7 @@ header {
 }
 
 .dino-card:hover {
-    transform: translateY(-5px); 
+    transform: translateY(-5px);
     border-color: #00ffcc;
 }
 
@@ -129,7 +129,7 @@ header {
 /* Estilos para el mensaje del buscador cuando no sale nada */
 
 .sin-resultados {
-    grid-column: 1 / -1; 
+    grid-column: 1 / -1;
     text-align: center;
     padding: 50px;
     color: #888;
@@ -159,8 +159,8 @@ header {
 
 /* Contenedor principal responsive */
 .contenedor-detalle {
-    width: 95%; 
-    max-width: 800px; 
+    width: 95%;
+    max-width: 800px;
     margin: 20px auto;
 }
 
@@ -181,13 +181,13 @@ header {
 /* Grid que se vuelve una columna en móviles */
 .info-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr; 
+    grid-template-columns: 1fr 1fr;
     gap: 15px;
 }
 
 @media (max-width: 600px) {
     .info-grid {
-        grid-template-columns: 1fr; 
+        grid-template-columns: 1fr;
     }
 }
 
@@ -214,20 +214,41 @@ header {
     text-decoration: none;
 }
 
+/*Estilos para el boton de aliminar dinosaurio*/
+
+.boton-eliminar {
+    background-color: #00ffcc;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: 1px solid #006450;
+}
+
+.boton-eliminar:hover {
+    background-color: #006450;
+    box-shadow: 0 0 10px rgba(0, 255, 204, 0.6);
+}
+
 /* -------------- ESTILOS PARA EL PANEL DE ADMINISTRACIÓN ----------------- */
 
 .contenedor-formulario {
     max-width: 600px;
     margin: 40px auto;
-    background-color: #2c2c2c; /* Tu gris de las cards */
+    background-color: #2c2c2c;
+    /* Tu gris de las cards */
     padding: 30px;
     border-radius: 12px;
     border: 1px solid #444;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .contenedor-formulario h2 {
-    color: #00ffcc; /* Tu verde cian */
+    color: #00ffcc;
+    /* Tu verde cian */
     text-align: center;
     margin-bottom: 25px;
 }
@@ -243,19 +264,20 @@ header {
     color: #ffffff;
 }
 
-.form-ark input, 
-.form-ark select, 
+.form-ark input,
+.form-ark select,
 .form-ark textarea {
     width: 100%;
     padding: 12px;
-    background-color: #1a1a1a; /* Tu color de fondo de body */
+    background-color: #1a1a1a;
+    /* Tu color de fondo de body */
     border: 1px solid #444;
     color: white;
     border-radius: 8px;
     outline: none;
 }
 
-.form-ark input:focus, 
+.form-ark input:focus,
 .form-ark select:focus {
     border-color: #00ffcc;
     box-shadow: 0 0 5px #00ffcc;
@@ -264,7 +286,8 @@ header {
 .boton-insertar {
     width: 100%;
     padding: 15px;
-    background-color: #00ffcc; /* Tu color de botones */
+    background-color: #00ffcc;
+    /* Tu color de botones */
     color: #1a1a1a;
     border: none;
     border-radius: 8px;
