@@ -1,4 +1,7 @@
 <?php
+session_start();
+$_SESSION['is_admin'] = true;
+
 include 'config/db.php';
 
 // 1. Recogemos el ID del dinosaurio desde la URL (con validación básica)
@@ -58,12 +61,25 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
                 <?php if (count($mapas) > 0): ?>
                     <?php foreach ($mapas as $mapa): ?>
                         <span class="tag-mapa"><?php echo $mapa['nombre_mapa']; ?></span>
-                    <?php endforeach; ?>
-                <?php else: ?>
+                    <?php
+    endforeach; ?>
+                <?php
+else: ?>
                     <p class="sin-datos">No se han registrado avistamientos en los mapas actuales.</p>
-                <?php endif; ?>
+                <?php
+endif; ?>
             </div>
         </section>
+        <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
+            <div style="margin-top: 40px; text-align: center; border-top: 1px solid #444; padding-top: 20px;">
+                <a href="admin/procesar_eliminar.php?id=<?php echo $dino['id']; ?>" 
+                    class="boton-eliminar" 
+                    onclick="return confirm('⚠️¿Estás seguro de que quieres extinguir a <?php echo htmlspecialchars($dino['nombre']); ?>? Esta acción borrará sus datos de la base de datos y NO se puede deshacer.');">
+                    Eliminar Criatura
+                </a>
+            </div>
+        <?php
+endif; ?>
     </main>
 </body>
 </html>
