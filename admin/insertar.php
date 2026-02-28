@@ -1,5 +1,12 @@
-<?php 
-include '../config/db.php'; 
+<?php
+session_start();
+if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
+    header("Location: ../index.php");
+    exit();
+}
+
+include '../config/db.php';
+
 
 $sql_mapas = "SELECT * FROM mapas ORDER BY nombre_mapa ASC";
 $stmt_mapas = $conexion->prepare($sql_mapas);
@@ -29,7 +36,8 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
             <div class="alerta-error">
                 ⚠️ El dinosaurio <strong><?php echo htmlspecialchars($_GET['nombre']); ?></strong> ya existe en el sistema.
             </div>
-        <?php endif; ?>
+        <?php
+endif; ?>
 
         <form action="procesar_insertar.php" method="POST" class="form-ark">
             <div class="campo">
@@ -60,7 +68,8 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
                         <option value="<?php echo $mapa['id']; ?>">
                             <?php echo $mapa['nombre_mapa']; ?>
                         </option>
-                    <?php endforeach; ?>
+                    <?php
+endforeach; ?>
                 </select>
             </div>
 
