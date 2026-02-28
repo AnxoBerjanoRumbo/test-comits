@@ -33,7 +33,7 @@ endif; ?>
         <form action="procesar_login.php" method="POST" class="form-ark">
             <div class="campo">
                 <label>Usuario (o Email):</label>
-                <input type="text" name="usuario" required placeholder="Introduce tu identificador">
+                <input type="text" name="nick" required placeholder="Introduce tu identificador">
             </div>
 
             <div class="campo">
