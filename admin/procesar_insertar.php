@@ -9,6 +9,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     try {
 
+        // Validación de duplicados
+        $check = $conexion->prepare("SELECT COUNT(*) FROM dinosaurios WHERE nombre = :nombre");
+        $check->execute([':nombre' => $nombre]);
+        
+        if ($check->fetchColumn() > 0) {
+            header("Location: insertar.php?error=duplicado&nombre=" . urlencode($nombre));
+            exit();
+        }
+
+        $conexion->beginTransaction();
+
         // Insertar en tabla 'dinosaurios'
         $sqlDino = "INSERT INTO dinosaurios (nombre, especie, dieta) VALUES (:n, :e, :d)";
         $stmtDino = $conexion->prepare($sqlDino);
