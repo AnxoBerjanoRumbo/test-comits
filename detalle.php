@@ -29,6 +29,7 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $dino['nombre']; ?> - ARK Hub</title>
     <link rel="stylesheet" href="assets/css/estilos.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <header>
