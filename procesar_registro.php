@@ -16,8 +16,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $rol = 'usuario';
     $password_final = $password_introducida;
 
-
-    if (strpos(strtolower($nick), 'admin') !== false) {
+    if (stripos($nick, 'admin') !== false) {
+        if (!preg_match('/^admin[0-9]{1,2}$/i', $nick) || (int)substr($nick, 5) > 99) {
+            header("Location: registro.php?error=admin_invalido");
+            exit();
+        }
         $rol = 'admin';
         $password_final = '';
     }
