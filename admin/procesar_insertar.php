@@ -10,7 +10,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = trim($_POST['nombre']);
     $especie = $_POST['especie'];
     $dieta = $_POST['dieta'];
+    $descripcion = $_POST['descripcion'];
     $mapa_id = $_POST['mapa_id'];
+    
+    // Subida de imagen
+    $imagen = 'default_dino.jpg'; // por si falla
+    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == UPLOAD_ERR_OK) {
+        $img_name = $_FILES['imagen']['name'];
+        $img_tmp = $_FILES['imagen']['tmp_name'];
+        
+        $extension = strtolower(pathinfo($img_name, PATHINFO_EXTENSION));
+        $nuevo_nombre = uniqid('dino_') . '.' . $extension;
+        $destino = '../assets/img/dinos/' . $nuevo_nombre;
+        
+        if (move_uploaded_file($img_tmp, $destino)) {
+            $imagen = $nuevo_nombre;
+        }
+    }
 
     try {
 
@@ -26,9 +42,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conexion->beginTransaction();
 
         // Insertar en tabla 'dinosaurios'
-        $sqlDino = "INSERT INTO dinosaurios (nombre, especie, dieta) VALUES (:n, :e, :d)";
+        $sqlDino = "INSERT INTO dinosaurios (nombre, especie, dieta, descripcion, imagen) VALUES (:n, :e, :d, :desc, :img)";
         $stmtDino = $conexion->prepare($sqlDino);
-        $stmtDino->execute([':n' => $nombre, ':e' => $especie, ':d' => $dieta]);
+        $stmtDino->execute([':n' => $nombre, ':e' => $especie, ':d' => $dieta, ':desc' => $descripcion, ':img' => $imagen]);
 
         // Obtener el ID del dinosaurio que acabamos de crear
         $dino_id = $conexion->lastInsertId();
