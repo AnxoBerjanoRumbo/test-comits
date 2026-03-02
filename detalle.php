@@ -72,7 +72,7 @@ endif; ?>
             <div style="margin-top: 40px; text-align: center; border-top: 1px solid #444; padding-top: 20px;">
                 <a href="admin/procesar_eliminar.php?id=<?php echo $dino['id']; ?>" 
                     class="boton-eliminar" 
-                    onclick="return confirm('⚠️¿Estás seguro de que quieres extinguir a <?php echo htmlspecialchars($dino['nombre']); ?>? Esta acción borrará sus datos de la base de datos y NO se puede deshacer.');">
+                    onclick="return confirm('¿Estás seguro de que quieres extinguir a <?php echo htmlspecialchars($dino['nombre']); ?>? Esta acción borrará sus datos de la base de datos y NO se puede deshacer.');">
                     Eliminar Criatura
                 </a>
             </div>
