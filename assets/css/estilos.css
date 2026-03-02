@@ -445,81 +445,126 @@ header h1 {
 }
 
 .lista-admins {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
 }
 
 .admin-card {
     background-color: var(--bg-card);
-    padding: 25px;
+    padding: 30px;
     border-radius: var(--radius);
     border: 1px solid var(--border-color);
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    transition: 0.3s;
+    text-align: center;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s, border-color 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: #ffcc00;
 }
 
 .admin-card:hover {
+    transform: translateY(-8px);
     border-color: #ffcc00;
-    box-shadow: 0 4px 15px rgba(255, 204, 0, 0.1);
+    box-shadow: 0 12px 20px rgba(255, 204, 0, 0.15);
 }
 
 .admin-nick {
     margin: 0;
     color: #ffcc00;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
+    font-weight: 800;
 }
 
 .admin-estado {
-    margin: 8px 0 0 0;
-    color: var(--error-color);
+    margin: 8px 0 20px 0;
+    color: var(--text-muted);
     font-size: 0.95rem;
-    font-weight: bold;
+}
+
+.admin-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
 }
 
 .form-activar {
     display: flex;
-    gap: 15px;
-    align-items: center;
-    background: var(--bg-main);
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin: 0;
+    background: transparent;
+    padding: 0;
+    border: none;
 }
 
 .input-password {
+    width: 100%;
     padding: 12px 15px;
-    border-radius: 6px;
-    border: none;
-    background-color: transparent;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-main);
     color: white;
     font-family: inherit;
     font-size: 1rem;
     outline: none;
-    width: 200px;
+    text-align: center;
+    transition: 0.3s;
 }
 
 .input-password:focus {
-    background-color: var(--bg-card);
+    border-color: #ffcc00;
+    box-shadow: 0 0 8px rgba(255, 204, 0, 0.3);
 }
 
 .btn-activar {
-    padding: 12px 20px;
+    width: 100%;
+    padding: 14px 20px;
     background-color: #ffcc00;
     color: #121212;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: 0.3s;
+    text-transform: uppercase;
+}
+
+.btn-activar:hover {
+    background-color: #e6b800;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 204, 0, 0.3);
+}
+
+.btn-cancelar {
+    width: 100%;
+    padding: 12px 20px;
+    background-color: transparent;
+    color: var(--error-color);
+    border: 1px solid var(--error-color);
+    border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
     font-family: inherit;
     transition: 0.3s;
 }
 
-.btn-activar:hover {
-    background-color: #e6b800;
-    transform: translateY(-2px);
+.btn-cancelar:hover {
+    background-color: rgba(255, 68, 68, 0.1);
 }
 
 .mensaje-vacio {
