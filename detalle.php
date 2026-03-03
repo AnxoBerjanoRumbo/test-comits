@@ -1,7 +1,5 @@
 <?php
 session_start();
-$_SESSION['is_admin'] = true;
-
 include 'config/db.php';
 
 // 1. Recogemos el ID del dinosaurio desde la URL (con validación básica)
