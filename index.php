@@ -49,7 +49,9 @@ $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         <nav class="navegacion-usuario">
             <?php if (isset($_SESSION['nick'])): ?>
-                <span class="bienvenida">Hola, <strong><?php echo $_SESSION['nick']; ?></strong></span>
+                <a href="perfil.php" class="enlace-perfil" style="color: white; text-decoration: none; margin-right: 15px;">
+                    <span class="bienvenida">Hola, <strong><?php echo htmlspecialchars($_SESSION['nick']); ?></strong></span>
+                </a>
                 
                 <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'superadmin'): ?>
                     <a href="panel_superadmin.php" class="btn-nav" style="background-color: #ffcc00; color: #1a1a1a; border-color: #ffcc00;">Panel Superadmin</a>
