@@ -55,7 +55,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     }
     catch (PDOException $e) {
-        echo "Error en el registro: " . $e->getMessage();
+        error_log("Error en el registro: " . $e->getMessage());
+        header("Location: registro.php?error=interno");
+        exit();
     }
 }
 else {

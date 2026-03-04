@@ -33,7 +33,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     }
     catch (PDOException $e) {
-        echo "Error en el login: " . $e->getMessage();
+        error_log("Error en el login: " . $e->getMessage());
+        header("Location: login.php?error=interno");
+        exit();
     }
 }
 else {
