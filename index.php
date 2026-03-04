@@ -172,7 +172,7 @@ endif; ?>
 
     </main>
     
-    <button id="btnArriba" style="position: fixed; bottom: 30px; right: 30px; background-color: #ffcc00; color: #111; border: none; border-radius: 5px; padding: 10px 15px; font-size: 1.5rem; cursor: pointer; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 1000;">
+    <button id="btnArriba" class="btn-arriba">
         ⬆
     </button>
     <script src="assets/js/main.js"></script>
