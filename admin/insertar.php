@@ -86,5 +86,6 @@ endforeach; ?>
             <button type="submit" class="boton-insertar">Añadir a la base de datos</button>
         </form>
     </main>
+    <script src="../assets/js/main.js"></script>
 </body>
 </html>

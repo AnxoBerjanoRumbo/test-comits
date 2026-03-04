@@ -73,5 +73,6 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
             <button type="submit" class="boton-insertar">Guardar Perfil</button>
         </form>
     </main>
+    <script src="assets/js/main.js"></script>
 </body>
 </html>
