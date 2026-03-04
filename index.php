@@ -1,4 +1,5 @@
 <?php
+session_start();
 include 'config/db.php';
 
 $busqueda = isset($_GET['buscar']) ? $_GET['buscar'] : '';
@@ -47,8 +48,15 @@ $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
         
         <nav class="navegacion-usuario">
-            <a href="login.php" class="btn-nav">Loguearse</a>
-            <a href="registro.php" class="btn-nav btn-registro">Registrarse</a>
+            <?php if (isset($_SESSION['nick'])): ?>
+                <span class="bienvenida">Hola, <strong><?php echo $_SESSION['nick']; ?></strong></span>
+                <a href="logout.php" class="btn-nav">Cerrar Sesión</a>
+            <?php
+    else: ?>
+                <a href="login.php" class="btn-nav">Loguearse</a>
+                <a href="registro.php" class="btn-nav btn-registro">Registrarse</a>
+            <?php
+    endif; ?>
         </nav>
     </header>
     <section class="buscador">
