@@ -23,7 +23,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
 
     } catch (PDOException $e) {
-        echo "Error al actualizar contraseña: " . $e->getMessage();
+        error_log("Error al actualizar contraseña: " . $e->getMessage());
+        header("Location: panel_superadmin.php?error=interno");
+        exit();
     }
 } else {
     header("Location: panel_superadmin.php");

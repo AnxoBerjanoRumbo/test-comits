@@ -58,7 +58,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     } catch (PDOException $e) {
         $conexion->rollBack();
-        echo "Error: " . $e->getMessage();
+        error_log("Error al editar: " . $e->getMessage());
+        header("Location: editar.php?id=" . $id . "&error=interno");
+        exit();
     }
 } else {
     header("Location: ../index.php");

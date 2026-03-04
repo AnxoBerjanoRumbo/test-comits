@@ -61,7 +61,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     catch (PDOException $e) {
         $conexion->rollBack();
-        echo "Error: " . $e->getMessage();
+        error_log("Error al insertar: " . $e->getMessage());
+        header("Location: insertar.php?error=interno");
+        exit();
     }
 }
 else {

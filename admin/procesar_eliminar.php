@@ -33,7 +33,9 @@ if (isset($_GET['id'])) {
     }
     catch (PDOException $e) {
         $conexion->rollBack();
-        echo "Error al eliminar: " . $e->getMessage();
+        error_log("Error al eliminar: " . $e->getMessage());
+        header("Location: ../index.php?error=interno");
+        exit();
     }
 }
 else {
