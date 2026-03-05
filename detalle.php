@@ -84,7 +84,7 @@ $comentarios = $stmt_comments->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             <?php endif; ?>
             
-            <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
+            <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_insertar'] ?? 0) == 1): ?>
                 <div style="margin-top: 20px; text-align: center;">
                     <a href="admin/editar.php?id=<?php echo $dino['id']; ?>" class="btn-nav btn-registro" style="background-color: #007bff; border-color: #007bff; color: white;">Editar Criatura</a>
                 </div>
@@ -148,7 +148,7 @@ endif; ?>
             </div>
         </section>
 
-        <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
+        <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_insertar'] ?? 0) == 1): ?>
             <div style="margin-top: 40px; text-align: center; border-top: 1px solid #444; padding-top: 20px;">
                 <form action="admin/procesar_eliminar.php" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que quieres extinguir a <?php echo htmlspecialchars($dino['nombre']); ?>? Esta acción borrará sus datos de la base de datos y NO se puede deshacer.');">
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">

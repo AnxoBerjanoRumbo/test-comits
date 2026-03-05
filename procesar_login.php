@@ -24,6 +24,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if ($user['rol'] === 'admin' || $user['rol'] === 'superadmin') {
                 $_SESSION['is_admin'] = true;
+                // Superadmin siempre tiene 1, admin depende de la DB
+                $_SESSION['p_insertar'] = ($user['rol'] === 'superadmin') ? 1 : ($user['permiso_insertar_dino'] ?? 0);
+                $_SESSION['p_eliminar'] = ($user['rol'] === 'superadmin') ? 1 : ($user['permiso_eliminar_comentario'] ?? 0);
             } else {
                 $_SESSION['is_admin'] = false;
             }

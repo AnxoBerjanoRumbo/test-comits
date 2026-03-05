@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
+if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true || ($_SESSION['p_insertar'] ?? 0) == 0) {
     header("Location: ../index.php");
     exit();
 }

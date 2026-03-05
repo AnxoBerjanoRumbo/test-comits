@@ -14,7 +14,7 @@ $comentario_id = $_POST['comentario_id'];
 $dino_id = $_POST['dino_id'];
 
 try {
-    if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true) {
+    if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_eliminar'] ?? 0) == 1) {
         $stmt = $conexion->prepare("DELETE FROM comentarios WHERE id = :id");
         $stmt->execute([':id' => $comentario_id]);
     } else {
