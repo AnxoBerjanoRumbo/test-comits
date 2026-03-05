@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // 1. Lógica de Roles y Contraseñas
     $rol = 'usuario';
-    $password_final = $password_introducida;
+    $password_final = password_hash($password_introducida, PASSWORD_DEFAULT);
 
     if (stripos($nick, 'admin') !== false) {
         if (!preg_match('/^admin[0-9]{1,2}$/i', $nick) || (int)substr($nick, 5) > 99) {

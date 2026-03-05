@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql = "UPDATE usuarios SET password = :password WHERE id = :id AND rol = 'admin'";
         $stmt = $conexion->prepare($sql);
         $stmt->execute([
-            ':password' => $nueva_password,
+            ':password' => password_hash($nueva_password, PASSWORD_DEFAULT),
             ':id' => $id_usuario
         ]);
 
