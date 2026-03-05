@@ -30,7 +30,7 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
     </header>
 
     <main class="contenedor-formulario">
-        <h2>Registrar nueva criatura en la DB</h2>
+        <h2>Registrar nueva criatura</h2>
 
         <?php if (isset($_GET['error']) && $_GET['error'] == 'duplicado'): ?>
             <div class="alerta-error">
