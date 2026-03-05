@@ -18,12 +18,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($user && password_verify($password, $user['password'])) {
 
-            $_SESSION['id'] = $user['id'];
+            $_SESSION['usuario_id'] = $user['id'];
             $_SESSION['nick'] = $user['nick'];
             $_SESSION['rol'] = $user['rol'];
 
             if ($user['rol'] === 'admin' || $user['rol'] === 'superadmin') {
                 $_SESSION['is_admin'] = true;
+            } else {
+                $_SESSION['is_admin'] = false;
             }
 
             header("Location: index.php");

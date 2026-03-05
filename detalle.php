@@ -130,7 +130,7 @@ endif; ?>
                                     <?php echo htmlspecialchars($c['nick']); ?> <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '🛡️' : ''; ?>
                                 </strong>
                                 
-                                <?php if(isset($_SESSION['usuario_id']) && ($_SESSION['is_admin'] === true || $_SESSION['usuario_id'] == $c['usuario_id'])): ?>
+                                <?php if(isset($_SESSION['usuario_id']) && (($_SESSION['is_admin'] ?? false) === true || $_SESSION['usuario_id'] == $c['usuario_id'])): ?>
                                     <form action="borrar_comentario.php" method="POST" style="display: inline;">
                                         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                         <input type="hidden" name="comentario_id" value="<?php echo $c['id']; ?>">
