@@ -1,0 +1,17 @@
+# Configuración y Bases de Datos
+actualizar_passwords.php
+ajustar_base_datos.php
+config/config.php
+.env
+
+# Imágenes y Archivos de Usuario (Subidas)
+assets/img/perfil/*
+!assets/img/perfil/default.png
+
+# Otras exclusiones comunes
+.vscode/
+.idea/
+*.log
+vendor/
+node_modules/
+.antigravityignore
