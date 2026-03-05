@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
+    header("Location: ../index.php");
+    exit();
+}
 include '../config/db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -12,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Validación de duplicados
         $check = $conexion->prepare("SELECT COUNT(*) FROM dinosaurios WHERE nombre = :nombre");
         $check->execute([':nombre' => $nombre]);
-        
+
         if ($check->fetchColumn() > 0) {
             header("Location: insertar.php?error=duplicado&nombre=" . urlencode($nombre));
             exit();
@@ -37,11 +42,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: ../index.php?status=success");
         exit();
 
-    } catch (PDOException $e) {
-        $conexion->rollBack(); 
+    }
+    catch (PDOException $e) {
+        $conexion->rollBack();
         echo "Error: " . $e->getMessage();
     }
-} else {
+}
+else {
     header("Location: insertar.php");
     exit();
 }
