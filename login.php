@@ -31,6 +31,7 @@ if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true) {
 endif; ?>
 
         <form action="procesar_login.php" method="POST" class="form-ark">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <div class="campo">
                 <label>Usuario (o Email):</label>
                 <input type="text" name="nick" required placeholder="Introduce tu identificador">

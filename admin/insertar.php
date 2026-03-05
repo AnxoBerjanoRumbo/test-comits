@@ -40,6 +40,7 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
 endif; ?>
 
         <form action="procesar_insertar.php" method="POST" enctype="multipart/form-data" class="form-ark">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <div class="campo">
                 <label>Nombre de la criatura:</label>
                 <input type="text" name="nombre" required placeholder="Ej: Thylacoleo">

@@ -112,6 +112,7 @@ endif; ?>
             
             <?php if (isset($_SESSION['usuario_id'])): ?>
                 <form action="procesar_comentario.php" method="POST" class="form-ark" style="margin-bottom: 20px;">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="dino_id" value="<?php echo $dino['id']; ?>">
                     <textarea name="texto" required placeholder="Añade tu comentario o estrategia (máx 10.000 palabras)..." rows="4" style="width: 100%; margin-bottom: 10px;"></textarea>
                     <button type="submit" class="boton-insertar">Comentar</button>
@@ -131,6 +132,7 @@ endif; ?>
                                 
                                 <?php if(isset($_SESSION['usuario_id']) && ($_SESSION['is_admin'] === true || $_SESSION['usuario_id'] == $c['usuario_id'])): ?>
                                     <form action="borrar_comentario.php" method="POST" style="display: inline;">
+                                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                         <input type="hidden" name="comentario_id" value="<?php echo $c['id']; ?>">
                                         <input type="hidden" name="dino_id" value="<?php echo $dino['id']; ?>">
                                         <button type="submit" onclick="return confirm('¿Borrar este comentario?');" style="background: none; border: none; color: #ff5555; cursor: pointer; font-size: 0.9em; padding: 0;">Eliminar</button>
@@ -148,11 +150,13 @@ endif; ?>
 
         <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
             <div style="margin-top: 40px; text-align: center; border-top: 1px solid #444; padding-top: 20px;">
-                <a href="admin/procesar_eliminar.php?id=<?php echo $dino['id']; ?>" 
-                    class="boton-eliminar" 
-                    onclick="return confirm('¿Estás seguro de que quieres extinguir a <?php echo htmlspecialchars($dino['nombre']); ?>? Esta acción borrará sus datos de la base de datos y NO se puede deshacer.');">
-                    Eliminar Criatura
-                </a>
+                <form action="admin/procesar_eliminar.php" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que quieres extinguir a <?php echo htmlspecialchars($dino['nombre']); ?>? Esta acción borrará sus datos de la base de datos y NO se puede deshacer.');">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                    <input type="hidden" name="id" value="<?php echo $dino['id']; ?>">
+                    <button type="submit" class="boton-eliminar" style="border: none; cursor: pointer;">
+                        Eliminar Criatura
+                    </button>
+                </form>
             </div>
         <?php
 endif; ?>

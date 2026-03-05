@@ -43,6 +43,7 @@ if (isset($_SESSION['nick'])) {
         <?php endif; ?>
 
         <form action="procesar_registro.php" method="POST" class="form-ark">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <div class="campo">
                 <label>Nick de Usuario:</label>
                 <input type="text" name="nick" required placeholder="Ej: Superviviente99 o admin1">

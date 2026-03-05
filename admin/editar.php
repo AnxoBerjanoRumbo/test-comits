@@ -55,6 +55,7 @@ $mapas_seleccionados = $stmt_dm->fetchAll(PDO::FETCH_COLUMN);
         <h2>Modificar <?php echo htmlspecialchars($dino['nombre']); ?></h2>
 
         <form action="procesar_editar.php" method="POST" enctype="multipart/form-data" class="form-ark">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <input type="hidden" name="id" value="<?php echo $dino['id']; ?>">
             
             <div class="campo">

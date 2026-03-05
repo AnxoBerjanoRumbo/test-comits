@@ -8,9 +8,12 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
     exit();
 }
 
-// Comprobamos que nos llega el ID del dinosaurio a borrar
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
+// Comprobamos que nos llega el ID del dinosaurio vía POST y el CSRF
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("Error de validación CSRF.");
+    }
+    $id = $_POST['id'];
 
     try {
         $conexion->beginTransaction();

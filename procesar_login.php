@@ -4,6 +4,9 @@ session_start();
 include 'config/db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("Error de validación CSRF.");
+    }
     $nick = trim($_POST['nick']);
     $password = $_POST['password'];
 

@@ -11,4 +11,8 @@ try {
     error_log("Error de conexión a la base de datos: " . $e->getMessage());
     die("Error interno del servidor. Por favor, inténtelo de nuevo más tarde.");
 }
+
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 ?>

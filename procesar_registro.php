@@ -3,6 +3,9 @@ session_start();
 include 'config/db.php'; // Asegúrate de que la ruta a tu conexión es correcta
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("Error de validación CSRF.");
+    }
     $nick = trim($_POST['nick']);
     $password_introducida = $_POST['password'];
     $confirm_password_introducida = $_POST['confirm_password'];

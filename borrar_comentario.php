@@ -6,6 +6,10 @@ if (!isset($_SESSION['usuario_id']) || $_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 include 'config/db.php';
 
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die("Error de validación CSRF.");
+}
+
 $comentario_id = $_POST['comentario_id'];
 $dino_id = $_POST['dino_id'];
 

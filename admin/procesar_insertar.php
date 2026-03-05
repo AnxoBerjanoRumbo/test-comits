@@ -7,6 +7,9 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
 include '../config/db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("Error de validación CSRF.");
+    }
     $nombre = trim($_POST['nombre']);
     $especie = $_POST['especie'];
     $dieta = $_POST['dieta'];
