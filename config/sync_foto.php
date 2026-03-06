@@ -1,7 +1,9 @@
 <?php
 // Script para sincronizar fotos de perfil reales desde la DB a la sesión
-session_start();
-include 'config/db.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+// La conexión $conexion ya debe estar disponible por el archivo que incluye este script.
 
 if (isset($_SESSION['usuario_id'])) {
     $stmt = $conexion->prepare("SELECT foto_perfil FROM usuarios WHERE id = ?");
