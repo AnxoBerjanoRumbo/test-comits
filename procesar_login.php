@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
 
     try {
-        $sql = "SELECT * FROM usuarios WHERE nick = :nick";
+        $sql = "SELECT * FROM usuarios WHERE nick = :nick OR email = :nick";
         $stmt = $conexion->prepare($sql);
         $stmt->execute([':nick' => $nick]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);

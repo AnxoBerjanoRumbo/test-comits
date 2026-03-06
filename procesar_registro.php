@@ -7,6 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Error de validación CSRF.");
     }
     $nick = trim($_POST['nick']);
+    $email = trim($_POST['email']);
     $password_introducida = $_POST['password'];
     $confirm_password_introducida = $_POST['confirm_password'];
 
@@ -29,9 +30,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     try {
-        // 2. Comprobamos que el nick no exista ya
-        $check = $conexion->prepare("SELECT COUNT(*) FROM usuarios WHERE nick = :nick");
-        $check->execute([':nick' => $nick]);
+        // 2. Comprobamos que el nick o el email no existan ya
+        $check = $conexion->prepare("SELECT COUNT(*) FROM usuarios WHERE nick = :nick OR email = :email");
+        $check->execute([':nick' => $nick, ':email' => $email]);
 
         if ($check->fetchColumn() > 0) {
             header("Location: registro.php?error=duplicado");
@@ -39,10 +40,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // 3. Insertamos en la base de datos
-        $sql = "INSERT INTO usuarios (nick, password, rol) VALUES (:nick, :password, :rol)";
+        $sql = "INSERT INTO usuarios (nick, email, password, rol) VALUES (:nick, :email, :password, :rol)";
         $stmt = $conexion->prepare($sql);
         $stmt->execute([
             ':nick' => $nick,
+            ':email' => $email,
             ':password' => $password_final,
             ':rol' => $rol
         ]);

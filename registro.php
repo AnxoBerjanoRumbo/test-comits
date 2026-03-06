@@ -51,6 +51,12 @@ if (isset($_SESSION['nick'])) {
             </div>
 
             <div class="campo">
+                <label>Correo Electrónico:</label>
+                <input type="email" name="email" required placeholder="tu@email.com">
+                <small style="color: #aaa;">Necesario para recuperar tu contraseña.</small>
+            </div>
+
+            <div class="campo">
                 <label>Contraseña (solo usuarios normales):</label>
                 <input type="password" name="password" required placeholder="••••••••" id="pass">
             </div>
