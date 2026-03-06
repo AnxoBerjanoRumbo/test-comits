@@ -5,6 +5,7 @@ if (!isset($_SESSION['usuario_id'])) {
     exit();
 }
 include 'config/db.php';
+include 'config/sync_foto.php';
 
 $usuario_id = $_SESSION['usuario_id'];
 $sql = "SELECT * FROM usuarios WHERE id = :id";
