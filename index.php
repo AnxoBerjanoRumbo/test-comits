@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'config/db.php';
+include 'config/sync_foto.php';
 
 $busqueda = isset($_GET['buscar']) ? $_GET['buscar'] : '';
 $dieta = isset($_GET['dieta']) ? $_GET['dieta'] : '';

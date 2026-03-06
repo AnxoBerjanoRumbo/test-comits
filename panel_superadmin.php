@@ -6,6 +6,7 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'superadmin') {
 }
 
 include 'config/db.php';
+include 'config/sync_foto.php';
 
 $sql_pendientes = "SELECT * FROM usuarios WHERE rol = 'admin' AND password = ''";
 $stmt_p = $conexion->prepare($sql_pendientes);

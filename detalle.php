@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'config/db.php';
+include 'config/sync_foto.php';
 
 // 1. Recogemos el ID del dinosaurio desde la URL (con validación básica)
 $id = isset($_GET['id']) ? $_GET['id'] : 1;
