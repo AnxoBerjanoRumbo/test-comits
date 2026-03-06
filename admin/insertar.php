@@ -24,9 +24,18 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body class="admin-body">
-    <header>
-        <h1>Panel de Administración</h1>
-        <a href="../index.php" class="boton-volver">Volver a la Wiki</a>
+    <header style="display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: var(--bg-header); border-radius: var(--radius); border: 1px solid var(--border-color); margin-bottom: 30px;">
+        <h1 style="margin: 0; font-size: 1.8rem;">Panel de Administración</h1>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <img src="../assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" 
+                     alt="Perfil" 
+                     style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);"
+                     onerror="this.src='../assets/img/perfil/default.png'">
+                <span class="bienvenida"><strong><?php echo htmlspecialchars($_SESSION['nick']); ?></strong></span>
+            </div>
+            <a href="../index.php" class="boton-volver" style="margin: 0;">Volver a la Wiki</a>
+        </div>
     </header>
 
     <main class="contenedor-formulario">

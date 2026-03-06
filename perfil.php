@@ -28,7 +28,10 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
         </div>
         <nav class="navegacion-usuario" style="display: flex; align-items: center; gap: 15px;">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <img src="assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" alt="Perfil" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+                <img src="assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" 
+                     alt="Perfil" 
+                     style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);"
+                     onerror="this.src='assets/img/perfil/default.png'">
                 <span class="bienvenida"><strong><?php echo htmlspecialchars($usuario['nick']); ?></strong></span>
             </div>
             <a href="index.php" class="btn-nav">Volver al Inicio</a>
@@ -54,7 +57,10 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
         <?php endif; ?>
 
         <div style="text-align: center; margin-bottom: 30px;">
-            <img src="assets/img/perfil/<?php echo htmlspecialchars($usuario['foto_perfil'] ?? 'default.png'); ?>" alt="Foto de perfil" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid #ffcc00; margin-bottom: 10px;">
+            <img src="assets/img/perfil/<?php echo htmlspecialchars($usuario['foto_perfil'] ?? 'default.png'); ?>" 
+                 alt="Foto de perfil" 
+                 style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid #ffcc00; margin-bottom: 10px;"
+                 onerror="this.src='assets/img/perfil/default.png'">
             <p><strong><?php echo htmlspecialchars($usuario['nick']); ?></strong> (<?php echo htmlspecialchars($usuario['rol']); ?>)</p>
         </div>
 

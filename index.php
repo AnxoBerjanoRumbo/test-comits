@@ -78,7 +78,10 @@ $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <nav class="navegacion-usuario">
             <?php if (isset($_SESSION['nick'])): ?>
                 <a href="perfil.php" class="enlace-perfil" style="color: white; text-decoration: none; margin-right: 15px; display: flex; align-items: center; gap: 10px;">
-                    <img src="assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" alt="Perfil" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+                    <img src="assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" 
+                         alt="Perfil" 
+                         style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);"
+                         onerror="this.src='assets/img/perfil/default.png'">
                     <span class="bienvenida">Hola, <strong><?php echo htmlspecialchars($_SESSION['nick']); ?></strong></span>
                 </a>
                 

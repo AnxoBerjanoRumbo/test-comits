@@ -48,7 +48,10 @@ $comentarios = $stmt_comments->fetchAll(PDO::FETCH_ASSOC);
             <a href="index.php" class="btn-nav">Volver al listado</a>
             <?php if (isset($_SESSION['nick'])): ?>
                 <a href="perfil.php" class="enlace-perfil" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 10px;">
-                    <img src="assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" alt="Perfil" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+                    <img src="assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" 
+                         alt="Perfil" 
+                         style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);"
+                         onerror="this.src='assets/img/perfil/default.png'">
                     <span class="bienvenida">Hola, <strong><?php echo htmlspecialchars($_SESSION['nick']); ?></strong></span>
                 </a>
             <?php else: ?>
@@ -128,7 +131,10 @@ endif; ?>
                         <div class="comentario" style="background-color: #222; margin-bottom: 15px; padding: 15px; border-radius: 8px; border-left: 4px solid <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '#ffcc00' : '#4CAF50'; ?>;">
                             <div class="comentario-header" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                                 <div style="display: flex; align-items: center; gap: 10px;">
-                                    <img src="assets/img/perfil/<?php echo htmlspecialchars($c['foto_perfil'] ?? 'default.png'); ?>" alt="Avatar" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '#ffcc00' : '#4CAF50'; ?>;">
+                                    <img src="assets/img/perfil/<?php echo htmlspecialchars($c['foto_perfil'] ?? 'default.png'); ?>" 
+                                         alt="Avatar" 
+                                         style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '#ffcc00' : '#4CAF50'; ?>;"
+                                         onerror="this.src='assets/img/perfil/default.png'">
                                     <strong style="color: <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '#ffcc00' : '#fff'; ?>;">
                                         <?php echo htmlspecialchars($c['nick']); ?> <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '🛡️' : ''; ?>
                                     </strong>

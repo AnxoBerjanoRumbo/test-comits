@@ -31,7 +31,10 @@ $admins_activos = $stmt_a->fetchAll(PDO::FETCH_ASSOC);
         <h1 class="titulo-superadmin" style="margin: 0; font-size: 1.8rem;">Panel Superadmin</h1>
         <div style="display: flex; align-items: center; gap: 15px;">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <img src="assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" alt="Perfil" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid #ffcc00;">
+                <img src="assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" 
+                     alt="Perfil" 
+                     style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid #ffcc00;"
+                     onerror="this.src='assets/img/perfil/default.png'">
                 <span class="bienvenida" style="color: #ffcc00;"><strong><?php echo htmlspecialchars($_SESSION['nick']); ?></strong></span>
             </div>
             <a href="index.php" class="boton-volver" style="margin: 0;">Volver a la Wiki</a>
