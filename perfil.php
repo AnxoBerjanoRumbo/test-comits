@@ -26,7 +26,11 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
         <div class="logo-titulo">
             <h1>Opciones de Usuario</h1>
         </div>
-        <nav class="navegacion-usuario">
+        <nav class="navegacion-usuario" style="display: flex; align-items: center; gap: 15px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <img src="assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" alt="Perfil" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+                <span class="bienvenida"><strong><?php echo htmlspecialchars($usuario['nick']); ?></strong></span>
+            </div>
             <a href="index.php" class="btn-nav">Volver al Inicio</a>
         </nav>
     </header>

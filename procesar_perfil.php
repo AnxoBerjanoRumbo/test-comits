@@ -45,6 +45,7 @@ try {
                 $sqlImg = "UPDATE usuarios SET foto_perfil = :img WHERE id = :id";
                 $stmtImg = $conexion->prepare($sqlImg);
                 $stmtImg->execute([':img' => $nuevo_nombre, ':id' => $usuario_id]);
+                $_SESSION['foto_perfil'] = $nuevo_nombre;
             } else {
                 $conexion->rollBack();
                 header("Location: perfil.php?error=upload");

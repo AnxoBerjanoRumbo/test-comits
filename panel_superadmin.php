@@ -27,9 +27,15 @@ $admins_activos = $stmt_a->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="assets/css/estilos.css">
 </head>
 <body>
-    <header>
-        <h1 class="titulo-superadmin">Panel de Superadministrador</h1>
-        <a href="index.php" class="boton-volver">Volver a la Wiki</a>
+    <header style="display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: var(--bg-header); border-radius: var(--radius); border: 1px solid var(--border-color); margin-bottom: 30px;">
+        <h1 class="titulo-superadmin" style="margin: 0; font-size: 1.8rem;">Panel Superadmin</h1>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <img src="assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" alt="Perfil" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid #ffcc00;">
+                <span class="bienvenida" style="color: #ffcc00;"><strong><?php echo htmlspecialchars($_SESSION['nick']); ?></strong></span>
+            </div>
+            <a href="index.php" class="boton-volver" style="margin: 0;">Volver a la Wiki</a>
+        </div>
     </header>
 
     <main class="contenedor-detalle" style="max-width: 1000px;">

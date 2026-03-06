@@ -23,7 +23,7 @@ $stmt_mapas->execute();
 $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
 
 // 4. Consulta de comentarios
-$sql_comments = "SELECT c.*, u.nick, u.rol FROM comentarios c JOIN usuarios u ON c.usuario_id = u.id WHERE c.dino_id = :id ORDER BY c.id DESC";
+$sql_comments = "SELECT c.*, u.nick, u.rol, u.foto_perfil FROM comentarios c JOIN usuarios u ON c.usuario_id = u.id WHERE c.dino_id = :id ORDER BY c.id DESC";
 $stmt_comments = $conexion->prepare($sql_comments);
 $stmt_comments->bindParam(':id', $id);
 $stmt_comments->execute();
@@ -47,7 +47,8 @@ $comentarios = $stmt_comments->fetchAll(PDO::FETCH_ASSOC);
         <nav class="navegacion-usuario" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
             <a href="index.php" class="btn-nav">Volver al listado</a>
             <?php if (isset($_SESSION['nick'])): ?>
-                <a href="perfil.php" class="enlace-perfil" style="color: white; text-decoration: none;">
+                <a href="perfil.php" class="enlace-perfil" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 10px;">
+                    <img src="assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" alt="Perfil" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
                     <span class="bienvenida">Hola, <strong><?php echo htmlspecialchars($_SESSION['nick']); ?></strong></span>
                 </a>
             <?php else: ?>
@@ -126,9 +127,12 @@ endif; ?>
                     <?php foreach ($comentarios as $c): ?>
                         <div class="comentario" style="background-color: #222; margin-bottom: 15px; padding: 15px; border-radius: 8px; border-left: 4px solid <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '#ffcc00' : '#4CAF50'; ?>;">
                             <div class="comentario-header" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                <strong style="color: <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '#ffcc00' : '#fff'; ?>;">
-                                    <?php echo htmlspecialchars($c['nick']); ?> <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '🛡️' : ''; ?>
-                                </strong>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <img src="assets/img/perfil/<?php echo htmlspecialchars($c['foto_perfil'] ?? 'default.png'); ?>" alt="Avatar" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '#ffcc00' : '#4CAF50'; ?>;">
+                                    <strong style="color: <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '#ffcc00' : '#fff'; ?>;">
+                                        <?php echo htmlspecialchars($c['nick']); ?> <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '🛡️' : ''; ?>
+                                    </strong>
+                                </div>
                                 
                                 <?php if(isset($_SESSION['usuario_id']) && (($_SESSION['is_admin'] ?? false) === true || $_SESSION['usuario_id'] == $c['usuario_id'])): ?>
                                     <form action="borrar_comentario.php" method="POST" style="display: inline;">

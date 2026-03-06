@@ -21,6 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['usuario_id'] = $user['id'];
             $_SESSION['nick'] = $user['nick'];
             $_SESSION['rol'] = $user['rol'];
+            $_SESSION['foto_perfil'] = $user['foto_perfil'] ?? 'default.png';
 
             if ($user['rol'] === 'admin' || $user['rol'] === 'superadmin') {
                 $_SESSION['is_admin'] = true;
