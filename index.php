@@ -50,13 +50,19 @@ $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <nav class="navegacion-usuario">
             <?php if (isset($_SESSION['nick'])): ?>
                 <span class="bienvenida">Hola, <strong><?php echo $_SESSION['nick']; ?></strong></span>
+                
+                <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'superadmin'): ?>
+                    <a href="panel_superadmin.php" class="btn-nav" style="background-color: #ffcc00; color: #1a1a1a; border-color: #ffcc00;">👑 Panel Superadmin</a>
+                <?php
+    endif; ?>
+
                 <a href="logout.php" class="btn-nav">Cerrar Sesión</a>
             <?php
-    else: ?>
+else: ?>
                 <a href="login.php" class="btn-nav">Loguearse</a>
                 <a href="registro.php" class="btn-nav btn-registro">Registrarse</a>
             <?php
-    endif; ?>
+endif; ?>
         </nav>
     </header>
     <section class="buscador">
@@ -81,6 +87,16 @@ endif; ?>
     </section>
     <main>
         <h2>Diccionario de Criaturas</h2>
+        
+        <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
+            <div style="text-align: center; margin-bottom: 25px;">
+                <a href="admin/insertar.php" class="btn-nav btn-registro" style="padding: 10px 20px; font-size: 1.1rem; text-decoration: none; display: inline-block;">
+                    ➕ Añadir Nueva Criatura
+                </a>
+            </div>
+        <?php
+endif; ?>
+
         <div class="contenedor-dinos">
             <?php if (count($dinos) > 0): ?>
                 <?php foreach ($dinos as $dino): ?>
