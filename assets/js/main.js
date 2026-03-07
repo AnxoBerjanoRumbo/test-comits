@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // 3. Previsualizar la imagen antes de subirla (en Insertar, Editar o Perfil)
+    // 3. Previsualizar la imagen antes de subirla
     const imageInputs = document.querySelectorAll('input[type="file"][accept="image/*"]');
     imageInputs.forEach(input => {
         input.addEventListener('change', function(e) {
@@ -72,17 +72,38 @@ document.addEventListener('DOMContentLoaded', function() {
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    
                     // Ver si ya existe una preview
-                    let preview = input.parentNode.querySelector('.img-preview');
-                    if (!preview) {
+                    let preview = input.parentNode.querySelector('.img-preview-container img');
+                    let container = input.parentNode.querySelector('.img-preview-container');
+                    
+                    if (!container) {
+                        container = document.createElement('div');
+                        container.className = 'img-preview-container';
+                        input.parentNode.appendChild(container);
+                        
                         preview = document.createElement('img');
-                        preview.className = 'img-preview foto-perfil-preview';
-                        preview.style.display = 'block';
-                        preview.style.marginTop = '15px';
-                        input.parentNode.appendChild(preview);
+                        container.appendChild(preview);
                     }
+                    
+                    // Decidir qué clase aplicar según el input
+                    const isProfile = input.name.includes('perfil') || input.id.includes('perfil');
+                    preview.className = isProfile ? 'foto-perfil-preview' : 'img-preview';
+                    
+                    if (isProfile) {
+                        preview.style.width = '150px';
+                        preview.style.height = '150px';
+                        preview.style.borderRadius = '50%';
+                        preview.style.objectFit = 'cover';
+                    } else {
+                        preview.style.maxWidth = '300px';
+                        preview.style.maxHeight = '300px';
+                        preview.style.borderRadius = '8px';
+                    }
+                    
                     preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    preview.style.margin = '15px auto';
+                    preview.style.border = '2px solid var(--accent)';
                 }
                 reader.readAsDataURL(file);
             }

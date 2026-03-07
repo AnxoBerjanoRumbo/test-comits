@@ -58,7 +58,7 @@ $comentarios = $stmt_comments->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $dino['nombre']; ?> - ARK Hub</title>
-    <link rel="stylesheet" href="assets/css/estilos.css?v=1.2">
+    <link rel="stylesheet" href="assets/css/estilos.css?v=1.3">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
@@ -137,10 +137,17 @@ endif; ?>
             <h3>Comentarios y Aportes</h3>
             
             <?php if (isset($_SESSION['usuario_id'])): ?>
-                <form action="procesar_comentario.php" method="POST" class="form-ark" style="margin-bottom: 20px;">
+                <form action="procesar_comentario.php" method="POST" class="form-ark" style="margin-bottom: 25px;">
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="dino_id" value="<?php echo $dino['id']; ?>">
-                    <textarea name="texto" required placeholder="Añade tu comentario o estrategia (máx 10.000 palabras)..." rows="4" style="width: 100%; margin-bottom: 10px;"></textarea>
+                    <div style="display: flex; gap: 15px; margin-bottom: 10px;">
+                        <img src="assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" 
+                             alt="Mi Perfil" 
+                             class="avatar-comentario"
+                             style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--success-color); flex-shrink: 0;"
+                             onerror="this.src='assets/img/perfil/default.png'">
+                        <textarea name="texto" required placeholder="Añade tu comentario o estrategia (máx 10.000 palabras)..." rows="4" style="width: 100%; border-radius: var(--radius);"></textarea>
+                    </div>
                     <button type="submit" class="boton-insertar">Comentar</button>
                 </form>
             <?php else: ?>

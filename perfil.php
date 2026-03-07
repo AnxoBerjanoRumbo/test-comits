@@ -20,7 +20,7 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Perfil - ARK Hub</title>
-    <link rel="stylesheet" href="assets/css/estilos.css?v=1.2">
+    <link rel="stylesheet" href="assets/css/estilos.css?v=1.3">
 </head>
 <body>
     <header class="header-principal">
@@ -32,6 +32,7 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
                 <img src="assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" 
                      alt="Perfil" 
                      class="perfil-avatar-nav"
+                     style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);"
                      onerror="this.src='assets/img/perfil/default.png'">
                 <span class="bienvenida"><strong><?php echo htmlspecialchars($usuario['nick']); ?></strong></span>
             </div>
@@ -61,6 +62,7 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
             <img src="assets/img/perfil/<?php echo htmlspecialchars($usuario['foto_perfil'] ?? 'default.png'); ?>" 
                  alt="Foto de perfil" 
                  class="perfil-foto-main"
+                 style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid var(--accent); margin: 0 auto 15px auto; display: block;"
                  onerror="this.src='assets/img/perfil/default.png'">
             <p><strong><?php echo htmlspecialchars($usuario['nick']); ?></strong> 
                <span style="color: var(--accent);">(<?php echo htmlspecialchars($usuario['rol']); ?>)</span>

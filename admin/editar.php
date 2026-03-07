@@ -44,7 +44,7 @@ $mapas_seleccionados = $stmt_dm->fetchAll(PDO::FETCH_COLUMN);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Criatura</title>
-    <link rel="stylesheet" href="../assets/css/estilos.css?v=1.2">
+    <link rel="stylesheet" href="../assets/css/estilos.css?v=1.3">
 </head>
 <body class="admin-body">
     <header style="display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: var(--bg-header); border-radius: var(--radius); border: 1px solid var(--border-color); margin-bottom: 30px;">

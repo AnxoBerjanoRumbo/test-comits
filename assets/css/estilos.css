@@ -21,6 +21,12 @@
     box-sizing: border-box;
 }
 
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
 body {
     font-family: 'Outfit', sans-serif;
     background-color: var(--bg-main);
@@ -734,6 +740,17 @@ header h1 {
     margin-bottom: 20px;
     box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
     transition: all 0.3s ease;
+    display: block;
+}
+
+.img-preview {
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: var(--radius);
+    object-fit: contain;
+    border: 2px solid var(--border-color);
+    margin: 15px 0;
+    box-shadow: var(--shadow);
 }
 
 .foto-perfil-preview:hover {
