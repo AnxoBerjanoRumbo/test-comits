@@ -23,10 +23,31 @@ $stmt_mapas->bindParam(':id', $id);
 $stmt_mapas->execute();
 $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
 
-// 4. Consulta de comentarios
-$sql_comments = "SELECT c.*, u.nick, u.rol, u.foto_perfil FROM comentarios c JOIN usuarios u ON c.usuario_id = u.id WHERE c.dino_id = :id ORDER BY c.id DESC";
+// 4. Paginación de Comentarios
+$comentarios_por_pagina = 10;
+$pagina_actual = isset($_GET['p']) && is_numeric($_GET['p']) ? (int)$_GET['p'] : 1;
+if ($pagina_actual < 1) $pagina_actual = 1;
+$offset = ($pagina_actual - 1) * $comentarios_por_pagina;
+
+// 4.1. Contar total de comentarios para este dino
+$sql_count = "SELECT COUNT(*) FROM comentarios WHERE dino_id = :id";
+$stmt_count = $conexion->prepare($sql_count);
+$stmt_count->bindParam(':id', $id);
+$stmt_count->execute();
+$total_comentarios = $stmt_count->fetchColumn();
+$total_paginas = ceil($total_comentarios / $comentarios_por_pagina);
+
+// 4.2. Consulta de comentarios con LIMIT y OFFSET
+$sql_comments = "SELECT c.*, u.nick, u.rol, u.foto_perfil 
+                 FROM comentarios c 
+                 JOIN usuarios u ON c.usuario_id = u.id 
+                 WHERE c.dino_id = :id 
+                 ORDER BY c.id DESC 
+                 LIMIT :limit OFFSET :offset";
 $stmt_comments = $conexion->prepare($sql_comments);
-$stmt_comments->bindParam(':id', $id);
+$stmt_comments->bindParam(':id', $id, PDO::PARAM_INT);
+$stmt_comments->bindParam(':limit', $comentarios_por_pagina, PDO::PARAM_INT);
+$stmt_comments->bindParam(':offset', $offset, PDO::PARAM_INT);
 $stmt_comments->execute();
 $comentarios = $stmt_comments->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -129,14 +150,14 @@ endif; ?>
             <div class="comentarios-lista">
                 <?php if (count($comentarios) > 0): ?>
                     <?php foreach ($comentarios as $c): ?>
-                        <div class="comentario" style="background-color: #222; margin-bottom: 15px; padding: 15px; border-radius: 8px; border-left: 4px solid <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '#ffcc00' : '#4CAF50'; ?>;">
-                            <div class="comentario-header" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <div class="comentario <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? 'comentario-admin' : ''; ?>">
+                            <div class="comentario-header">
                                 <div style="display: flex; align-items: center; gap: 10px;">
                                     <img src="assets/img/perfil/<?php echo htmlspecialchars($c['foto_perfil'] ?? 'default.png'); ?>" 
                                          alt="Avatar" 
-                                         style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '#ffcc00' : '#4CAF50'; ?>;"
+                                         class="avatar-comentario"
                                          onerror="this.src='assets/img/perfil/default.png'">
-                                    <strong style="color: <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '#ffcc00' : '#fff'; ?>;">
+                                    <strong class="comentario-nick <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? 'nick-admin' : ''; ?>">
                                         <?php echo htmlspecialchars($c['nick']); ?> <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '🛡️' : ''; ?>
                                     </strong>
                                 </div>
@@ -146,13 +167,32 @@ endif; ?>
                                         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                         <input type="hidden" name="comentario_id" value="<?php echo $c['id']; ?>">
                                         <input type="hidden" name="dino_id" value="<?php echo $dino['id']; ?>">
-                                        <button type="submit" onclick="return confirm('¿Borrar este comentario?');" style="background: none; border: none; color: #ff5555; cursor: pointer; font-size: 0.9em; padding: 0;">Eliminar</button>
+                                        <button type="submit" onclick="return confirm('¿Borrar este comentario?');" class="btn-borrar-comentario">Eliminar</button>
                                     </form>
                                 <?php endif; ?>
                             </div>
-                            <p style="white-space: pre-wrap; font-size: 0.95em; color: #ddd; margin: 0;"><?php echo nl2br(htmlspecialchars($c['texto'])); ?></p>
+                            <p class="comentario-texto"><?php echo nl2br(htmlspecialchars($c['texto'])); ?></p>
                         </div>
                     <?php endforeach; ?>
+
+                    <?php if ($total_paginas > 1): ?>
+                        <div class="paginacion-comentarios" style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+                            <?php if ($pagina_actual > 1): ?>
+                                <a href="detalle.php?id=<?php echo $id; ?>&p=<?php echo $pagina_actual - 1; ?>" class="btn-pag">« Anterior</a>
+                            <?php endif; ?>
+
+                            <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                                <a href="detalle.php?id=<?php echo $id; ?>&p=<?php echo $i; ?>" class="btn-pag <?php echo ($i === $pagina_actual) ? 'active' : ''; ?>">
+                                    <?php echo $i; ?>
+                                </a>
+                            <?php endfor; ?>
+
+                            <?php if ($pagina_actual < $total_paginas): ?>
+                                <a href="detalle.php?id=<?php echo $id; ?>&p=<?php echo $pagina_actual + 1; ?>" class="btn-pag">Siguiente »</a>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+
                 <?php else: ?>
                     <p class="sin-datos" style="text-align: center; color: #888;">No hay comentarios todavía. ¡Sé el primero en aportar info!</p>
                 <?php endif; ?>

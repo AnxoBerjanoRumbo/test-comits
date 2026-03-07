@@ -1,34 +1,46 @@
 <?php
 session_start();
-if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'superadmin') {
-    header("Location: index.php");
+if (!isset($_SESSION['usuario_id']) || $_SERVER["REQUEST_METHOD"] !== "POST") {
+    header("Location: login.php");
+    exit();
+}
+include 'config/db.php';
+
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die("Error de validación CSRF.");
+}
+
+$usuario_id = $_SESSION['usuario_id'];
+$nueva_password = $_POST['nueva_password'];
+$confirmar_password = $_POST['confirmar_password'];
+
+if (empty($nueva_password)) {
+    header("Location: perfil.php?error=vacio");
     exit();
 }
 
-include 'config/db.php';
+if ($nueva_password !== $confirmar_password) {
+    header("Location: perfil.php?error=pass_no_coincide");
+    exit();
+}
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id_usuario = $_POST['id_usuario'];
-    $nueva_password = $_POST['nueva_password'];
+if (strlen($nueva_password) < 4) {
+    header("Location: perfil.php?error=pass_corta");
+    exit();
+}
 
-    try {
-        $sql = "UPDATE usuarios SET password = :password WHERE id = :id AND rol = 'admin'";
-        $stmt = $conexion->prepare($sql);
-        $stmt->execute([
-            ':password' => password_hash($nueva_password, PASSWORD_DEFAULT),
-            ':id' => $id_usuario
-        ]);
+try {
+    $hash = password_hash($nueva_password, PASSWORD_DEFAULT);
+    $sqlPass = "UPDATE usuarios SET password = :p WHERE id = :id";
+    $stmtPass = $conexion->prepare($sqlPass);
+    $stmtPass->execute([':p' => $hash, ':id' => $usuario_id]);
 
-        header("Location: panel_superadmin.php?status=actualizado");
-        exit();
+    header("Location: perfil.php?status=success");
+    exit();
 
-    } catch (PDOException $e) {
-        error_log("Error al actualizar contraseña: " . $e->getMessage());
-        header("Location: panel_superadmin.php?error=interno");
-        exit();
-    }
-} else {
-    header("Location: panel_superadmin.php");
+} catch (PDOException $e) {
+    error_log("Error al cambiar contraseña: " . $e->getMessage());
+    header("Location: perfil.php?error=db");
     exit();
 }
 ?>

@@ -161,14 +161,14 @@ endif; ?>
         </div>
 
         <?php if ($total_paginas > 1): ?>
-        <div class="paginacion" style="margin-top: 30px; text-align: center;">
+        <div class="paginacion" style="margin-top: 40px; text-align: center;">
             <?php
             $query_params = $_GET;
             for ($i = 1; $i <= $total_paginas; $i++):
                 $query_params['p'] = $i;
                 $link = 'index.php?' . http_build_query($query_params);
             ?>
-                <a href="<?php echo htmlspecialchars($link); ?>" class="btn-nav <?php echo ($i == $pagina_actual) ? 'btn-registro' : ''; ?>" style="margin: 0 5px; padding: 5px 10px;">
+                <a href="<?php echo htmlspecialchars($link); ?>" class="btn-pag <?php echo ($i == $pagina_actual) ? 'active' : ''; ?>">
                     <?php echo $i; ?>
                 </a>
             <?php endfor; ?>

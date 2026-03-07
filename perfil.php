@@ -27,11 +27,11 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
         <div class="logo-titulo">
             <h1>Opciones de Usuario</h1>
         </div>
-        <nav class="navegacion-usuario" style="display: flex; align-items: center; gap: 15px;">
+        <nav class="perfil-nav">
             <div style="display: flex; align-items: center; gap: 10px;">
                 <img src="assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" 
                      alt="Perfil" 
-                     style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);"
+                     class="perfil-avatar-nav"
                      onerror="this.src='assets/img/perfil/default.png'">
                 <span class="bienvenida"><strong><?php echo htmlspecialchars($usuario['nick']); ?></strong></span>
             </div>
@@ -57,32 +57,54 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
             </div>
         <?php endif; ?>
 
-        <div style="text-align: center; margin-bottom: 30px;">
+        <div class="perfil-container">
             <img src="assets/img/perfil/<?php echo htmlspecialchars($usuario['foto_perfil'] ?? 'default.png'); ?>" 
                  alt="Foto de perfil" 
-                 style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid #ffcc00; margin-bottom: 10px;"
+                 class="perfil-foto-main"
                  onerror="this.src='assets/img/perfil/default.png'">
-            <p><strong><?php echo htmlspecialchars($usuario['nick']); ?></strong> (<?php echo htmlspecialchars($usuario['rol']); ?>)</p>
+            <p><strong><?php echo htmlspecialchars($usuario['nick']); ?></strong> 
+               <span style="color: var(--accent);">(<?php echo htmlspecialchars($usuario['rol']); ?>)</span>
+            </p>
         </div>
 
-        <form action="procesar_perfil.php" method="POST" enctype="multipart/form-data" class="form-ark">
+        <!-- Formulario para la Foto de Perfil (Auto-envío) -->
+        <form id="form-foto" action="procesar_perfil.php" method="POST" enctype="multipart/form-data" class="form-ark">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
             <div class="campo">
-                <label>Cambiar foto de perfil (Opcional):</label>
-                <input type="file" name="foto_perfil" accept="image/*">
+                <label>Cambiar foto de perfil:</label>
+                <input type="file" name="foto_perfil" id="foto_perfil" accept="image/*" style="display: none;">
+                <button type="button" class="boton-insertar" onclick="document.getElementById('foto_perfil').click()">Seleccionar Nueva Imagen</button>
+                <small style="display: block; margin-top: 10px; color: #aaa;">La foto se actualizará automáticamente al seleccionarla.</small>
             </div>
+        </form>
 
+        <hr style="border: 0; height: 1px; background: #333; margin: 30px 0;">
+
+        <!-- Formulario para la Contraseña -->
+        <form action="procesar_password.php" method="POST" class="form-ark">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+            <h3>Cambiar Contraseña</h3>
             <div class="campo">
-                <label>Nueva contraseña (Opcional):</label>
-                <input type="password" name="nueva_password" placeholder="Solo si deseas cambiarla">
+                <label>Nueva contraseña:</label>
+                <input type="password" name="nueva_password" placeholder="Mínimo 4 caracteres" required>
             </div>
 
             <div class="campo">
                 <label>Confirmar nueva contraseña:</label>
-                <input type="password" name="confirmar_password" placeholder="Repite la nueva contraseña">
+                <input type="password" name="confirmar_password" placeholder="Repite la nueva contraseña" required>
             </div>
 
-            <button type="submit" class="boton-insertar">Guardar Perfil</button>
+            <button type="submit" class="boton-insertar">Confirmar Cambio de Contraseña</button>
         </form>
+
+        <script>
+            // Auto-envío al seleccionar archivo
+            document.getElementById('foto_perfil').addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    document.getElementById('form-foto').submit();
+                }
+            });
+        </script>
     </main>
     <script src="assets/js/main.js"></script>
 </body>

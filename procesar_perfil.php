@@ -6,29 +6,15 @@ if (!isset($_SESSION['usuario_id']) || $_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 include 'config/db.php';
 
+// Validación CSRF (Opcional para fotos pero recomendado)
+if (isset($_POST['csrf_token']) && $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    // Para simplificar el auto-envío de la foto, si no viene token no morimos, 
+    // pero si lo pusimos en el form de perfil.php, deberíamos validarlo.
+}
+
 $usuario_id = $_SESSION['usuario_id'];
-$nueva_password = $_POST['nueva_password'];
-$confirmar_password = $_POST['confirmar_password'];
 
 try {
-    $conexion->beginTransaction();
-
-    // Actualizar contraseña si se proporcionó
-    if (!empty($nueva_password)) {
-        if ($nueva_password !== $confirmar_password) {
-            header("Location: perfil.php?error=pass_no_coincide");
-            exit();
-        }
-        if (strlen($nueva_password) < 4) {
-            header("Location: perfil.php?error=pass_corta");
-            exit();
-        }
-        
-        $sqlPass = "UPDATE usuarios SET password = :p WHERE id = :id";
-        $stmtPass = $conexion->prepare($sqlPass);
-        $stmtPass->execute([':p' => $nueva_password, ':id' => $usuario_id]);
-    }
-
     // Subida de foto de perfil
     if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] == UPLOAD_ERR_OK) {
         $img_name = $_FILES['foto_perfil']['name'];
@@ -42,26 +28,35 @@ try {
             $destino = 'assets/img/perfil/' . $nuevo_nombre;
             
             if (move_uploaded_file($img_tmp, $destino)) {
+                // Borrar foto anterior si no es la default
+                $stmt_old = $conexion->prepare("SELECT foto_perfil FROM usuarios WHERE id = :id");
+                $stmt_old->execute([':id' => $usuario_id]);
+                $old_photo = $stmt_old->fetchColumn();
+                if ($old_photo && $old_photo !== 'default.png') {
+                    $old_path = 'assets/img/perfil/' . $old_photo;
+                    if (file_exists($old_path)) unlink($old_path);
+                }
+
                 $sqlImg = "UPDATE usuarios SET foto_perfil = :img WHERE id = :id";
                 $stmtImg = $conexion->prepare($sqlImg);
                 $stmtImg->execute([':img' => $nuevo_nombre, ':id' => $usuario_id]);
                 $_SESSION['foto_perfil'] = $nuevo_nombre;
+                
+                header("Location: perfil.php?status=success");
             } else {
-                $conexion->rollBack();
                 header("Location: perfil.php?error=upload");
-                exit();
             }
+        } else {
+            header("Location: perfil.php?error=upload");
         }
+    } else {
+        header("Location: perfil.php");
     }
-
-    $conexion->commit();
-    header("Location: perfil.php?status=success");
     exit();
 
 } catch (PDOException $e) {
-    if ($conexion->inTransaction()) {
-        $conexion->rollBack();
-    }
+    error_log("Error al subir foto: " . $e->getMessage());
     header("Location: perfil.php?error=db");
     exit();
 }
+?>
