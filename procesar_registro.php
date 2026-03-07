@@ -5,6 +5,12 @@ include 'config/db.php'; // Asegúrate de que la ruta a tu conexión es correcta
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nick = trim($_POST['nick']);
     $password_introducida = $_POST['password'];
+    $confirm_password_introducida = $_POST['confirm_password'];
+
+    if ($password_introducida !== $confirm_password_introducida) {
+        header("Location: registro.php?error=pass_mismatch");
+        exit();
+    }
 
     // 1. Lógica de Roles y Contraseñas
     $rol = 'usuario';

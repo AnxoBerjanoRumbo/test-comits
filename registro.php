@@ -28,8 +28,13 @@ if (isset($_SESSION['nick'])) {
             <div class="alerta-error" style="color: orange; border-color: orange; background: rgba(255,165,0,0.1);">
                 ⚠️ <strong>Solicitud de Admin registrada.</strong> Tu cuenta está bloqueada. El Superadministrador (Anxo) debe asignarte una contraseña para poder acceder.
             </div>
-        <?php
-endif; ?>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['error']) && $_GET['error'] == 'pass_mismatch'): ?>
+            <div class="alerta-error">
+                ❌ Las contraseñas no coinciden. Inténtalo de nuevo.
+            </div>
+        <?php endif; ?>
 
         <form action="procesar_registro.php" method="POST" class="form-ark">
             <div class="campo">
@@ -40,11 +45,42 @@ endif; ?>
 
             <div class="campo">
                 <label>Contraseña (solo usuarios normales):</label>
-                <input type="password" name="password" required placeholder="••••••••">
+                <input type="password" name="password" required placeholder="••••••••" id="pass">
+            </div>
+
+            <div class="campo">
+                <label>Confirmar Contraseña:</label>
+                <input type="password" name="confirm_password" required placeholder="••••••••" id="confirm_pass">
+                <small id="error_pass" style="color: #ff4444; display: none; margin-top: 5px;">Las contraseñas no coinciden.</small>
             </div>
 
             <button type="submit" class="boton-insertar">Registrarse</button>
         </form>
     </main>
+    <script>
+        const pass = document.getElementById('pass');
+        const confirm_pass = document.getElementById('confirm_pass');
+        const error_pass = document.getElementById('error_pass');
+        const form = document.querySelector('.form-ark');
+
+        function checkPass() {
+            if(pass.value !== confirm_pass.value && confirm_pass.value !== '') {
+                error_pass.style.display = 'block';
+                return false;
+            } else {
+                error_pass.style.display = 'none';
+                return true;
+            }
+        }
+
+        pass.addEventListener('input', checkPass);
+        confirm_pass.addEventListener('input', checkPass);
+
+        form.addEventListener('submit', function(e) {
+            if(!checkPass()) {
+                e.preventDefault();
+            }
+        });
+    </script>
 </body>
 </html>
