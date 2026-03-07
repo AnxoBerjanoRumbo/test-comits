@@ -1,0 +1,32 @@
+<?php
+session_start();
+if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'superadmin') {
+    header("Location: index.php");
+    exit();
+}
+
+include 'config/db.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $id_usuario = $_POST['id_usuario'];
+    $nueva_password = $_POST['nueva_password'];
+
+    try {
+        $sql = "UPDATE usuarios SET password = :password WHERE id = :id AND rol = 'admin'";
+        $stmt = $conexion->prepare($sql);
+        $stmt->execute([
+            ':password' => $nueva_password,
+            ':id' => $id_usuario
+        ]);
+
+        header("Location: panel_superadmin.php?status=actualizado");
+        exit();
+
+    } catch (PDOException $e) {
+        echo "Error al actualizar contraseña: " . $e->getMessage();
+    }
+} else {
+    header("Location: panel_superadmin.php");
+    exit();
+}
+?>

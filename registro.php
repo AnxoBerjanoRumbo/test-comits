@@ -36,6 +36,12 @@ if (isset($_SESSION['nick'])) {
             </div>
         <?php endif; ?>
 
+        <?php if (isset($_GET['error']) && $_GET['error'] == 'admin_invalido'): ?>
+            <div class="alerta-error">
+                ❌ Si deseas ser administrador, tu nick debe tener el formato exacto de 'admin' seguido de un número del 0 al 99 (ej: admin42). No puedes usar la palabra 'admin' de otra forma.
+            </div>
+        <?php endif; ?>
+
         <form action="procesar_registro.php" method="POST" class="form-ark">
             <div class="campo">
                 <label>Nick de Usuario:</label>
