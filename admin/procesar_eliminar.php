@@ -18,12 +18,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
     try {
         $conexion->beginTransaction();
 
-        // 1. Primero borramos las relaciones en la tabla intermedia
+        // 1. Borramos los comentarios asociados
+        $sqlComent = "DELETE FROM comentarios WHERE dino_id = :id";
+        $stmtComent = $conexion->prepare($sqlComent);
+        $stmtComent->execute([':id' => $id]);
+
+        // 2. Borramos las relaciones en la tabla intermedia de mapas
         $sqlMapas = "DELETE FROM dino_mapas WHERE dino_id = :id";
         $stmtMapas = $conexion->prepare($sqlMapas);
         $stmtMapas->execute([':id' => $id]);
 
-        // 2. Luego borramos el dinosaurio de la tabla principal
+        // 3. Finalmente, borramos el dinosaurio de la tabla principal
         $sqlDino = "DELETE FROM dinosaurios WHERE id = :id";
         $stmtDino = $conexion->prepare($sqlDino);
         $stmtDino->execute([':id' => $id]);
