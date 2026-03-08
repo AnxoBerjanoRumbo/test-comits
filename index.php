@@ -22,7 +22,7 @@ if ($dieta != '') {
 }
 
 // Paginación
-$por_pagina = 10;
+$por_pagina = 9;
 $pagina_actual = isset($_GET['p']) && is_numeric($_GET['p']) ? (int)$_GET['p'] : 1;
 if ($pagina_actual < 1) $pagina_actual = 1;
 $offset = ($pagina_actual - 1) * $por_pagina;
