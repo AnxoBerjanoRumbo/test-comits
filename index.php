@@ -146,8 +146,6 @@ endif; ?>
                                 <?php echo htmlspecialchars($dino['nombre']); ?>
                             </a>
                         </h3>
-                        <p><strong>Especie:</strong> <?php echo htmlspecialchars($dino['especie']); ?></p>
-                        <p><strong>Dieta:</strong> <?php echo htmlspecialchars($dino['dieta']); ?></p>
                     </div>
                 <?php
     endforeach; ?>
