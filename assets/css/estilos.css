@@ -196,21 +196,23 @@ header h1 {
 /* ------------------- TARJETAS CREADURAS (DINOS) ------------------- */
 .contenedor-dinos {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
-    margin-top: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
 }
 
 .dino-card {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
-    padding: 25px;
+    padding: 0;
     border-radius: var(--radius);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s, border-color 0.3s;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s, border-color 0.4s;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
     position: relative;
+    overflow: hidden;
+    height: 100%;
 }
 
 .dino-card:hover {
@@ -220,8 +222,13 @@ header h1 {
 }
 
 .dino-card h3 {
-    margin: 0 0 15px 0;
-    font-size: 1.5rem;
+    margin: 0;
+    padding: 20px;
+    font-size: 1.6rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    width: 100%;
+    margin-top: auto;
+    text-align: center;
 }
 
 .enlace-dino {
@@ -790,17 +797,16 @@ header h1 {
 
 .dino-img-container {
     width: 100%;
-    height: 200px;
+    height: 380px;
     overflow: hidden;
-    border-radius: 8px;
-    margin-bottom: 15px;
+    position: relative;
 }
 
 .dino-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease;
+    transition: transform 0.6s ease;
 }
 
 .dino-card:hover .dino-img {
