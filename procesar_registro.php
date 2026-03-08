@@ -31,16 +31,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     try {
         if ($rol === 'admin') {
-            // Para solicitudes de admin: el nick adminX puede estar ocupado por un ex-admin
-            // (alguien que fue rechazado previamente y cuyo slot no fue liberado, o que fue
-            // revocado). Distinguimos tres situaciones:
-            //   a) Nick existe como admin activo o pendiente  → bloqueado, no se puede reusar
-            //   b) Nick existe como usuario normal (ex-admin) → slot disponible, lo reciclamos
-            //   c) El email ya está en uso por cualquier usuario → bloqueado
             $checkEmail = $conexion->prepare("SELECT COUNT(*) FROM usuarios WHERE email = :email");
             $checkEmail->execute([':email' => $email]);
             if ($checkEmail->fetchColumn() > 0) {
-                header("Location: registro.php?error=duplicado");
+                header("Location: registro.php?error=email_en_uso");
                 exit();
             }
 
@@ -51,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($existente) {
                 if ($existente['rol'] === 'admin') {
                     // Ya hay un admin activo o pendiente con ese nick
-                    header("Location: registro.php?error=duplicado");
+                    header("Location: registro.php?error=nick_admin_activo");
                     exit();
                 }
                 // El nick existe como usuario normal (slot de admin previamente revocado):
@@ -61,7 +55,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                               recuperar_token = NULL, recuperar_expira = NULL WHERE id = :id";
                 $stmtU = $conexion->prepare($sqlUpdate);
                 $stmtU->execute([':email' => $email, ':id' => $existente['id']]);
-            } else {
+            }
+            else {
                 // Nick libre: inserción normal
                 $sqlInsert = "INSERT INTO usuarios (nick, email, password, rol) VALUES (:nick, :email, '', 'admin')";
                 $stmtI = $conexion->prepare($sqlInsert);
@@ -71,22 +66,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: registro.php?status=espera");
             exit();
 
-        } else {
+        }
+        else {
             // Registro de usuario normal: comprobación estándar de nick Y email
-            $check = $conexion->prepare("SELECT COUNT(*) FROM usuarios WHERE nick = :nick OR email = :email");
+            $check = $conexion->prepare("SELECT id, nick, email FROM usuarios WHERE nick = :nick OR email = :email LIMIT 1");
             $check->execute([':nick' => $nick, ':email' => $email]);
-            if ($check->fetchColumn() > 0) {
-                header("Location: registro.php?error=duplicado");
+            $conflicto = $check->fetch(PDO::FETCH_ASSOC);
+            if ($conflicto) {
+                if ($conflicto['email'] === $email) {
+                    header("Location: registro.php?error=email_en_uso");
+                } else {
+                    header("Location: registro.php?error=nick_en_uso");
+                }
                 exit();
             }
 
             $sql = "INSERT INTO usuarios (nick, email, password, rol) VALUES (:nick, :email, :password, :rol)";
             $stmt = $conexion->prepare($sql);
             $stmt->execute([
-                ':nick'     => $nick,
-                ':email'    => $email,
+                ':nick' => $nick,
+                ':email' => $email,
                 ':password' => $password_final,
-                ':rol'      => $rol
+                ':rol' => $rol
             ]);
             header("Location: login.php?status=registrado");
             exit();

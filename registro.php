@@ -36,6 +36,30 @@ if (isset($_SESSION['nick'])) {
             </div>
         <?php endif; ?>
 
+        <?php if (isset($_GET['error']) && $_GET['error'] == 'email_en_uso'): ?>
+            <div class="alerta-error">
+                Este <strong>correo electrónico</strong> ya está registrado. Intenta con otro o recupera tu contraseña.
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['error']) && $_GET['error'] == 'nick_en_uso'): ?>
+            <div class="alerta-error">
+                El <strong>nick</strong> ya está en uso por otro superviviente.
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['error']) && $_GET['error'] == 'nick_admin_activo'): ?>
+            <div class="alerta-error" style="color: orange; border-color: orange; background: rgba(255,165,0,0.1);">
+                Ya existe un <strong>administrador</strong> activo o una solicitud pendiente con este nick exacto.
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['error']) && $_GET['error'] == 'interno'): ?>
+            <div class="alerta-error">
+                Hubo un error interno en el servidor. Por favor, inténtalo de nuevo más tarde.
+            </div>
+        <?php endif; ?>
+
         <?php if (isset($_GET['error']) && $_GET['error'] == 'admin_invalido'): ?>
             <div class="alerta-error">
                 Si deseas ser administrador, tu nick debe tener el formato exacto de 'admin' seguido de un número del 0 al 99 (ej: admin42). No puedes usar la palabra 'admin' de otra forma.
