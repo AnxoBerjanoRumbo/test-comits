@@ -30,33 +30,67 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     try {
-        // 2. Comprobamos que el nick o el email no existan ya
-        $check = $conexion->prepare("SELECT COUNT(*) FROM usuarios WHERE nick = :nick OR email = :email");
-        $check->execute([':nick' => $nick, ':email' => $email]);
+        if ($rol === 'admin') {
+            // Para solicitudes de admin: el nick adminX puede estar ocupado por un ex-admin
+            // (alguien que fue rechazado previamente y cuyo slot no fue liberado, o que fue
+            // revocado). Distinguimos tres situaciones:
+            //   a) Nick existe como admin activo o pendiente  → bloqueado, no se puede reusar
+            //   b) Nick existe como usuario normal (ex-admin) → slot disponible, lo reciclamos
+            //   c) El email ya está en uso por cualquier usuario → bloqueado
+            $checkEmail = $conexion->prepare("SELECT COUNT(*) FROM usuarios WHERE email = :email");
+            $checkEmail->execute([':email' => $email]);
+            if ($checkEmail->fetchColumn() > 0) {
+                header("Location: registro.php?error=duplicado");
+                exit();
+            }
 
-        if ($check->fetchColumn() > 0) {
-            header("Location: registro.php?error=duplicado");
+            $checkNick = $conexion->prepare("SELECT id, rol FROM usuarios WHERE nick = :nick");
+            $checkNick->execute([':nick' => $nick]);
+            $existente = $checkNick->fetch(PDO::FETCH_ASSOC);
+
+            if ($existente) {
+                if ($existente['rol'] === 'admin') {
+                    // Ya hay un admin activo o pendiente con ese nick
+                    header("Location: registro.php?error=duplicado");
+                    exit();
+                }
+                // El nick existe como usuario normal (slot de admin previamente revocado):
+                // reciclamos el registro en lugar de insertar uno nuevo.
+                $sqlUpdate = "UPDATE usuarios SET email = :email, password = '', rol = 'admin',
+                              permiso_insertar_dino = 0, permiso_eliminar_comentario = 0,
+                              recuperar_token = NULL, recuperar_expira = NULL WHERE id = :id";
+                $stmtU = $conexion->prepare($sqlUpdate);
+                $stmtU->execute([':email' => $email, ':id' => $existente['id']]);
+            } else {
+                // Nick libre: inserción normal
+                $sqlInsert = "INSERT INTO usuarios (nick, email, password, rol) VALUES (:nick, :email, '', 'admin')";
+                $stmtI = $conexion->prepare($sqlInsert);
+                $stmtI->execute([':nick' => $nick, ':email' => $email]);
+            }
+
+            header("Location: registro.php?status=espera");
+            exit();
+
+        } else {
+            // Registro de usuario normal: comprobación estándar de nick Y email
+            $check = $conexion->prepare("SELECT COUNT(*) FROM usuarios WHERE nick = :nick OR email = :email");
+            $check->execute([':nick' => $nick, ':email' => $email]);
+            if ($check->fetchColumn() > 0) {
+                header("Location: registro.php?error=duplicado");
+                exit();
+            }
+
+            $sql = "INSERT INTO usuarios (nick, email, password, rol) VALUES (:nick, :email, :password, :rol)";
+            $stmt = $conexion->prepare($sql);
+            $stmt->execute([
+                ':nick'     => $nick,
+                ':email'    => $email,
+                ':password' => $password_final,
+                ':rol'      => $rol
+            ]);
+            header("Location: login.php?status=registrado");
             exit();
         }
-
-        // 3. Insertamos en la base de datos
-        $sql = "INSERT INTO usuarios (nick, email, password, rol) VALUES (:nick, :email, :password, :rol)";
-        $stmt = $conexion->prepare($sql);
-        $stmt->execute([
-            ':nick' => $nick,
-            ':email' => $email,
-            ':password' => $password_final,
-            ':rol' => $rol
-        ]);
-
-        // 4. Redirecciones según el rol
-        if ($rol === 'admin') {
-            header("Location: registro.php?status=espera");
-        }
-        else {
-            header("Location: login.php?status=registrado");
-        }
-        exit();
 
     }
     catch (PDOException $e) {

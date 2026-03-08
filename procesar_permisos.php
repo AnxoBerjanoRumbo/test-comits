@@ -27,7 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: panel_superadmin.php?status=permisos_actualizados");
         } 
         elseif ($accion === 'quitar_admin') {
-            $sql = "UPDATE usuarios SET rol = 'usuario', permiso_insertar_dino = 0, permiso_eliminar_comentario = 0 WHERE id = :id";
+            // Al revocar admin, liberamos el nick de admin (ej: admin42) renombrándolo
+            // para que otro usuario pueda volver a solicitar ese slot de admin en el futuro.
+            $sql = "UPDATE usuarios SET rol = 'usuario', nick = CONCAT('usuario_', id), permiso_insertar_dino = 0, permiso_eliminar_comentario = 0 WHERE id = :id";
             $stmt = $conexion->prepare($sql);
             $stmt->execute([':id' => $usuario_id]);
             

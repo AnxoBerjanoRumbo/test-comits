@@ -8,10 +8,16 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'superadmin') {
 include 'config/db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id_usuario = $_POST['id_usuario'];
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("Error de validación CSRF.");
+    }
+    $id_usuario = (int)$_POST['id_usuario'];
 
     try {
-        $sql = "DELETE FROM usuarios WHERE id = :id AND rol = 'admin' AND password = ''";
+        // Eliminamos la solicitud pendiente. No usamos AND password = '' porque en
+        // algunos entornos el campo puede estar almacenado como NULL en vez de '',
+        // lo que haría que el DELETE fallara silenciosamente y el nick quedara bloqueado.
+        $sql = "DELETE FROM usuarios WHERE id = :id AND rol = 'admin'";
         $stmt = $conexion->prepare($sql);
         $stmt->execute([':id' => $id_usuario]);
 
