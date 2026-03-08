@@ -64,7 +64,7 @@ $admins_activos = $stmt_a->fetchAll(PDO::FETCH_ASSOC);
                             <p class="admin-estado">Esperando activación de clave</p>
                             
                             <div class="admin-actions">
-                                <form action="procesar_password.php" method="POST" class="form-activar">
+                                <form action="procesar_activar_admin.php" method="POST" class="form-activar">
                                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                     <input type="hidden" name="id_usuario" value="<?php echo $admin['id']; ?>">
                                     <input type="text" name="nueva_password" required placeholder="Asignar contraseña..." class="input-password">
