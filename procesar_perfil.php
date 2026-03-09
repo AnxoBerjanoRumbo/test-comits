@@ -23,25 +23,30 @@ try {
         $validas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
         if (in_array($extension, $validas)) {
-            $nuevo_nombre = 'user_' . $usuario_id . '_' . uniqid() . '.' . $extension;
-            $destino = 'assets/img/perfil/' . $nuevo_nombre;
-            
-            if (move_uploaded_file($img_tmp, $destino)) {
-                // Borrar foto anterior si no es la default
-                $stmt_old = $conexion->prepare("SELECT foto_perfil FROM usuarios WHERE id = :id");
-                $stmt_old->execute([':id' => $usuario_id]);
-                $old_photo = $stmt_old->fetchColumn();
-                if ($old_photo && $old_photo !== 'default.png') {
-                    $old_path = 'assets/img/perfil/' . $old_photo;
-                    if (file_exists($old_path)) unlink($old_path);
-                }
-
-                $sqlImg = "UPDATE usuarios SET foto_perfil = :img WHERE id = :id";
-                $stmtImg = $conexion->prepare($sqlImg);
-                $stmtImg->execute([':img' => $nuevo_nombre, ':id' => $usuario_id]);
-                $_SESSION['foto_perfil'] = $nuevo_nombre;
+            // Verificar si es una imagen real
+            if (@getimagesize($img_tmp)) {
+                $nuevo_nombre = 'user_' . $usuario_id . '_' . uniqid() . '.' . $extension;
+                $destino = 'assets/img/perfil/' . $nuevo_nombre;
                 
-                header("Location: perfil.php?status=success");
+                if (move_uploaded_file($img_tmp, $destino)) {
+                    // Borrar foto anterior si no es la default
+                    $stmt_old = $conexion->prepare("SELECT foto_perfil FROM usuarios WHERE id = :id");
+                    $stmt_old->execute([':id' => $usuario_id]);
+                    $old_photo = $stmt_old->fetchColumn();
+                    if ($old_photo && $old_photo !== 'default.png') {
+                        $old_path = 'assets/img/perfil/' . $old_photo;
+                        if (file_exists($old_path)) unlink($old_path);
+                    }
+
+                    $sqlImg = "UPDATE usuarios SET foto_perfil = :img WHERE id = :id";
+                    $stmtImg = $conexion->prepare($sqlImg);
+                    $stmtImg->execute([':img' => $nuevo_nombre, ':id' => $usuario_id]);
+                    $_SESSION['foto_perfil'] = $nuevo_nombre;
+                    
+                    header("Location: perfil.php?status=success");
+                } else {
+                    header("Location: perfil.php?error=upload");
+                }
             } else {
                 header("Location: perfil.php?error=upload");
             }
