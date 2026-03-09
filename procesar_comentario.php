@@ -22,7 +22,7 @@ if (!empty($texto) && !empty($dino_id)) {
         $stmt = $conexion->prepare("INSERT INTO comentarios (texto, usuario_id, dino_id) VALUES (:texto, :u_id, :d_id)");
         $stmt->execute([':texto' => $texto, ':u_id' => $usuario_id, ':d_id' => $dino_id]);
     } catch(PDOException $e) {
-        // Si hay error, simplemente volverá al detalle
+        error_log("Error al insertar comentario: " . $e->getMessage());
     }
 }
 
