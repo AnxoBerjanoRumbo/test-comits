@@ -12,38 +12,49 @@ Se ha implementado una estructura relacional sólida para gestionar el contenido
     * **1:N (Uno a Muchos):** Entre Usuarios y Comentarios (un usuario puede realizar múltiples aportaciones).
     * **N:M (Muchos a Muchos):** Entre Dinosaurios y Mapas mediante la tabla intermedia `dino_mapas`, permitiendo gestionar avistamientos de una criatura en múltiples localizaciones.
 
-
 ---
 
 ## Tecnologías Utilizadas
 * **Backend:** PHP 8.x utilizando **PDO** (PHP Data Objects) para una conexión segura y preparada contra inyecciones SQL.
 * **Base de Datos:** MariaDB (XAMPP).
-* **Frontend:** HTML5 y CSS3 siguiendo la metodología de separación de responsabilidades.
+* **Frontend:** HTML5, CSS3 Avanzado (Variables globales, Grid, Flexbox) y JavaScript Vanilla (Validación de formularios en tiempo real).
 * **Control de Versiones:** Git y GitHub.
 
 ---
 
 ## Características Implementadas
-* **Navegación Dinámica:** Sistema de rutas mediante parámetros **GET** para visualizar fichas técnicas individuales (`detalle.php?id=X`).
-* **Consultas Relacionales:** Uso de `INNER JOIN` para cruzar datos entre criaturas y sus localizaciones geográficas en tiempo real.
-* **Diseño Responsive:** Interfaz adaptativa optimizada para dispositivos móviles y escritorio mediante **CSS Grid** y **Media Queries**.
-* **Seguridad:** Consultas preparadas con `bindParam` para proteger la integridad de la base de datos.
+
+### Interfaz de Usuario UI/UX
+* **Diseño Premium y Oscuro (Dark Mode):** Interfaz inmersiva con colores de acento vibrantes (#00ffcc, #ffcc00), variables CSS y tipografía moderna (Outfit).
+* **Componentes Interactivos:** Tarjetas de criaturas y de administración con efectos flotantes (hover), sombras dinámicas y transiciones suaves.
+* **Diseño Responsive:** Interfaz completamente adaptativa optimizada para dispositivos móviles y escritorio mediante CSS Grid y Media Queries.
 
 ### Motor de Búsqueda y Filtrado
-* **Búsqueda por Texto:** Implementación del operador `LIKE` en SQL para localizar criaturas por nombre o especie de forma parcial.
+* **Búsqueda por Texto:** Implementación del operador LIKE en SQL para localizar criaturas por nombre o especie de forma parcial.
 * **Filtros por Dieta:** Menú desplegable para filtrar dinosaurios según su tipo de alimentación (Carnívoro, Herbívoro, etc.).
 * **Consultas Dinámicas:** Lógica en PHP que permite combinar el buscador de texto con el filtro de dieta simultáneamente.
-* **Gestión de Errores:** Sistema de control que muestra un mensaje personalizado cuando una búsqueda no devuelve resultados.
 
-### Panel de Administración y Gestión de Datos
-* **Arquitectura de Directorios:** Separación lógica creando la ruta `/admin`, aislando las operaciones de escritura y alteración de la base de datos de las vistas públicas.
-* **Inserción Dinámica (POST):** Implementación de formularios seguros para dar de alta nuevas criaturas y asignarlas a sus respectivos mapas directamente desde la interfaz.
-* **Transacciones SQL Avanzadas:** Uso de `beginTransaction()`, `commit()` y `rollBack()` con PDO. Esto permite insertar datos en la tabla principal (`dinosaurios`) y en la tabla intermedia (`dino_mapas`) en una sola operación atómica, garantizando la integridad referencial.
-* **Validación de Duplicados:** Lógica en el servidor que ejecuta consultas previas (`SELECT COUNT`) para evitar el registro de criaturas con nombres idénticos, devolviendo alertas visuales en caso de error.
+### Sistema de Usuarios y Seguridad (NUEVO)
+* **Autenticación Completa:** Sistema de Login y Logout utilizando Variables de Sesión ($_SESSION) protegiendo las rutas importantes (Auth Guards).
+* **Registro con Validación:** 
+  * Confirmación de contraseña en frontend (JavaScript) mostrando errores en tiempo real y evitando envíos erróneos.
+  * Doble verificación de seguridad en backend (PHP).
+* **Control de Roles (RBAC):** Sistema escalonado con roles de usuario, admin y superadmin.
+
+### Panel de Administración y SuperAdmin
+* **Gestión de Contenido (CRUD Completo):**
+  * **Inserción Dinámica (POST):** Formularios seguros para dar de alta nuevas criaturas asignando múltiples mapas vía transacciones SQL atómicas (beginTransaction, commit, rollBack).
+  * **Eliminación Segura:** Opción de extinguir criaturas eliminando primero sus referencias en tablas intermedias para mantener la integridad referencial.
+* **Flujo de Aprobación de Moderadores (SuperAdmin):**
+  * Validación Estricta: Si un usuario quiere ser admin, su nick debe seguir estrictamente un formato validado por Expresiones Regulares (admin0 hasta admin99).
+  * Las cuentas admin se registran bloqueadas (sin contraseña).
+  * Panel exclusivo para el superadmin mostrando tarjetas de solicitudes pendientes.
+  * Opciones para Asignar Contraseña y Activar o Cancelar y Borrar de la BD en un solo clic.
+
 ---
 
 ## Instalación y Uso
-1. **Clonar** el repositorio en la carpeta `htdocs` de tu servidor local (XAMPP).
-2. **Importar** el archivo SQL (ubicado en la carpeta `database/`) a través de **phpMyAdmin**.
-3. **Configurar** las credenciales de acceso a la base de datos en el archivo `config/db.php`.
-4. **Acceder** a `localhost/ark-survival-hub` desde cualquier navegador.
+1. **Clonar** el repositorio en la carpeta htdocs de tu servidor local (XAMPP).
+2. **Importar** el archivo SQL (ubicado en la carpeta database/) a través de phpMyAdmin. (Asegúrate de agregar al superadmin directamente en base de datos si es la primera vez).
+3. **Configurar** las credenciales de acceso a la base de datos en el archivo config/db.php.
+4. **Acceder** a localhost/ark-survival-hub desde el navegador.

@@ -26,19 +26,19 @@ if (isset($_SESSION['nick'])) {
         
         <?php if (isset($_GET['status']) && $_GET['status'] == 'espera'): ?>
             <div class="alerta-error" style="color: orange; border-color: orange; background: rgba(255,165,0,0.1);">
-                ⚠️ <strong>Solicitud de Admin registrada.</strong> Tu cuenta está bloqueada. El Superadministrador (Anxo) debe asignarte una contraseña para poder acceder.
+                <strong>Solicitud de Admin registrada.</strong> Tu cuenta está bloqueada. El Superadministrador (Anxo) debe asignarte una contraseña para poder acceder.
             </div>
         <?php endif; ?>
 
         <?php if (isset($_GET['error']) && $_GET['error'] == 'pass_mismatch'): ?>
             <div class="alerta-error">
-                ❌ Las contraseñas no coinciden. Inténtalo de nuevo.
+                Las contraseñas no coinciden. Inténtalo de nuevo.
             </div>
         <?php endif; ?>
 
         <?php if (isset($_GET['error']) && $_GET['error'] == 'admin_invalido'): ?>
             <div class="alerta-error">
-                ❌ Si deseas ser administrador, tu nick debe tener el formato exacto de 'admin' seguido de un número del 0 al 99 (ej: admin42). No puedes usar la palabra 'admin' de otra forma.
+                Si deseas ser administrador, tu nick debe tener el formato exacto de 'admin' seguido de un número del 0 al 99 (ej: admin42). No puedes usar la palabra 'admin' de otra forma.
             </div>
         <?php endif; ?>
 

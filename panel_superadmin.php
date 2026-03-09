@@ -23,7 +23,7 @@ $admins_pendientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
     <header>
-        <h1 class="titulo-superadmin">👑 Panel de Superadministrador</h1>
+        <h1 class="titulo-superadmin">Panel de Superadministrador</h1>
         <a href="index.php" class="boton-volver">Volver a la Wiki</a>
     </header>
 
@@ -32,14 +32,14 @@ $admins_pendientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
         <?php if (isset($_GET['status']) && $_GET['status'] == 'actualizado'): ?>
             <div class="alerta-exito">
-                ✅ Contraseña asignada correctamente. El admin ya puede entrar.
+                Contraseña asignada correctamente. El admin ya puede entrar.
             </div>
         <?php
 endif; ?>
 
         <?php if (isset($_GET['status']) && $_GET['status'] == 'cancelado'): ?>
             <div class="alerta-exito" style="color: #ff4444; border-color: #ff4444; background: rgba(255, 68, 68, 0.1);">
-                🗑️ Solicitud de administrador cancelada y eliminada.
+                Solicitud de administrador cancelada y eliminada.
             </div>
         <?php
 endif; ?>
@@ -55,12 +55,12 @@ endif; ?>
                             <form action="procesar_password.php" method="POST" class="form-activar">
                                 <input type="hidden" name="id_usuario" value="<?php echo $admin['id']; ?>">
                                 <input type="text" name="nueva_password" required placeholder="Escribir contraseña..." class="input-password">
-                                <button type="submit" class="btn-activar">✅ Activar Admin</button>
+                                <button type="submit" class="btn-activar">Activar Admin</button>
                             </form>
                             
                             <form action="procesar_cancelar_admin.php" method="POST" style="width: 100%;">
                                 <input type="hidden" name="id_usuario" value="<?php echo $admin['id']; ?>">
-                                <button type="submit" class="btn-cancelar" onclick="return confirm('¿Seguro que quieres cancelar la solicitud de <?php echo htmlspecialchars($admin['nick']); ?>?');">🗑️ Cancelar Solicitud</button>
+                                <button type="submit" class="btn-cancelar" onclick="return confirm('¿Seguro que quieres cancelar la solicitud de <?php echo htmlspecialchars($admin['nick']); ?>?');">Cancelar Solicitud</button>
                             </form>
                         </div>
                     </div>
