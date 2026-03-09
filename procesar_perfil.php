@@ -6,10 +6,9 @@ if (!isset($_SESSION['usuario_id']) || $_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 include 'config/db.php';
 
-// Validación CSRF (Opcional para fotos pero recomendado)
-if (isset($_POST['csrf_token']) && $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    // Para simplificar el auto-envío de la foto, si no viene token no morimos, 
-    // pero si lo pusimos en el form de perfil.php, deberíamos validarlo.
+// Validación CSRF obligatoria
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die("Error de validación CSRF.");
 }
 
 $usuario_id = $_SESSION['usuario_id'];
