@@ -64,6 +64,15 @@ $mapas_seleccionados = $stmt_dm->fetchAll(PDO::FETCH_COLUMN);
     <main class="contenedor-formulario">
         <h2>Modificar <?php echo htmlspecialchars($dino['nombre']); ?></h2>
 
+        <?php if (isset($_GET['error'])): ?>
+            <div class="alerta-error">
+                <?php 
+                if ($_GET['error'] == 'formato') echo "⚠️ Formato de imagen no válido o archivo dañado. Usa JPG, PNG o WebP.";
+                elseif ($_GET['error'] == 'interno') echo "⚠️ Error interno del servidor al procesar los datos.";
+                ?>
+            </div>
+        <?php endif; ?>
+
         <form action="procesar_editar.php" method="POST" enctype="multipart/form-data" class="form-ark">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <input type="hidden" name="id" value="<?php echo $dino['id']; ?>">

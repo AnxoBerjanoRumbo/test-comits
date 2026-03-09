@@ -42,12 +42,15 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
     <main class="contenedor-formulario">
         <h2>Registrar nueva criatura</h2>
 
-        <?php if (isset($_GET['error']) && $_GET['error'] == 'duplicado'): ?>
+        <?php if (isset($_GET['error'])): ?>
             <div class="alerta-error">
-                ⚠️ El dinosaurio <strong><?php echo htmlspecialchars($_GET['nombre']); ?></strong> ya existe en el sistema.
+                <?php 
+                if ($_GET['error'] == 'duplicado') echo "⚠️ El dinosaurio <strong>".htmlspecialchars($_GET['nombre'])."</strong> ya existe en el sistema.";
+                elseif ($_GET['error'] == 'formato') echo "⚠️ Formato de imagen no válido o archivo dañado. Usa JPG, PNG o WebP.";
+                elseif ($_GET['error'] == 'interno') echo "⚠️ Error interno del servidor al procesar los datos.";
+                ?>
             </div>
-        <?php
-endif; ?>
+        <?php endif; ?>
 
         <form action="procesar_insertar.php" method="POST" enctype="multipart/form-data" class="form-ark">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
