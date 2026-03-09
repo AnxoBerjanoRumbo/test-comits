@@ -1,60 +1,89 @@
 # ARK Survival Hub - Wiki Project
 
-Proyecto de Wiki dinámica sobre el universo de **ARK: Survival Ascended**, desarrollada como proyecto integrador intermodular.
+Una enciclopedia dinámica y sistema de gestión sobre el universo de ARK: Survival Ascended, desarrollada como una aplicación web completa, segura y de alto rendimiento.
 
 ---
 
-## Base de Datos (MariaDB)
-Se ha implementado una estructura relacional sólida para gestionar el contenido y la interacción:
-
-* **Entidades:** Usuarios, Dinosaurios, Mapas y Comentarios.
-* **Relaciones:**
-    * **1:N (Uno a Muchos):** Entre Usuarios y Comentarios (un usuario puede realizar múltiples aportaciones).
-    * **N:M (Muchos a Muchos):** Entre Dinosaurios y Mapas mediante la tabla intermedia `dino_mapas`, permitiendo gestionar avistamientos de una criatura en múltiples localizaciones.
-
----
-
-## Tecnologías Utilizadas
-* **Backend:** PHP 8.x utilizando **PDO** (PHP Data Objects) para una conexión segura y preparada contra inyecciones SQL.
-* **Base de Datos:** MariaDB (XAMPP).
-* **Frontend:** HTML5, CSS3 Avanzado (Variables globales, Grid, Flexbox) y JavaScript Vanilla (Validación de formularios en tiempo real).
-* **Control de Versiones:** Git y GitHub.
+## Índice
+1. [Visión General](#visión-general)
+2. [Arquitectura de Base de Datos](#arquitectura-de-base-de-datos)
+3. [Stack Tecnológico](#stack-tecnológico)
+4. [Características Principales](#características-principales)
+    * [UI/UX y Diseño](#uiux-y-diseño)
+    * [Seguridad y Autenticación](#seguridad-y-autenticación)
+    * [Gestión de Contenido (CRUD)](#gestión-de-contenido-crud)
+    * [Panel Administrativo (RBAC)](#panel-administrativo-rbac)
+5. [Seguridad Avanzada](#seguridad-avanzada)
+6. [Instalación y Configuración](#instalación-y-configuración)
 
 ---
 
-## Características Implementadas
-
-### Interfaz de Usuario UI/UX
-* **Diseño Premium y Oscuro (Dark Mode):** Interfaz inmersiva con colores de acento vibrantes (#00ffcc, #ffcc00), variables CSS y tipografía moderna (Outfit).
-* **Componentes Interactivos:** Tarjetas de criaturas y de administración con efectos flotantes (hover), sombras dinámicas y transiciones suaves.
-* **Diseño Responsive:** Interfaz completamente adaptativa optimizada para dispositivos móviles y escritorio mediante CSS Grid y Media Queries.
-
-### Motor de Búsqueda y Filtrado
-* **Búsqueda por Texto:** Implementación del operador LIKE en SQL para localizar criaturas por nombre o especie de forma parcial.
-* **Filtros por Dieta:** Menú desplegable para filtrar dinosaurios según su tipo de alimentación (Carnívoro, Herbívoro, etc.).
-* **Consultas Dinámicas:** Lógica en PHP que permite combinar el buscador de texto con el filtro de dieta simultáneamente.
-
-### Sistema de Usuarios y Seguridad (NUEVO)
-* **Autenticación Completa:** Sistema de Login y Logout utilizando Variables de Sesión ($_SESSION) protegiendo las rutas importantes (Auth Guards).
-* **Registro con Validación:** 
-  * Confirmación de contraseña en frontend (JavaScript) mostrando errores en tiempo real y evitando envíos erróneos.
-  * Doble verificación de seguridad en backend (PHP).
-* **Control de Roles (RBAC):** Sistema escalonado con roles de usuario, admin y superadmin.
-
-### Panel de Administración y SuperAdmin
-* **Gestión de Contenido (CRUD Completo):**
-  * **Inserción Dinámica (POST):** Formularios seguros para dar de alta nuevas criaturas asignando múltiples mapas vía transacciones SQL atómicas (beginTransaction, commit, rollBack).
-  * **Eliminación Segura:** Opción de extinguir criaturas eliminando primero sus referencias en tablas intermedias para mantener la integridad referencial.
-* **Flujo de Aprobación de Moderadores (SuperAdmin):**
-  * Validación Estricta: Si un usuario quiere ser admin, su nick debe seguir estrictamente un formato validado por Expresiones Regulares (admin0 hasta admin99).
-  * Las cuentas admin se registran bloqueadas (sin contraseña).
-  * Panel exclusivo para el superadmin mostrando tarjetas de solicitudes pendientes.
-  * Opciones para Asignar Contraseña y Activar o Cancelar y Borrar de la BD en un solo clic.
+## Visión General
+ARK Survival Hub es una plataforma robusta que permite a los usuarios explorar criaturas, descubrir sus localizaciones en diferentes mapas y participar mediante un sistema de comentarios. Los administradores disponen de herramientas avanzadas para la moderación y actualización del ecosistema de la wiki.
 
 ---
 
-## Instalación y Uso
-1. **Clonar** el repositorio en la carpeta htdocs de tu servidor local (XAMPP).
-2. **Importar** el archivo SQL (ubicado en la carpeta database/) a través de phpMyAdmin. (Asegúrate de agregar al superadmin directamente en base de datos si es la primera vez).
-3. **Configurar** las credenciales de acceso a la base de datos en el archivo config/db.php.
-4. **Acceder** a localhost/ark-survival-hub desde el navegador.
+## Arquitectura de Base de Datos
+El sistema utiliza una estructura relacional en MariaDB diseñada para la escalabilidad y la integridad de los datos:
+
+*   **Entidades Core**: Usuarios, Dinosaurios, Mapas y Comentarios.
+*   **Relaciones Relacionales**:
+    *   **1:N (Uno a Muchos)**: Usuarios -> Comentarios / Dinosaurios -> Comentarios.
+    *   **N:M (Muchos a Muchos)**: Dinosaurios <-> Mapas (a través de dino_mapas), permitiendo que una criatura habite múltiples regiones y que cada región albergue diversas especies.
+*   **Integridad Referencial**: Implementación de eliminaciones en cascada y transacciones SQL para mantener la coherencia absoluta de los datos.
+
+---
+
+## Stack Tecnológico
+*   **Backend**: PHP 8.x con arquitectura modular orientada a la seguridad.
+*   **Acceso a Datos**: PHP Data Objects (PDO) con sentencias preparadas para blindaje contra SQL Injection.
+*   **Base de Datos**: MariaDB / MySQL.
+*   **Frontend**: HTML5 Semántico, CSS3 avanzado (Variables, Grid, Flexbox, Glassmorphism) y JavaScript Vanilla para interactividad fluida y validaciones.
+*   **Versionado**: Git y GitHub con flujo de trabajo profesional.
+
+---
+
+## Características Principales
+
+### UI/UX y Diseño
+*   **Estética Premium**: Diseño Dark Mode con acentos en colores neón para una inmersión total.
+*   **Vertical Card Design**: Tarjetas de dinosaurios con estilo póster, imágenes de gran tamaño, efectos de zoom dinámico y pies de página integrados con degradados.
+*   **Paginación Inteligente**: Listados optimizados (9 criaturas por página) para una carga rápida y navegación organizada.
+*   **Responsive**: Adaptabilidad total en todos los dispositivos mediante sistemas de rejillas flexibles.
+
+### Seguridad y Autenticación
+*   **Sistema de Cuentas**: Gestión de sesiones seguras mediante variables de sesión.
+*   **Recuperación de Contraseña**: Flujo con tokens temporales de un solo uso con expiración automática.
+*   **Hashing de Seguridad**: Uso de password_hash con algoritmo BCRYPT.
+*   **Validación CSRF**: Protección en todos los formularios de acción mediante tokens aleatorios para prevenir ataques de falsificación de peticiones.
+
+### Gestión de Contenido (CRUD)
+*   **Panel de Administración**: Gestión de criaturas (Alta, Baja, Modificación).
+*   **Subida de Archivos**: Sistema de carga de imágenes con validación de tipos y limpieza automática de archivos huérfanos al editar o borrar.
+*   **Sistema de Comentarios**: Interacción social con herramientas de moderación.
+
+### Panel Administrativo (RBAC)
+*   **Control de Roles**: Diferenciación entre Usuario, Admin y SuperAdmin.
+*   **Aprobación de Moderadores**: El SuperAdmin valida y activa solicitudes de administradores, asignando credenciales iniciales y gestionando permisos.
+
+---
+
+## Seguridad Avanzada
+El proyecto implementa medidas de seguridad críticas:
+1.  **Blindaje de subidas**: Validación de extensiones y verificación de contenido real de imagen mediante getimagesize para evitar RCE (ejecución remota de código).
+2.  **Transacciones Atómicas**: Uso de transacciones para garantizar que los cambios en múltiples tablas se realicen por completo o se reviertan totalmente en caso de error.
+3.  **Logs de Error**: Registro interno de excepciones en el servidor para evitar la exposición de datos técnicos al usuario final.
+
+---
+
+## Instalación y Configuración
+
+1.  **Entorno**: Clonar el repositorio en la carpeta htdocs de un servidor local (XAMPP/WAMP).
+2.  **Base de Datos**: 
+    *   Importar el archivo SQL desde la carpeta database.
+    *   Asegurarse de tener un usuario superadmin inicial.
+3.  **Configuración**: Editar config/db.php con las credenciales correspondientes.
+4.  **Ejecución**: Acceder a la URL de localhost correspondiente en el navegador.
+
+---
+© 2024 ARK Survival Hub - Proyecto Wiki de Alto Rendimiento.
