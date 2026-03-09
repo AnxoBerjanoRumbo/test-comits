@@ -40,9 +40,21 @@ $comentarios = $stmt_comments->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <header>
-        <h1>Ficha de Criatura</h1>
-        <a href="index.php" class="boton-volver">Volver al listado</a>
+    <header class="header-principal" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 5%;">
+        <div class="logo-titulo">
+            <h1>Ficha de Criatura</h1>
+        </div>
+        <nav class="navegacion-usuario">
+            <a href="index.php" class="btn-nav">Volver al listado</a>
+            <?php if (isset($_SESSION['nick'])): ?>
+                <a href="perfil.php" class="enlace-perfil" style="color: white; text-decoration: none; margin-left: 15px; margin-right: 15px;">
+                    <span class="bienvenida">Hola, <strong><?php echo htmlspecialchars($_SESSION['nick']); ?></strong></span>
+                </a>
+                <a href="logout.php" class="btn-nav" style="background-color: #ff5555; border-color: #ff5555;">Salir</a>
+            <?php else: ?>
+                <a href="login.php" class="btn-nav" style="margin-left: 10px;">Login</a>
+            <?php endif; ?>
+        </nav>
     </header>
 
     <main class="contenedor-detalle">
