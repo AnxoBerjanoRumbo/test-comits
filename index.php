@@ -172,18 +172,9 @@ endif; ?>
 
     </main>
     
-    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'});" id="btnArriba" style="position: fixed; bottom: 30px; right: 30px; background-color: #ffcc00; color: #111; border: none; border-radius: 5px; padding: 10px 15px; font-size: 1.5rem; cursor: pointer; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+    <button id="btnArriba" style="position: fixed; bottom: 30px; right: 30px; background-color: #ffcc00; color: #111; border: none; border-radius: 5px; padding: 10px 15px; font-size: 1.5rem; cursor: pointer; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 1000;">
         ⬆
     </button>
-    <script>
-        window.onscroll = function() {
-            var btnArriba = document.getElementById("btnArriba");
-            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-                btnArriba.style.display = "block";
-            } else {
-                btnArriba.style.display = "none";
-            }
-        };
-    </script>
+    <script src="assets/js/main.js"></script>
 </body>
 </html>

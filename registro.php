@@ -88,5 +88,6 @@ if (isset($_SESSION['nick'])) {
             }
         });
     </script>
+    <script src="assets/js/main.js"></script>
 </body>
 </html>

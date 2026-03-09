@@ -617,3 +617,114 @@ header h1 {
         grid-template-columns: 1fr;
     }
 }
+
+/* ------------------- COMENTARIOS ------------------- */
+.seccion-comentarios h3 {
+    font-size: 1.8rem;
+    color: var(--accent);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.comentario {
+    background-color: var(--bg-card);
+    margin-bottom: 15px;
+    padding: 20px;
+    border-radius: var(--radius);
+    border-left: 4px solid var(--success-color);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.comentario:hover {
+    transform: translateX(5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.comentario-admin {
+    border-left: 4px solid #ffcc00;
+}
+
+.comentario-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.comentario-texto {
+    white-space: pre-wrap;
+    font-size: 1rem;
+    color: var(--text-main);
+    line-height: 1.5;
+}
+
+.contador-caracteres {
+    text-align: right;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: -5px;
+    margin-bottom: 15px;
+}
+
+.contador-caracteres.limite-cerca {
+    color: #ffaa00;
+}
+
+.contador-caracteres.limite-excedido {
+    color: var(--error-color);
+    font-weight: bold;
+}
+
+/* ------------------- PERFIL Y ELEMENTOS EXTRA ------------------- */
+.foto-perfil-preview {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--accent);
+    margin-bottom: 20px;
+    box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+    transition: all 0.3s ease;
+}
+
+.foto-perfil-preview:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
+}
+
+.dino-img-container {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.dino-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.dino-card:hover .dino-img {
+    transform: scale(1.1);
+}
+
+/* ------------------- PAGINACIÓN ------------------- */
+.paginacion {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+.paginacion .btn-nav {
+    min-width: 40px;
+    text-align: center;
+}

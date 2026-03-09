@@ -102,5 +102,6 @@ $mapas_seleccionados = $stmt_dm->fetchAll(PDO::FETCH_COLUMN);
             <button type="submit" class="boton-insertar">Guardar Cambios</button>
         </form>
     </main>
+    <script src="../assets/js/main.js"></script>
 </body>
 </html>

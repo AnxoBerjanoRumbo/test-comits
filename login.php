@@ -44,5 +44,6 @@ endif; ?>
             <button type="submit" class="boton-insertar">Iniciar Sesión</button>
         </form>
     </main>
+    <script src="assets/js/main.js"></script>
 </body>
 </html>
