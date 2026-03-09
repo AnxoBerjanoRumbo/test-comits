@@ -204,6 +204,7 @@ header h1 {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .dino-card:hover {
@@ -222,6 +223,13 @@ header h1 {
     text-decoration: none;
     font-weight: 800;
     transition: all 0.3s ease;
+}
+
+.enlace-dino::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 10;
 }
 
 .enlace-dino:hover {
@@ -727,4 +735,34 @@ header h1 {
 .paginacion .btn-nav {
     min-width: 40px;
     text-align: center;
+}
+
+/* ------------------- BOTON VOLVER ARRIBA ------------------- */
+.btn-arriba {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: var(--bg-card);
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 1.8rem;
+    cursor: pointer;
+    display: none;
+    box-shadow: 0 4px 15px rgba(0, 255, 204, 0.2);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 56px;
+}
+
+.btn-arriba:hover {
+    background-color: var(--accent);
+    color: #121212;
+    transform: translateY(-5px) !important;
+    box-shadow: 0 8px 25px rgba(0, 255, 204, 0.5);
 }
