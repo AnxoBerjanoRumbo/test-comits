@@ -24,17 +24,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dino_actual = $stmt_actual->fetch(PDO::FETCH_ASSOC);
     $imagen = $dino_actual['imagen'] ?? 'default_dino.jpg';
 
-    // Subida de nueva imagen
+    // Subida de nueva imagen con validación de seguridad
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == UPLOAD_ERR_OK) {
         $img_name = $_FILES['imagen']['name'];
         $img_tmp = $_FILES['imagen']['tmp_name'];
         
         $extension = strtolower(pathinfo($img_name, PATHINFO_EXTENSION));
-        $nuevo_nombre = uniqid('dino_') . '.' . $extension;
-        $destino = '../assets/img/dinos/' . $nuevo_nombre;
-        
-        if (move_uploaded_file($img_tmp, $destino)) {
-            $imagen = $nuevo_nombre;
+        $validas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+        if (in_array($extension, $validas)) {
+            $nuevo_nombre = uniqid('dino_') . '.' . $extension;
+            $destino = '../assets/img/dinos/' . $nuevo_nombre;
+            
+            if (move_uploaded_file($img_tmp, $destino)) {
+                // Borrar foto anterior del servidor si es distinta a la default
+                if ($imagen && $imagen !== 'default_dino.jpg') {
+                    $old_path = '../assets/img/dinos/' . $imagen;
+                    if (file_exists($old_path)) {
+                        unlink($old_path);
+                    }
+                }
+                $imagen = $nuevo_nombre;
+            }
+        } else {
+            // Si la extensión no es válida, redirigimos con error
+            header("Location: editar.php?id=" . $id . "&error=formato");
+            exit();
         }
     }
 

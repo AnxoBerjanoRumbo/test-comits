@@ -16,18 +16,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $descripcion = $_POST['descripcion'];
     $mapa_id = $_POST['mapa_id'];
     
-    // Subida de imagen
+    // Subida de imagen con validación de seguridad
     $imagen = 'default_dino.jpg'; // por si falla
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == UPLOAD_ERR_OK) {
         $img_name = $_FILES['imagen']['name'];
         $img_tmp = $_FILES['imagen']['tmp_name'];
         
         $extension = strtolower(pathinfo($img_name, PATHINFO_EXTENSION));
-        $nuevo_nombre = uniqid('dino_') . '.' . $extension;
-        $destino = '../assets/img/dinos/' . $nuevo_nombre;
-        
-        if (move_uploaded_file($img_tmp, $destino)) {
-            $imagen = $nuevo_nombre;
+        $validas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+        if (in_array($extension, $validas)) {
+            $nuevo_nombre = uniqid('dino_') . '.' . $extension;
+            $destino = '../assets/img/dinos/' . $nuevo_nombre;
+            
+            if (move_uploaded_file($img_tmp, $destino)) {
+                $imagen = $nuevo_nombre;
+            }
+        } else {
+            header("Location: insertar.php?error=formato");
+            exit();
         }
     }
 
