@@ -16,6 +16,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
     $id = $_POST['id'];
 
     try {
+        // 0. Obtener el nombre de la imagen antes de borrar para limpiar el disco
+        $stmtImg = $conexion->prepare("SELECT imagen FROM dinosaurios WHERE id = :id");
+        $stmtImg->execute([':id' => $id]);
+        $img_file = $stmtImg->fetchColumn();
+
         $conexion->beginTransaction();
 
         // 1. Borramos los comentarios asociados
@@ -34,6 +39,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
         $stmtDino->execute([':id' => $id]);
 
         $conexion->commit();
+        
+        // Borrar el archivo físico si no es el default
+        if ($img_file && $img_file !== 'default_dino.jpg') {
+            $file_path = '../assets/img/dinos/' . $img_file;
+            if (file_exists($file_path)) {
+                unlink($file_path);
+            }
+        }
 
         header("Location: ../index.php?status=deleted");
         exit();
