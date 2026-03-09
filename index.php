@@ -6,16 +6,41 @@ $busqueda = isset($_GET['buscar']) ? $_GET['buscar'] : '';
 $dieta = isset($_GET['dieta']) ? $_GET['dieta'] : '';
 
 $sql = "SELECT * FROM dinosaurios WHERE 1=1";
+$sql_count = "SELECT COUNT(*) FROM dinosaurios WHERE 1=1";
 
 // Si hay búsqueda por texto, añadimos la condición
 if ($busqueda != '') {
     $sql .= " AND (nombre LIKE :busqueda OR especie LIKE :busqueda)";
+    $sql_count .= " AND (nombre LIKE :busqueda OR especie LIKE :busqueda)";
 }
 
 // Si hay filtro por dieta, añadimos la condición
 if ($dieta != '') {
     $sql .= " AND dieta = :dieta";
+    $sql_count .= " AND dieta = :dieta";
 }
+
+// Paginación
+$por_pagina = 10;
+$pagina_actual = isset($_GET['p']) && is_numeric($_GET['p']) ? (int)$_GET['p'] : 1;
+if ($pagina_actual < 1) $pagina_actual = 1;
+$offset = ($pagina_actual - 1) * $por_pagina;
+
+// Ejecutar count
+$stmt_count = $conexion->prepare($sql_count);
+if ($busqueda != '') {
+    $termino = "%$busqueda%";
+    $stmt_count->bindParam(':busqueda', $termino);
+}
+if ($dieta != '') {
+    $stmt_count->bindParam(':dieta', $dieta);
+}
+$stmt_count->execute();
+$total_dinos = $stmt_count->fetchColumn();
+$total_paginas = ceil($total_dinos / $por_pagina);
+
+// Añadir limits
+$sql .= " LIMIT :limit OFFSET :offset";
 
 $stmt = $conexion->prepare($sql);
 
@@ -27,6 +52,9 @@ if ($busqueda != '') {
 if ($dieta != '') {
     $stmt->bindParam(':dieta', $dieta);
 }
+// PDO requiere bind explícito para INTs en LIMIT/OFFSET cuando emulation_prepare está ON
+$stmt->bindValue(':limit', $por_pagina, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 
 $stmt->execute();
 $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -126,6 +154,36 @@ else: ?>
             <?php
 endif; ?>
         </div>
+
+        <?php if ($total_paginas > 1): ?>
+        <div class="paginacion" style="margin-top: 30px; text-align: center;">
+            <?php
+            $query_params = $_GET;
+            for ($i = 1; $i <= $total_paginas; $i++):
+                $query_params['p'] = $i;
+                $link = 'index.php?' . http_build_query($query_params);
+            ?>
+                <a href="<?php echo htmlspecialchars($link); ?>" class="btn-nav <?php echo ($i == $pagina_actual) ? 'btn-registro' : ''; ?>" style="margin: 0 5px; padding: 5px 10px;">
+                    <?php echo $i; ?>
+                </a>
+            <?php endfor; ?>
+        </div>
+        <?php endif; ?>
+
     </main>
+    
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'});" id="btnArriba" style="position: fixed; bottom: 30px; right: 30px; background-color: #ffcc00; color: #111; border: none; border-radius: 5px; padding: 10px 15px; font-size: 1.5rem; cursor: pointer; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+        ⬆
+    </button>
+    <script>
+        window.onscroll = function() {
+            var btnArriba = document.getElementById("btnArriba");
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                btnArriba.style.display = "block";
+            } else {
+                btnArriba.style.display = "none";
+            }
+        };
+    </script>
 </body>
 </html>
