@@ -22,7 +22,7 @@ try {
         $stmt->execute([':id' => $comentario_id, ':u_id' => $_SESSION['usuario_id']]);
     }
 } catch(PDOException $e) {
-    // Si hay error saltará aquí silenciosamente
+    error_log("Error al borrar comentario: " . $e->getMessage());
 }
 
 header("Location: detalle.php?id=" . $dino_id);
