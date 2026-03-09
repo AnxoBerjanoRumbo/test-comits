@@ -101,13 +101,18 @@ endif; ?>
             <?php if (count($dinos) > 0): ?>
                 <?php foreach ($dinos as $dino): ?>
                     <div class="dino-card">
+                        <?php if(!empty($dino['imagen'])): ?>
+                            <div class="dino-img-container">
+                                <img src="assets/img/dinos/<?php echo htmlspecialchars($dino['imagen']); ?>" alt="<?php echo htmlspecialchars($dino['nombre']); ?>" class="dino-img">
+                            </div>
+                        <?php endif; ?>
                         <h3>
                             <a href="detalle.php?id=<?php echo $dino['id']; ?>" class="enlace-dino">
-                                <?php echo $dino['nombre']; ?>
+                                <?php echo htmlspecialchars($dino['nombre']); ?>
                             </a>
                         </h3>
-                        <p><strong>Especie:</strong> <?php echo $dino['especie']; ?></p>
-                        <p><strong>Dieta:</strong> <?php echo $dino['dieta']; ?></p>
+                        <p><strong>Especie:</strong> <?php echo htmlspecialchars($dino['especie']); ?></p>
+                        <p><strong>Dieta:</strong> <?php echo htmlspecialchars($dino['dieta']); ?></p>
                     </div>
                 <?php
     endforeach; ?>

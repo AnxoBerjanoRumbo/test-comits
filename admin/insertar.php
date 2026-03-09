@@ -39,7 +39,7 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
         <?php
 endif; ?>
 
-        <form action="procesar_insertar.php" method="POST" class="form-ark">
+        <form action="procesar_insertar.php" method="POST" enctype="multipart/form-data" class="form-ark">
             <div class="campo">
                 <label>Nombre de la criatura:</label>
                 <input type="text" name="nombre" required placeholder="Ej: Thylacoleo">
@@ -58,6 +58,16 @@ endif; ?>
                     <option value="Omnívoro">Omnívoro</option>
                     <option value="Piscívoro">Piscívoro</option>
                 </select>
+            </div>
+
+            <div class="campo">
+                <label>Descripción:</label>
+                <textarea name="descripcion" required placeholder="Breve descripción de la criatura..." rows="4"></textarea>
+            </div>
+
+            <div class="campo">
+                <label>Imagen de la criatura:</label>
+                <input type="file" name="imagen" accept="image/*" required>
             </div>
 
             <div class="campo">
