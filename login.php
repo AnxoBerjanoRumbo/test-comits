@@ -15,10 +15,12 @@ if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true) {
     <link rel="stylesheet" href="assets/css/estilos.css">
 </head>
 <body>
-    <header>
-        <h1>Entrar a ARK Hub</h1>
-        <a href="index.php" class="boton-volver">Volver a la Wiki</a>
-    </header>
+    <?php 
+    $header_titulo = "Entrar a ARK Hub";
+    $header_volver_link = "index.php";
+    $header_volver_texto = "Volver a la Wiki";
+    include 'includes/header.php'; 
+    ?>
 
     <main class="contenedor-formulario">
         <h2>Identificación de Usuario</h2>
@@ -47,7 +49,7 @@ if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true) {
             </div>
         <?php endif; ?>
 
-        <form action="procesar_login.php" method="POST" class="form-ark">
+        <form action="actions/procesar_login.php" method="POST" class="form-ark">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <div class="campo">
                 <label>Usuario (o Email):</label>

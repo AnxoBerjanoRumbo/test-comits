@@ -36,10 +36,7 @@ try {
     <link rel="stylesheet" href="assets/css/estilos.css">
 </head>
 <body>
-    <header>
-        <h1>Nueva Contraseña</h1>
-        <a href="login.php" class="boton-volver">Cancelar</a>
-    </header>
+    <?php include 'includes/header.php'; ?>
 
     <main class="contenedor-formulario">
         <h2>Restablecer Contraseña</h2>
@@ -52,7 +49,7 @@ try {
                 <a href="recuperar.php" class="btn-nav">Solicitar otro enlace</a>
             </div>
         <?php else: ?>
-            <form action="procesar_reset.php" method="POST" class="form-ark">
+            <form action="actions/procesar_reset.php" method="POST" class="form-ark">
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
                 

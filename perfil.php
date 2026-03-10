@@ -23,26 +23,12 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="assets/css/estilos.css?v=1.3">
 </head>
 <body>
-    <header class="header-principal">
-        <div class="logo-titulo">
-            <h1>Opciones de Usuario</h1>
-        </div>
-        <nav class="perfil-nav">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <?php 
-                $foto_nav = $_SESSION['foto_perfil'] ?? 'default.png';
-                $src_nav = (strpos($foto_nav, 'http') === 0) ? $foto_nav : "assets/img/perfil/" . $foto_nav;
-                ?>
-                <img src="<?php echo htmlspecialchars($src_nav); ?>" 
-                     alt="Perfil" 
-                     class="perfil-avatar-nav"
-                     style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);"
-                     onerror="this.src='assets/img/perfil/default.png'">
-                <span class="bienvenida"><strong><?php echo htmlspecialchars($usuario['nick']); ?></strong></span>
-            </div>
-            <a href="index.php" class="btn-nav">Volver al Inicio</a>
-        </nav>
-    </header>
+    <?php 
+    $header_titulo = "Opciones de Usuario";
+    $header_volver_link = "index.php";
+    $header_volver_texto = "Volver al Inicio";
+    include 'includes/header.php'; 
+    ?>
 
     <main class="contenedor-formulario">
         <h2>Mi Perfil</h2>
@@ -78,7 +64,7 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
         </div>
 
         <!-- Formulario para la Foto de Perfil (Auto-envío) -->
-        <form id="form-foto" action="procesar_perfil.php" method="POST" enctype="multipart/form-data" class="form-ark">
+        <form id="form-foto" action="actions/procesar_perfil.php" method="POST" enctype="multipart/form-data" class="form-ark">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
             <div class="campo">
                 <label>Cambiar foto de perfil:</label>
@@ -91,7 +77,7 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
         <hr style="border: 0; height: 1px; background: #333; margin: 30px 0;">
 
         <!-- Formulario para la Contraseña -->
-        <form action="procesar_password.php" method="POST" class="form-ark">
+        <form action="actions/procesar_password.php" method="POST" class="form-ark">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
             <h3>Cambiar Contraseña</h3>
             <div class="campo">

@@ -25,23 +25,13 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body class="admin-body">
-    <header style="display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: var(--bg-header); border-radius: var(--radius); border: 1px solid var(--border-color); margin-bottom: 30px;">
-        <h1 style="margin: 0; font-size: 1.8rem;">Panel de Administración</h1>
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <?php 
-                $foto_admin_i = $_SESSION['foto_perfil'] ?? 'default.png';
-                $src_admin_i = (strpos($foto_admin_i, 'http') === 0) ? $foto_admin_i : "../assets/img/perfil/" . $foto_admin_i;
-                ?>
-                <img src="<?php echo htmlspecialchars($src_admin_i); ?>" 
-                     alt="Perfil" 
-                     style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);"
-                     onerror="this.src='../assets/img/perfil/default.png'">
-                <span class="bienvenida"><strong><?php echo htmlspecialchars($_SESSION['nick']); ?></strong></span>
-            </div>
-            <a href="../index.php" class="boton-volver" style="margin: 0;">Volver a la Wiki</a>
-        </div>
-    </header>
+    <?php 
+    $is_admin_panel = true;
+    $header_titulo = "Panel de Administración";
+    $header_volver_link = "../index.php";
+    $header_volver_texto = "Volver a la Wiki";
+    include '../includes/header.php'; 
+    ?>
 
     <main class="contenedor-formulario">
         <h2>Registrar nueva criatura</h2>
@@ -56,7 +46,7 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
             </div>
         <?php endif; ?>
 
-        <form action="procesar_insertar.php" method="POST" enctype="multipart/form-data" class="form-ark">
+        <form action="../actions/admin/procesar_insertar.php" method="POST" enctype="multipart/form-data" class="form-ark">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <div class="campo">
                 <label>Nombre de la criatura:</label>

@@ -47,23 +47,13 @@ $mapas_seleccionados = $stmt_dm->fetchAll(PDO::FETCH_COLUMN);
     <link rel="stylesheet" href="../assets/css/estilos.css?v=1.3">
 </head>
 <body class="admin-body">
-    <header style="display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: var(--bg-header); border-radius: var(--radius); border: 1px solid var(--border-color); margin-bottom: 30px;">
-        <h1 style="margin: 0; font-size: 1.8rem;">Editar datos de la Criatura</h1>
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <?php 
-                $foto_admin_e = $_SESSION['foto_perfil'] ?? 'default.png';
-                $src_admin_e = (strpos($foto_admin_e, 'http') === 0) ? $foto_admin_e : "../assets/img/perfil/" . $foto_admin_e;
-                ?>
-                <img src="<?php echo htmlspecialchars($src_admin_e); ?>" 
-                     alt="Perfil" 
-                     style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);"
-                     onerror="this.src='../assets/img/perfil/default.png'">
-                <span class="bienvenida"><strong><?php echo htmlspecialchars($_SESSION['nick']); ?></strong></span>
-            </div>
-            <a href="../detalle.php?id=<?php echo $dino['id']; ?>" class="boton-volver" style="margin: 0;">Volver al detalle</a>
-        </div>
-    </header>
+    <?php 
+    $is_admin_panel = true;
+    $header_titulo = "Editar Criatura";
+    $header_volver_link = "../detalle.php?id=" . $dino['id'];
+    $header_volver_texto = "Volver al detalle";
+    include '../includes/header.php'; 
+    ?>
 
     <main class="contenedor-formulario">
         <h2>Modificar <?php echo htmlspecialchars($dino['nombre']); ?></h2>
@@ -77,7 +67,7 @@ $mapas_seleccionados = $stmt_dm->fetchAll(PDO::FETCH_COLUMN);
             </div>
         <?php endif; ?>
 
-        <form action="procesar_editar.php" method="POST" enctype="multipart/form-data" class="form-ark">
+        <form action="../actions/admin/procesar_editar.php" method="POST" enctype="multipart/form-data" class="form-ark">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <input type="hidden" name="id" value="<?php echo $dino['id']; ?>">
             

@@ -62,29 +62,12 @@ $comentarios = $stmt_comments->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <header class="header-principal" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; flex-wrap: wrap; gap: 15px;">
-        <div class="logo-titulo">
-            <h1>Ficha de Criatura</h1>
-        </div>
-        <nav class="navegacion-usuario" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-            <a href="index.php" class="btn-nav">Volver al listado</a>
-            <?php if (isset($_SESSION['nick'])): ?>
-                <a href="perfil.php" class="enlace-perfil" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 10px;">
-                    <?php 
-                    $foto_perfil_h = $_SESSION['foto_perfil'] ?? 'default.png';
-                    $src_foto_h = (strpos($foto_perfil_h, 'http') === 0) ? $foto_perfil_h : "assets/img/perfil/" . $foto_perfil_h;
-                    ?>
-                    <img src="<?php echo htmlspecialchars($src_foto_h); ?>" 
-                         alt="Perfil" 
-                         style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);"
-                         onerror="this.src='assets/img/perfil/default.png'">
-                    <span class="bienvenida">Hola, <strong><?php echo htmlspecialchars($_SESSION['nick']); ?></strong></span>
-                </a>
-            <?php else: ?>
-                <a href="login.php" class="btn-nav">Login</a>
-            <?php endif; ?>
-        </nav>
-    </header>
+    <?php 
+    $header_titulo = "Ficha de Criatura";
+    $header_volver_link = "index.php";
+    $header_volver_texto = "Volver al listado";
+    include 'includes/header.php'; 
+    ?>
 
     <main class="contenedor-detalle">
         <section class="ficha-principal">
@@ -144,7 +127,7 @@ endif; ?>
             <h3>Comentarios y Aportes</h3>
             
             <?php if (isset($_SESSION['usuario_id'])): ?>
-                <form action="procesar_comentario.php" method="POST" class="form-ark" style="margin-bottom: 25px;">
+                <form action="actions/procesar_comentario.php" method="POST" class="form-ark" style="margin-bottom: 25px;">
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="dino_id" value="<?php echo $dino['id']; ?>">
                     <div style="display: flex; gap: 15px; margin-bottom: 10px;">
@@ -185,7 +168,7 @@ endif; ?>
                                 </div>
                                 
                                 <?php if(isset($_SESSION['usuario_id']) && (($_SESSION['is_admin'] ?? false) === true || $_SESSION['usuario_id'] == $c['usuario_id'])): ?>
-                                    <form action="borrar_comentario.php" method="POST" style="display: inline;">
+                                    <form action="actions/borrar_comentario.php" method="POST" style="display: inline;">
                                         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                         <input type="hidden" name="comentario_id" value="<?php echo $c['id']; ?>">
                                         <input type="hidden" name="dino_id" value="<?php echo $dino['id']; ?>">
@@ -223,7 +206,7 @@ endif; ?>
 
         <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_insertar'] ?? 0) == 1): ?>
             <div style="margin-top: 40px; text-align: center; border-top: 1px solid #444; padding-top: 20px;">
-                <form action="admin/procesar_eliminar.php" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que quieres extinguir a <?php echo htmlspecialchars($dino['nombre']); ?>? Esta acción borrará sus datos de la base de datos y NO se puede deshacer.');">
+                <form action="actions/admin/procesar_eliminar.php" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que quieres extinguir a <?php echo htmlspecialchars($dino['nombre']); ?>? Esta acción borrará sus datos de la base de datos y NO se puede deshacer.');">
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="id" value="<?php echo $dino['id']; ?>">
                     <button type="submit" class="boton-eliminar" style="border: none; cursor: pointer;">

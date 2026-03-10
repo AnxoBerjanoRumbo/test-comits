@@ -71,39 +71,7 @@ $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <header class="header-principal">
-        <div class="logo-titulo">
-            <h1>ARK Survival Hub</h1>
-        </div>
-        
-        <nav class="navegacion-usuario">
-            <?php if (isset($_SESSION['nick'])): ?>
-                <a href="perfil.php" class="enlace-perfil" style="color: white; text-decoration: none; margin-right: 15px; display: flex; align-items: center; gap: 10px;">
-                    <?php 
-                    $foto_perfil = $_SESSION['foto_perfil'] ?? 'default.png';
-                    $src_foto = (strpos($foto_perfil, 'http') === 0) ? $foto_perfil : "assets/img/perfil/" . $foto_perfil;
-                    ?>
-                    <img src="<?php echo htmlspecialchars($src_foto); ?>" 
-                         alt="Perfil" 
-                         style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);"
-                         onerror="this.src='assets/img/perfil/default.png'">
-                    <span class="bienvenida">Hola, <strong><?php echo htmlspecialchars($_SESSION['nick']); ?></strong></span>
-                </a>
-                
-                <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'superadmin'): ?>
-                    <a href="panel_superadmin.php" class="btn-nav" style="background-color: #ffcc00; color: #1a1a1a; border-color: #ffcc00;">Panel Superadmin</a>
-                <?php
-    endif; ?>
-
-                <a href="logout.php" class="btn-nav">Cerrar Sesión</a>
-            <?php
-else: ?>
-                <a href="login.php" class="btn-nav">Loguearse</a>
-                <a href="registro.php" class="btn-nav btn-registro">Registrarse</a>
-            <?php
-endif; ?>
-        </nav>
-    </header>
+    <?php include 'includes/header.php'; ?>
     <section class="buscador">
         <form action="index.php" method="GET">
             <input type="text" name="buscar" placeholder="Busca tu criatura..." 

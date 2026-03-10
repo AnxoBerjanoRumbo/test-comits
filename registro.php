@@ -16,10 +16,12 @@ if (isset($_SESSION['nick'])) {
     <link rel="stylesheet" href="assets/css/estilos.css">
 </head>
 <body>
-    <header>
-        <h1>Crear Cuenta</h1>
-        <a href="login.php" class="boton-volver">Ya tengo cuenta (Login)</a>
-    </header>
+    <?php 
+    $header_titulo = "Crear Cuenta";
+    $header_volver_link = "login.php";
+    $header_volver_texto = "Ya tengo cuenta (Login)";
+    include 'includes/header.php'; 
+    ?>
 
     <main class="contenedor-formulario">
         <h2>Únete a la Wiki</h2>
@@ -66,7 +68,7 @@ if (isset($_SESSION['nick'])) {
             </div>
         <?php endif; ?>
 
-        <form action="procesar_registro.php" method="POST" class="form-ark">
+        <form action="actions/procesar_registro.php" method="POST" class="form-ark">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <div class="campo">
                 <label>Nick de Usuario:</label>

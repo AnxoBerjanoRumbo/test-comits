@@ -10,10 +10,7 @@ session_start();
     <link rel="stylesheet" href="assets/css/estilos.css">
 </head>
 <body>
-    <header>
-        <h1>Recuperar Acceso</h1>
-        <a href="login.php" class="boton-volver">Volver al Login</a>
-    </header>
+    <?php include 'includes/header.php'; ?>
 
     <main class="contenedor-formulario">
         <h2>¿Olvidaste tu contraseña?</h2>
@@ -31,7 +28,7 @@ session_start();
             </div>
         <?php endif; ?>
 
-        <form action="procesar_recuperar.php" method="POST" class="form-ark">
+        <form action="actions/procesar_recuperar.php" method="POST" class="form-ark">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <div class="campo">
                 <label>Tu Correo Electrónico:</label>
