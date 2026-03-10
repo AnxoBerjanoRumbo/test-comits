@@ -28,12 +28,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (in_array($extension, $validas)) {
             // Verificar si es una imagen real
             if (@getimagesize($img_tmp)) {
-                $nuevo_nombre = uniqid('dino_') . '.' . $extension;
-                $destino = '../assets/img/dinos/' . $nuevo_nombre;
-                
-                if (move_uploaded_file($img_tmp, $destino)) {
-                    $imagen = $nuevo_nombre;
+
+                // INTENTO DE SUBIDA A CLOUDINARY
+                include_once '../config/cloudinary_helper.php';
+                $url_cloudinary = subirImagenACloudinary($img_tmp, 'dinos');
+
+                if ($url_cloudinary) {
+                    $imagen = $url_cloudinary;
+                } else {
+                    // FALLBACK: Almacenamiento local si Cloudinary no está configurado o falla
+                    $nuevo_nombre = uniqid('dino_') . '.' . $extension;
+                    $destino = '../assets/img/dinos/' . $nuevo_nombre;
+                    if (move_uploaded_file($img_tmp, $destino)) {
+                        $imagen = $nuevo_nombre;
+                    } else {
+                        header("Location: insertar.php?error=formato");
+                        exit();
+                    }
                 }
+
             } else {
                 header("Location: insertar.php?error=formato");
                 exit();

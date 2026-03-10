@@ -29,7 +29,11 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
         </div>
         <nav class="perfil-nav">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <img src="assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" 
+                <?php 
+                $foto_nav = $_SESSION['foto_perfil'] ?? 'default.png';
+                $src_nav = (strpos($foto_nav, 'http') === 0) ? $foto_nav : "assets/img/perfil/" . $foto_nav;
+                ?>
+                <img src="<?php echo htmlspecialchars($src_nav); ?>" 
                      alt="Perfil" 
                      class="perfil-avatar-nav"
                      style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);"
@@ -59,7 +63,11 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
         <?php endif; ?>
 
         <div class="perfil-container">
-            <img src="assets/img/perfil/<?php echo htmlspecialchars($usuario['foto_perfil'] ?? 'default.png'); ?>" 
+            <?php 
+            $foto_p = $usuario['foto_perfil'] ?? 'default.png';
+            $src_p = (strpos($foto_p, 'http') === 0) ? $foto_p : "assets/img/perfil/" . $foto_p;
+            ?>
+            <img src="<?php echo htmlspecialchars($src_p); ?>" 
                  alt="Foto de perfil" 
                  class="perfil-foto-main"
                  style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid var(--accent); margin: 0 auto 15px auto; display: block;"

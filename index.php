@@ -79,7 +79,11 @@ $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <nav class="navegacion-usuario">
             <?php if (isset($_SESSION['nick'])): ?>
                 <a href="perfil.php" class="enlace-perfil" style="color: white; text-decoration: none; margin-right: 15px; display: flex; align-items: center; gap: 10px;">
-                    <img src="assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" 
+                    <?php 
+                    $foto_perfil = $_SESSION['foto_perfil'] ?? 'default.png';
+                    $src_foto = (strpos($foto_perfil, 'http') === 0) ? $foto_perfil : "assets/img/perfil/" . $foto_perfil;
+                    ?>
+                    <img src="<?php echo htmlspecialchars($src_foto); ?>" 
                          alt="Perfil" 
                          style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);"
                          onerror="this.src='assets/img/perfil/default.png'">
@@ -138,7 +142,10 @@ endif; ?>
                     <div class="dino-card">
                         <?php if(!empty($dino['imagen'])): ?>
                             <div class="dino-img-container">
-                                <img src="assets/img/dinos/<?php echo htmlspecialchars($dino['imagen']); ?>" alt="<?php echo htmlspecialchars($dino['nombre']); ?>" class="dino-img">
+                                <?php 
+                                $src_dino = (strpos($dino['imagen'], 'http') === 0) ? $dino['imagen'] : "assets/img/dinos/" . $dino['imagen'];
+                                ?>
+                                <img src="<?php echo htmlspecialchars($src_dino); ?>" alt="<?php echo htmlspecialchars($dino['nombre']); ?>" class="dino-img" onerror="this.src='assets/img/dinos/default_dino.jpg'">
                             </div>
                         <?php endif; ?>
                         <h3>

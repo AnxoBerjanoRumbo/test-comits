@@ -70,7 +70,11 @@ $comentarios = $stmt_comments->fetchAll(PDO::FETCH_ASSOC);
             <a href="index.php" class="btn-nav">Volver al listado</a>
             <?php if (isset($_SESSION['nick'])): ?>
                 <a href="perfil.php" class="enlace-perfil" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 10px;">
-                    <img src="assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" 
+                    <?php 
+                    $foto_perfil_h = $_SESSION['foto_perfil'] ?? 'default.png';
+                    $src_foto_h = (strpos($foto_perfil_h, 'http') === 0) ? $foto_perfil_h : "assets/img/perfil/" . $foto_perfil_h;
+                    ?>
+                    <img src="<?php echo htmlspecialchars($src_foto_h); ?>" 
                          alt="Perfil" 
                          style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);"
                          onerror="this.src='assets/img/perfil/default.png'">
@@ -88,7 +92,10 @@ $comentarios = $stmt_comments->fetchAll(PDO::FETCH_ASSOC);
             
             <?php if(!empty($dino['imagen'])): ?>
                 <div class="dino-img-detalle" style="text-align: center; margin-bottom: 20px;">
-                    <img src="assets/img/dinos/<?php echo htmlspecialchars($dino['imagen']); ?>" alt="<?php echo htmlspecialchars($dino['nombre']); ?>" style="max-width: 100%; border-radius: 8px;">
+                    <?php 
+                    $src_dino_d = (strpos($dino['imagen'], 'http') === 0) ? $dino['imagen'] : "assets/img/dinos/" . $dino['imagen'];
+                    ?>
+                    <img src="<?php echo htmlspecialchars($src_dino_d); ?>" alt="<?php echo htmlspecialchars($dino['nombre']); ?>" style="max-width: 100%; border-radius: 8px;" onerror="this.src='assets/img/dinos/default_dino.jpg'">
                 </div>
             <?php endif; ?>
 
@@ -141,7 +148,11 @@ endif; ?>
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="dino_id" value="<?php echo $dino['id']; ?>">
                     <div style="display: flex; gap: 15px; margin-bottom: 10px;">
-                        <img src="assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" 
+                        <?php 
+                        $foto_mismo = $_SESSION['foto_perfil'] ?? 'default.png';
+                        $src_mismo = (strpos($foto_mismo, 'http') === 0) ? $foto_mismo : "assets/img/perfil/" . $foto_mismo;
+                        ?>
+                        <img src="<?php echo htmlspecialchars($src_mismo); ?>" 
                              alt="Mi Perfil" 
                              class="avatar-comentario"
                              style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--success-color); flex-shrink: 0;"
@@ -160,7 +171,11 @@ endif; ?>
                         <div class="comentario <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? 'comentario-admin' : ''; ?>">
                             <div class="comentario-header">
                                 <div style="display: flex; align-items: center; gap: 10px;">
-                                    <img src="assets/img/perfil/<?php echo htmlspecialchars($c['foto_perfil'] ?? 'default.png'); ?>" 
+                                    <?php 
+                                    $foto_c = $c['foto_perfil'] ?? 'default.png';
+                                    $src_c = (strpos($foto_c, 'http') === 0) ? $foto_c : "assets/img/perfil/" . $foto_c;
+                                    ?>
+                                    <img src="<?php echo htmlspecialchars($src_c); ?>" 
                                          alt="Avatar" 
                                          class="avatar-comentario"
                                          onerror="this.src='assets/img/perfil/default.png'">

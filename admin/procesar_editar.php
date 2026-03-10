@@ -35,19 +35,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (in_array($extension, $validas)) {
             // Verificar si es una imagen real
             if (@getimagesize($img_tmp)) {
-                $nuevo_nombre = uniqid('dino_') . '.' . $extension;
-                $destino = '../assets/img/dinos/' . $nuevo_nombre;
                 
-                if (move_uploaded_file($img_tmp, $destino)) {
-                    // Borrar foto anterior del servidor si es distinta a la default
-                    if ($imagen && $imagen !== 'default_dino.jpg') {
-                        $old_path = '../assets/img/dinos/' . $imagen;
-                        if (file_exists($old_path)) {
-                            unlink($old_path);
-                        }
+                // INTENTO DE SUBIDA A CLOUDINARY
+                include_once '../config/cloudinary_helper.php';
+                $url_cloudinary = subirImagenACloudinary($img_tmp, 'dinos');
+
+                if ($url_cloudinary) {
+                    $nueva_imagen_valor = $url_cloudinary;
+                } else {
+                    // FALLBACK: Almacenamiento local si Cloudinary no está configurado o falla
+                    $nuevo_nombre = uniqid('dino_') . '.' . $extension;
+                    $destino = '../assets/img/dinos/' . $nuevo_nombre;
+                    if (move_uploaded_file($img_tmp, $destino)) {
+                        $nueva_imagen_valor = $nuevo_nombre;
+                    } else {
+                        header("Location: editar.php?id=" . $id . "&error=formato");
+                        exit();
                     }
-                    $imagen = $nuevo_nombre;
                 }
+
+                // Borrar foto anterior LOCAL si no es la default y no es ya una URL
+                if ($imagen && $imagen !== 'default_dino.jpg' && strpos($imagen, 'http') === false) {
+                    $old_path = '../assets/img/dinos/' . $imagen;
+                    if (file_exists($old_path)) {
+                        unlink($old_path);
+                    }
+                }
+                $imagen = $nueva_imagen_valor;
+
             } else {
                 header("Location: editar.php?id=" . $id . "&error=formato");
                 exit();

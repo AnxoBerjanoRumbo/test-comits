@@ -29,7 +29,11 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
         <h1 style="margin: 0; font-size: 1.8rem;">Panel de Administración</h1>
         <div style="display: flex; align-items: center; gap: 15px;">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <img src="../assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" 
+                <?php 
+                $foto_admin_i = $_SESSION['foto_perfil'] ?? 'default.png';
+                $src_admin_i = (strpos($foto_admin_i, 'http') === 0) ? $foto_admin_i : "../assets/img/perfil/" . $foto_admin_i;
+                ?>
+                <img src="<?php echo htmlspecialchars($src_admin_i); ?>" 
                      alt="Perfil" 
                      style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);"
                      onerror="this.src='../assets/img/perfil/default.png'">

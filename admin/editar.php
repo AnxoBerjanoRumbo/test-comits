@@ -51,7 +51,11 @@ $mapas_seleccionados = $stmt_dm->fetchAll(PDO::FETCH_COLUMN);
         <h1 style="margin: 0; font-size: 1.8rem;">Editar datos de la Criatura</h1>
         <div style="display: flex; align-items: center; gap: 15px;">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <img src="../assets/img/perfil/<?php echo htmlspecialchars($_SESSION['foto_perfil'] ?? 'default.png'); ?>" 
+                <?php 
+                $foto_admin_e = $_SESSION['foto_perfil'] ?? 'default.png';
+                $src_admin_e = (strpos($foto_admin_e, 'http') === 0) ? $foto_admin_e : "../assets/img/perfil/" . $foto_admin_e;
+                ?>
+                <img src="<?php echo htmlspecialchars($src_admin_e); ?>" 
                      alt="Perfil" 
                      style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);"
                      onerror="this.src='../assets/img/perfil/default.png'">
