@@ -39,12 +39,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
         $stmtDino->execute([':id' => $id]);
 
         $conexion->commit();
-        
-        // Borrar el archivo físico si no es el default
+
+        // Borrar el archivo físico o Cloudinary si no es el default
         if ($img_file && $img_file !== 'default_dino.jpg') {
-            $file_path = '../../assets/img/dinos/' . $img_file;
-            if (file_exists($file_path)) {
-                unlink($file_path);
+            if (strpos($img_file, 'http') !== false) {
+                include_once '../../config/cloudinary_helper.php';
+                eliminarImagenDeCloudinary($img_file);
+            }
+            else {
+                $file_path = '../../assets/img/dinos/' . $img_file;
+                if (file_exists($file_path))
+                    unlink($file_path);
             }
         }
 

@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dieta = $_POST['dieta'];
     $descripcion = $_POST['descripcion'];
     $mapa_id = $_POST['mapa_id'];
-    
+
     // Obtener imagen actual por si no suben una nueva
     $sql_actual = "SELECT imagen FROM dinosaurios WHERE id = :id";
     $stmt_actual = $conexion->prepare($sql_actual);
@@ -28,46 +28,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == UPLOAD_ERR_OK) {
         $img_name = $_FILES['imagen']['name'];
         $img_tmp = $_FILES['imagen']['tmp_name'];
-        
+
         $extension = strtolower(pathinfo($img_name, PATHINFO_EXTENSION));
         $validas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
         if (in_array($extension, $validas)) {
             // Verificar si es una imagen real
             if (@getimagesize($img_tmp)) {
-                
+
                 // INTENTO DE SUBIDA A CLOUDINARY
                 include_once '../../config/cloudinary_helper.php';
                 $url_cloudinary = subirImagenACloudinary($img_tmp, 'dinos');
 
                 if ($url_cloudinary) {
                     $nueva_imagen_valor = $url_cloudinary;
-                } else {
+                }
+                else {
                     // FALLBACK: Almacenamiento local si Cloudinary no está configurado o falla
                     $nuevo_nombre = uniqid('dino_') . '.' . $extension;
                     $destino = '../../assets/img/dinos/' . $nuevo_nombre;
                     if (move_uploaded_file($img_tmp, $destino)) {
                         $nueva_imagen_valor = $nuevo_nombre;
-                    } else {
+                    }
+                    else {
                         header("Location: ../../admin/editar.php?id=" . $id . "&error=formato");
                         exit();
                     }
                 }
 
-                // Borrar foto anterior LOCAL si no es la default y no es ya una URL
-                if ($imagen && $imagen !== 'default_dino.jpg' && strpos($imagen, 'http') === false) {
-                    $old_path = '../../assets/img/dinos/' . $imagen;
-                    if (file_exists($old_path)) {
-                        unlink($old_path);
+                // Borrar foto anterior (local o Cloudinary) si no es la default
+                if ($imagen && $imagen !== 'default_dino.jpg') {
+                    if (strpos($imagen, 'http') !== false) {
+                        eliminarImagenDeCloudinary($imagen);
+                    }
+                    else {
+                        $old_path = '../../assets/img/dinos/' . $imagen;
+                        if (file_exists($old_path))
+                            unlink($old_path);
                     }
                 }
                 $imagen = $nueva_imagen_valor;
 
-            } else {
+            }
+            else {
                 header("Location: ../../admin/editar.php?id=" . $id . "&error=formato");
                 exit();
             }
-        } else {
+        }
+        else {
             // Si la extensión no es válida, redirigimos con error
             header("Location: ../../admin/editar.php?id=" . $id . "&error=formato");
             exit();
@@ -95,13 +103,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: ../../detalle.php?id=" . $id);
         exit();
 
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         $conexion->rollBack();
         error_log("Error al editar: " . $e->getMessage());
         header("Location: ../../admin/editar.php?id=" . $id . "&error=interno");
         exit();
     }
-} else {
+}
+else {
     header("Location: ../../index.php");
     exit();
 }
