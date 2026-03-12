@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // 4. Confirmaciones con animaciones suaves antes de borrar contenido
-    const confirmButtons = document.querySelectorAll('form[action="borrar_comentario.php"] button, .boton-eliminar');
+    const confirmButtons = document.querySelectorAll('form[action="actions/borrar_comentario.php"] button, .boton-eliminar');
     confirmButtons.forEach(btn => {
         // Remove native inline onclick attributes to override them
         if(btn.hasAttribute('onclick')) {
