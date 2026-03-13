@@ -1,8 +1,5 @@
     </main>
     <footer style="margin-top: 50px; padding: 30px 5%; background: var(--bg-header); border-top: 1px solid var(--border-color); text-align: center;">
-        <div style="margin-bottom: 15px;">
-            <img src="<?php echo ($path_prefix ?? ''); ?>assets/img/logo.png" alt="ARK Hub Logo" style="width: 50px; opacity: 0.7;">
-        </div>
         <p style="color: #888; font-size: 0.9rem; margin: 0;">
             &copy; <?php echo date('Y'); ?> <strong>ARK Survival Hub</strong> - Wiki de Supervivencia.
         </p>
