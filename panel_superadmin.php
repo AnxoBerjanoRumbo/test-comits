@@ -112,6 +112,10 @@ $admins_activos = $stmt_a->fetchAll(PDO::FETCH_ASSOC);
                                         <input type="checkbox" name="permiso_eliminar_comentario" <?php echo ($admin['permiso_eliminar_comentario'] == 1) ? 'checked' : ''; ?> style="width: auto;"> 
                                         Gestionar Comentarios
                                     </label>
+                                    <label style="cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 0.9em;">
+                                        <input type="checkbox" name="permiso_moderar_usuarios" <?php echo ($admin['permiso_moderar_usuarios'] == 1) ? 'checked' : ''; ?> style="width: auto;"> 
+                                        Moderar Usuarios (Vetos)
+                                    </label>
                                 </div>
 
                                 <button type="submit" class="btn-activar" style="background-color: var(--bg-card); color: var(--accent); border: 1px solid var(--accent); font-size: 0.85em; padding: 10px;">Aplicar Permisos</button>

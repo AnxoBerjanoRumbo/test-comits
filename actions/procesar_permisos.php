@@ -19,10 +19,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($accion === 'actualizar_permisos') {
             $p_insertar = isset($_POST['permiso_insertar_dino']) ? 1 : 0;
             $p_eliminar = isset($_POST['permiso_eliminar_comentario']) ? 1 : 0;
+            $p_moderar = isset($_POST['permiso_moderar_usuarios']) ? 1 : 0;
 
-            $sql = "UPDATE usuarios SET permiso_insertar_dino = :p_i, permiso_eliminar_comentario = :p_e WHERE id = :id";
+            $sql = "UPDATE usuarios SET permiso_insertar_dino = :p_i, permiso_eliminar_comentario = :p_e, permiso_moderar_usuarios = :p_m WHERE id = :id";
             $stmt = $conexion->prepare($sql);
-            $stmt->execute([':p_i' => $p_insertar, ':p_e' => $p_eliminar, ':id' => $usuario_id]);
+            $stmt->execute([':p_i' => $p_insertar, ':p_e' => $p_eliminar, ':p_m' => $p_moderar, ':id' => $usuario_id]);
             
             header("Location: ../panel_superadmin.php?status=permisos_actualizados");
         } 

@@ -16,6 +16,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
+    // 0. Verificar si el email está bloqueado permanentemente
+    $checkBlocked = $conexion->prepare("SELECT COUNT(*) FROM emails_bloqueados WHERE email = :email");
+    $checkBlocked->execute([':email' => $email]);
+    if ($checkBlocked->fetchColumn() > 0) {
+        header("Location: ../registro.php?error=email_bloqueado");
+        exit();
+    }
+
     // 1. Lógica de Roles y Contraseñas
     $rol = 'usuario';
     $password_final = password_hash($password_introducida, PASSWORD_DEFAULT);

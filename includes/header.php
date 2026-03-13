@@ -5,6 +5,37 @@ $path_prefix = isset($is_admin_panel) && $is_admin_panel ? '../' : '';
 
 $foto_perfil_h = $_SESSION['foto_perfil'] ?? 'default.png';
 $src_foto_h = (strpos($foto_perfil_h, 'http') === 0) ? $foto_perfil_h : $path_prefix . "assets/img/perfil/" . $foto_perfil_h;
+
+// Verificación de baneo en tiempo real (si está logueado)
+if (isset($_SESSION['usuario_id'])) {
+    if (!isset($conexion)) {
+        include_once ($path_prefix ?: './') . 'config/db.php';
+    }
+    $stmt_check = $conexion->prepare("SELECT baneado_hasta, ban_permanente, motivo_ban FROM usuarios WHERE id = :id");
+    $stmt_check->execute([':id' => $_SESSION['usuario_id']]);
+    $ban_status = $stmt_check->fetch(PDO::FETCH_ASSOC);
+
+    if ($ban_status) {
+        $is_permanente = ($ban_status['ban_permanente'] == 1);
+        $is_temporal = (!empty($ban_status['baneado_hasta']) && strtotime($ban_status['baneado_hasta']) > time());
+
+        if ($is_permanente || $is_temporal) {
+            $motivo = $ban_status['motivo_ban'];
+            $hasta = $ban_status['baneado_hasta'];
+            
+            // Destruir sesión y redirigir
+            session_unset();
+            session_destroy();
+            session_start();
+            $_SESSION['ban_motivo'] = $motivo;
+            if ($is_temporal) $_SESSION['ban_hasta'] = $hasta;
+            
+            $err_type = $is_permanente ? 'baneado_permanente' : 'baneado_temporal';
+            header("Location: " . $path_prefix . "login.php?error=" . $err_type);
+            exit();
+        }
+    }
+}
 ?>
 <header class="header-principal">
     <div class="logo-titulo">

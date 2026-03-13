@@ -157,7 +157,15 @@ endif; ?>
                                     <?php 
                                     $foto_c = $c['foto_perfil'] ?? 'default.png';
                                     $src_c = (strpos($foto_c, 'http') === 0) ? $foto_c : "assets/img/perfil/" . $foto_c;
+                                    
+                                    // Solo mostrar enlace si eres moderador y no eres el propio usuario
+                                    $can_moderate = isset($_SESSION['p_moderar']) && $_SESSION['p_moderar'] == 1 && $_SESSION['usuario_id'] != $c['usuario_id'] && $c['rol'] !== 'superadmin';
                                     ?>
+                                    
+                                    <?php if ($can_moderate): ?>
+                                        <a href="admin/moderar_usuario.php?id=<?php echo $c['usuario_id']; ?>" title="Moderar a <?php echo htmlspecialchars($c['nick']); ?>" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+                                    <?php endif; ?>
+
                                     <img src="<?php echo htmlspecialchars($src_c); ?>" 
                                          alt="Avatar" 
                                          class="avatar-comentario"
@@ -165,6 +173,10 @@ endif; ?>
                                     <strong class="comentario-nick <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? 'nick-admin' : ''; ?>">
                                         <?php echo htmlspecialchars($c['nick']); ?> <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '🛡️' : ''; ?>
                                     </strong>
+
+                                    <?php if ($can_moderate): ?>
+                                        </a>
+                                    <?php endif; ?>
                                 </div>
                                 
                                 <?php if(isset($_SESSION['usuario_id']) && (($_SESSION['is_admin'] ?? false) === true || $_SESSION['usuario_id'] == $c['usuario_id'])): ?>

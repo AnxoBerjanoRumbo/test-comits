@@ -11,12 +11,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
 
     try {
+        // 1. Verificar si el email está bloqueado totalmente
+        $checkBlocked = $conexion->prepare("SELECT COUNT(*) FROM emails_bloqueados WHERE email = :email");
+        $checkBlocked->execute([':email' => $nick]); // $nick puede ser nick o email
+        if ($checkBlocked->fetchColumn() > 0) {
+            header("Location: ../login.php?error=email_bloqueado");
+            exit();
+        }
+
         $sql = "SELECT * FROM usuarios WHERE nick = :nick OR email = :nick";
         $stmt = $conexion->prepare($sql);
         $stmt->execute([':nick' => $nick]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['password'])) {
+            // 2. Verificar si el usuario está bajo baneo (temporal o permanente)
+            if ($user['ban_permanente'] == 1) {
+                $_SESSION['ban_motivo'] = $user['motivo_ban'];
+                header("Location: ../login.php?error=baneado_permanente");
+                exit();
+            }
+
+            if (!empty($user['baneado_hasta']) && strtotime($user['baneado_hasta']) > time()) {
+                $_SESSION['ban_motivo'] = $user['motivo_ban'];
+                $_SESSION['ban_hasta'] = $user['baneado_hasta'];
+                header("Location: ../login.php?error=baneado_temporal");
+                exit();
+            }
 
             $_SESSION['usuario_id'] = $user['id'];
             $_SESSION['nick'] = $user['nick'];
@@ -28,6 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Superadmin siempre tiene 1, admin depende de la DB
                 $_SESSION['p_insertar'] = ($user['rol'] === 'superadmin') ? 1 : ($user['permiso_insertar_dino'] ?? 0);
                 $_SESSION['p_eliminar'] = ($user['rol'] === 'superadmin') ? 1 : ($user['permiso_eliminar_comentario'] ?? 0);
+                $_SESSION['p_moderar'] = ($user['rol'] === 'superadmin') ? 1 : ($user['permiso_moderar_usuarios'] ?? 0);
             }
             else {
                 $_SESSION['is_admin'] = false;
