@@ -148,11 +148,4 @@ endif; ?>
         </div>
         <?php endif; ?>
 
-    </main>
-    
-    <button id="btnArriba" class="btn-arriba">
-        ⬆
-    </button>
-    <script src="assets/js/main.js"></script>
-</body>
-</html>
+    <?php include 'includes/footer.php'; ?>

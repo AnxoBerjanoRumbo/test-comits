@@ -101,7 +101,4 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
                 }
             });
         </script>
-    </main>
-    <script src="assets/js/main.js"></script>
-</body>
-</html>
+    <?php include 'includes/footer.php'; ?>

@@ -95,7 +95,7 @@ if (isset($_SESSION['nick'])) {
 
             <button type="submit" class="boton-insertar">Registrarse</button>
         </form>
-    </main>
+
     <script>
         const pass = document.getElementById('pass');
         const confirm_pass = document.getElementById('confirm_pass');
@@ -120,7 +120,4 @@ if (isset($_SESSION['nick'])) {
                 e.preventDefault();
             }
         });
-    </script>
-    <script src="assets/js/main.js"></script>
-</body>
-</html>
+    <?php include 'includes/footer.php'; ?>

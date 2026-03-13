@@ -130,7 +130,4 @@ $admins_activos = $stmt_a->fetchAll(PDO::FETCH_ASSOC);
                 <p class="mensaje-vacio">No hay administradores registrados aparte de ti.</p>
             <?php endif; ?>
         </section>
-    </main>
-    <script src="assets/js/main.js"></script>
-</body>
-</html>
+    <?php include 'includes/footer.php'; ?>

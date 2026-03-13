@@ -37,7 +37,4 @@ session_start();
 
             <button type="submit" class="boton-insertar">Enviar Enlace de Recuperación</button>
         </form>
-    </main>
-    <script src="assets/js/main.js"></script>
-</body>
-</html>
+    <?php include 'includes/footer.php'; ?>

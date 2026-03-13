@@ -68,7 +68,4 @@ if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true) {
 
             <button type="submit" class="boton-insertar">Iniciar Sesión</button>
         </form>
-    </main>
-    <script src="assets/js/main.js"></script>
-</body>
-</html>
+    <?php include 'includes/footer.php'; ?>

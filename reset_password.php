@@ -67,7 +67,7 @@ try {
                 <button type="submit" class="boton-insertar">Cambiar Contraseña</button>
             </form>
         <?php endif; ?>
-    </main>
+
     <script>
         const pass = document.getElementById('pass');
         const confirm_pass = document.getElementById('confirm_pass');
@@ -99,5 +99,4 @@ try {
             });
         }
     </script>
-</body>
-</html>
+    <?php include 'includes/footer.php'; ?>
