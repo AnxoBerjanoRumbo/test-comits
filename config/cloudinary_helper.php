@@ -130,4 +130,51 @@ function eliminarImagenDeCloudinary($imageUrl)
     $result = json_decode($response, true);
     return (isset($result['result']) && $result['result'] === 'ok');
 }
+
+/**
+ * Función unificada para gestionar la subida de una imagen (Cloudinary con Fallback Local)
+ * @param array $fileArray El array de $_FILES['nombre_campo']
+ * @param string $folder Carpeta destino ('dinos', 'perfiles', etc)
+ * @param string $localPath Ruta relativa para el fallback local (desde el archivo que llama)
+ * @param string $prefix Prefijo para el nombre de archivo local (ej: 'dino_')
+ * @return string|false Devuelve la URL de Cloudinary o el nombre del archivo local, o false si falla.
+ */
+function gestionarSubidaImagen($fileArray, $folder, $localPath, $prefix = 'img_')
+{
+    if (!isset($fileArray) || $fileArray['error'] !== UPLOAD_ERR_OK) {
+        return false;
+    }
+
+    $img_name = $fileArray['name'];
+    $img_tmp = $fileArray['tmp_name'];
+    $extension = strtolower(pathinfo($img_name, PATHINFO_EXTENSION));
+    $validas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+    // 1. Validar extensión
+    if (!in_array($extension, $validas)) {
+        return false;
+    }
+
+    // 2. Validar que sea imagen real
+    if (!@getimagesize($img_tmp)) {
+        return false;
+    }
+
+    // 3. Intento de subida a Cloudinary
+    $url_cloudinary = subirImagenACloudinary($img_tmp, $folder);
+    if ($url_cloudinary) {
+        return $url_cloudinary;
+    }
+
+    // 4. Fallback: Almacenamiento local
+    $nuevo_nombre = uniqid($prefix) . '.' . $extension;
+    $destino = rtrim($localPath, '/') . '/' . $nuevo_nombre;
+
+    if (move_uploaded_file($img_tmp, $destino)) {
+        return $nuevo_nombre;
+    }
+
+    return false;
+}
 ?>
+

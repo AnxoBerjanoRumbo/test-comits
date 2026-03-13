@@ -16,71 +16,38 @@ $usuario_id = $_SESSION['usuario_id'];
 try {
     // Subida de foto de perfil
     if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] == UPLOAD_ERR_OK) {
-        $img_name = $_FILES['foto_perfil']['name'];
-        $img_tmp = $_FILES['foto_perfil']['tmp_name'];
+        include_once '../config/cloudinary_helper.php';
+        $resultado = gestionarSubidaImagen($_FILES['foto_perfil'], 'perfiles', '../assets/img/perfil/', 'user_' . $usuario_id . '_');
 
-        $extension = strtolower(pathinfo($img_name, PATHINFO_EXTENSION));
-        $validas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        if ($resultado) {
+            // Borrar foto anterior (local o Cloudinary) si no es la default
+            $stmt_old = $conexion->prepare("SELECT foto_perfil FROM usuarios WHERE id = :id");
+            $stmt_old->execute([':id' => $usuario_id]);
+            $old_photo = $stmt_old->fetchColumn();
 
-        if (in_array($extension, $validas)) {
-            // Verificar si es una imagen real
-            if (@getimagesize($img_tmp)) {
-
-                // INTENTO DE SUBIDA A CLOUDINARY
-                include_once '../config/cloudinary_helper.php';
-                $url_cloudinary = subirImagenACloudinary($img_tmp, 'perfiles');
-
-                if ($url_cloudinary) {
-                    $nuevo_valor_db = $url_cloudinary;
+            if ($old_photo && $old_photo !== 'default.png') {
+                if (strpos($old_photo, 'http') !== false) {
+                    eliminarImagenDeCloudinary($old_photo);
                 }
                 else {
-                    // FALLBACK: Almacenamiento local si Cloudinary no está configurado o falla
-                    $nuevo_nombre = 'user_' . $usuario_id . '_' . uniqid() . '.' . $extension;
-                    $destino = '../assets/img/perfil/' . $nuevo_nombre;
-                    if (move_uploaded_file($img_tmp, $destino)) {
-                        $nuevo_valor_db = $nuevo_nombre;
-                    }
-                    else {
-                        header("Location: ../perfil.php?error=upload");
-                        exit();
-                    }
+                    $old_path = '../assets/img/perfil/' . $old_photo;
+                    if (file_exists($old_path)) unlink($old_path);
                 }
-
-                // Borrar foto anterior (local o Cloudinary) si no es la default
-                $stmt_old = $conexion->prepare("SELECT foto_perfil FROM usuarios WHERE id = :id");
-                $stmt_old->execute([':id' => $usuario_id]);
-                $old_photo = $stmt_old->fetchColumn();
-
-                if ($old_photo && $old_photo !== 'default.png') {
-                    if (strpos($old_photo, 'http') !== false) {
-                        eliminarImagenDeCloudinary($old_photo);
-                    }
-                    else {
-                        $old_path = '../assets/img/perfil/' . $old_photo;
-                        if (file_exists($old_path))
-                            unlink($old_path);
-                    }
-                }
-
-                $sqlImg = "UPDATE usuarios SET foto_perfil = :img WHERE id = :id";
-                $stmtImg = $conexion->prepare($sqlImg);
-                $stmtImg->execute([':img' => $nuevo_valor_db, ':id' => $usuario_id]);
-                $_SESSION['foto_perfil'] = $nuevo_valor_db;
-
-                header("Location: ../perfil.php?status=success");
-                exit();
-
             }
-            else {
-                header("Location: ../perfil.php?error=upload");
-                exit();
-            }
-        }
-        else {
+
+            $sqlImg = "UPDATE usuarios SET foto_perfil = :img WHERE id = :id";
+            $stmtImg = $conexion->prepare($sqlImg);
+            $stmtImg->execute([':img' => $resultado, ':id' => $usuario_id]);
+            $_SESSION['foto_perfil'] = $resultado;
+
+            header("Location: ../perfil.php?status=success");
+            exit();
+        } else {
             header("Location: ../perfil.php?error=upload");
             exit();
         }
     }
+
     else {
         header("Location: ../perfil.php");
         exit();
