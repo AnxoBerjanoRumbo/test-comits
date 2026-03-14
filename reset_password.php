@@ -36,7 +36,11 @@ try {
     <link rel="stylesheet" href="assets/css/estilos.css">
 </head>
 <body>
-    <?php include 'includes/header.php'; ?>
+    <?php 
+    $header_volver_link = "index.php";
+    $header_volver_texto = "Volver a la Wiki";
+    include 'includes/header.php'; 
+    ?>
 
     <main class="contenedor-formulario">
         <h2>Restablecer Contraseña</h2>

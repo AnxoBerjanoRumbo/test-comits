@@ -23,7 +23,11 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="assets/css/estilos.css?v=1.3">
 </head>
 <body>
-    <?php include 'includes/header.php'; ?>
+    <?php 
+    $header_volver_link = "index.php";
+    $header_volver_texto = "Volver a la Wiki";
+    include 'includes/header.php'; 
+    ?>
 
     <main class="contenedor-formulario">
         <h2>Mi Perfil</h2>
