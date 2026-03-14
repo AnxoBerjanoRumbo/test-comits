@@ -16,12 +16,7 @@ if (isset($_SESSION['nick'])) {
     <link rel="stylesheet" href="assets/css/estilos.css">
 </head>
 <body>
-    <?php 
-    $header_titulo = "Crear Cuenta";
-    $header_volver_link = "login.php";
-    $header_volver_texto = "Ya tengo cuenta (Login)";
-    include 'includes/header.php'; 
-    ?>
+    <?php include 'includes/header.php'; ?>
 
     <main class="contenedor-formulario">
         <h2>Únete a la Wiki</h2>

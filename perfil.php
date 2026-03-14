@@ -23,12 +23,7 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="assets/css/estilos.css?v=1.3">
 </head>
 <body>
-    <?php 
-    $header_titulo = "Opciones de Usuario";
-    $header_volver_link = "index.php";
-    $header_volver_texto = "Volver al Inicio";
-    include 'includes/header.php'; 
-    ?>
+    <?php include 'includes/header.php'; ?>
 
     <main class="contenedor-formulario">
         <h2>Mi Perfil</h2>
