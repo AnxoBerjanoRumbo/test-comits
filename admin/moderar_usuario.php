@@ -37,26 +37,26 @@ $is_admin_panel = true;
 include '../includes/header.php';
 ?>
 
-<main class="contenedor-detalle" style="max-width: 800px; margin-top: 50px;">
-    <div class="admin-card" style="display: flex; gap: 30px; align-items: flex-start; padding: 30px;">
-        <div style="text-align: center;">
+<main class="contenedor-moderacion">
+    <div class="moderacion-card">
+        <div class="moderacion-usuario-info">
             <?php 
                 $foto = $user['foto_perfil'] ?? 'default.png';
                 $src_foto = (strpos($foto, 'http') === 0) ? $foto : "../assets/img/perfil/" . $foto;
             ?>
-            <img src="<?php echo htmlspecialchars($src_foto); ?>" alt="Perfil" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid var(--accent);">
-            <h2 style="margin-top: 15px;"><?php echo htmlspecialchars($user['nick']); ?></h2>
-            <p style="color: #aaa;"><?php echo htmlspecialchars($user['email']); ?></p>
+            <img src="<?php echo htmlspecialchars($src_foto); ?>" alt="Perfil" class="moderacion-avatar">
+            <h2 class="mt-15"><?php echo htmlspecialchars($user['nick']); ?></h2>
+            <p class="text-muted"><?php echo htmlspecialchars($user['email']); ?></p>
         </div>
 
-        <div style="flex: 1;">
-            <form action="../actions/admin/procesar_moderacion.php" method="POST" class="form-ark" style="background: transparent; padding: 0; box-shadow: none;">
+        <div class="moderacion-form-container">
+            <form action="../actions/admin/procesar_moderacion.php" method="POST" class="form-ark form-moderacion">
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 <input type="hidden" name="usuario_id" value="<?php echo $user['id']; ?>">
 
                 <div class="campo">
                     <label>Motivo de la Sanción / Mensaje para el usuario:</label>
-                    <textarea name="motivo" placeholder="Escribe el motivo del ban o un mensaje para el usuario..." required style="min-height: 100px;"><?php echo htmlspecialchars($user['motivo_ban'] ?? ''); ?></textarea>
+                    <textarea name="motivo" placeholder="Escribe el motivo del ban o un mensaje para el usuario..." required class="h-100"><?php echo htmlspecialchars($user['motivo_ban'] ?? ''); ?></textarea>
                 </div>
 
                 <div class="campo">
@@ -75,21 +75,21 @@ include '../includes/header.php';
                         <option value="permanente">Veto Total (Permanente)</option>
                         <option value="expulsion">Expulsión Total (Borrar Cuenta + Bloquear Correo)</option>
                         <?php if ($user['ban_permanente'] || ($user['baneado_hasta'] && strtotime($user['baneado_hasta']) > time())): ?>
-                            <option value="quitar" style="color: #4CAF50; font-weight: bold;">[ QUITAR SANCIONES ACTUALES ]</option>
+                            <option value="quitar" class="opcion-verde">[ QUITAR SANCIONES ACTUALES ]</option>
                         <?php endif; ?>
                     </select>
                 </div>
 
-                <div style="margin-top: 20px; display: flex; gap: 15px;">
-                    <button type="submit" class="boton-insertar" style="flex: 2;">Aplicar Sanción</button>
-                    <a href="../index.php" class="btn-nav" style="flex: 1; text-align: center; background: #333;">Cancelar</a>
+                <div class="botones-moderacion">
+                    <button type="submit" class="boton-insertar btn-moderacion-aplicar">Aplicar Sanción</button>
+                    <a href="../index.php" class="btn-nav btn-moderacion-cancelar">Cancelar</a>
                 </div>
             </form>
         </div>
     </div>
 
     <?php if ($user['ban_permanente'] || ($user['baneado_hasta'] && strtotime($user['baneado_hasta']) > time())): ?>
-        <div class="alerta-exito" style="margin-top: 30px; background: rgba(255, 68, 68, 0.1); border-color: #ff4444; color: #ff4444;">
+        <div class="alerta-ban-activa">
             <strong>ESTADO ACTUAL:</strong> 
             <?php 
                 if ($user['ban_permanente']) {

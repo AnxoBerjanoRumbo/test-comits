@@ -15,6 +15,16 @@
     --radius: 12px;
 }
 
+/* UTILIDADES */
+.mt-15 { margin-top: 15px; }
+.mt-30 { margin-top: 30px; }
+.mb-20 { margin-bottom: 20px; }
+.text-muted { color: var(--text-muted); }
+.text-center { text-align: center; }
+.h-100 { min-height: 100px; }
+.flex-1 { flex: 1; }
+
+
 * {
     margin: 0;
     padding: 0;
@@ -876,4 +886,74 @@ header h1 {
     color: #121212;
     transform: translateY(-5px) !important;
     box-shadow: 0 8px 25px rgba(0, 255, 204, 0.5);
+
+}
+
+/* ------------------- MODERACIÓN ------------------- */
+.contenedor-moderacion {
+    max-width: 800px;
+    margin: 50px auto;
+}
+
+.moderacion-card {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    padding: 30px;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+}
+
+.moderacion-usuario-info {
+    text-align: center;
+    min-width: 180px;
+}
+
+.moderacion-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--accent);
+}
+
+.moderacion-form-container {
+    flex: 1;
+}
+
+.form-moderacion {
+    background: transparent !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+}
+
+.alerta-ban-activa {
+    margin-top: 30px;
+    background: rgba(255, 68, 68, 0.1);
+    border: 1px solid #ff4444;
+    color: #ff4444;
+    padding: 15px;
+    border-radius: var(--radius);
+}
+
+.opcion-verde {
+    color: var(--success-color);
+    font-weight: bold;
+}
+
+.botones-moderacion {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+}
+
+.btn-moderacion-aplicar {
+    flex: 2;
+}
+
+.btn-moderacion-cancelar {
+    flex: 1;
+    background: #333 !important;
+    text-align: center;
 }
