@@ -95,28 +95,5 @@ if (isset($_SESSION['nick'])) {
             <button type="submit" class="boton-insertar">Registrarse</button>
         </form>
 
-    <script>
-        const pass = document.getElementById('pass');
-        const confirm_pass = document.getElementById('confirm_pass');
-        const error_pass = document.getElementById('error_pass');
-        const form = document.querySelector('.form-ark');
-
-        function checkPass() {
-            if(pass.value !== confirm_pass.value && confirm_pass.value !== '') {
-                error_pass.style.display = 'block';
-                return false;
-            } else {
-                error_pass.style.display = 'none';
-                return true;
-            }
-        }
-
-        pass.addEventListener('input', checkPass);
-        confirm_pass.addEventListener('input', checkPass);
-
-        form.addEventListener('submit', function(e) {
-            if(!checkPass()) {
-                e.preventDefault();
-            }
-        });
+    <script src="assets/js/validacion_registro.js"></script>
     <?php include 'includes/footer.php'; ?>
