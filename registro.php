@@ -95,5 +95,5 @@ if (isset($_SESSION['nick'])) {
             <button type="submit" class="boton-insertar">Registrarse</button>
         </form>
 
-    <script src="assets/js/validacion_registro.js"></script>
+    <script src="assets/js/registro.js"></script>
     <?php include 'includes/footer.php'; ?>
