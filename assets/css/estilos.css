@@ -23,6 +23,29 @@
 .text-center { text-align: center; }
 .h-100 { min-height: 100px; }
 .flex-1 { flex: 1; }
+.cursor-pointer { cursor: pointer; }
+.w-auto { width: auto; }
+.w-100 { width: 100%; }
+.mt-10 { margin-top: 10px; }
+.mb-15 { margin-bottom: 15px; }
+.gap-10 { gap: 10px; }
+.flex-column { display: flex; flex-direction: column; }
+.align-start { align-items: flex-start; }
+.align-center { align-items: center; }
+.d-flex { display: flex; }
+.f-09 { font-size: 0.9rem; }
+.f-085 { font-size: 0.85rem; }
+.f-08 { font-size: 0.8rem; }
+.p-10 { padding: 10px; }
+.p-8 { padding: 8px; }
+.p-15 { padding: 15px; }
+.accent-text { color: var(--accent); }
+.bg-soft-dark { background: rgba(0,0,0,0.2); }
+.border-radius { border-radius: 8px; }
+.border-accent-top { border-top: 5px solid var(--accent); }
+.bg-header-accent { background-color: var(--bg-card); color: var(--accent); border-color: var(--accent); }
+
+
 
 
 * {

@@ -79,14 +79,14 @@ $admins_activos = $stmt_a->fetchAll(PDO::FETCH_ASSOC);
         </section>
 
         <section>
-            <h2 style="color: var(--accent);">Administradores Oficiales</h2>
+            <h2 class="accent-text">Administradores Oficiales</h2>
 
             <?php if (isset($_GET['status']) && $_GET['status'] == 'permisos_actualizados'): ?>
                 <div class="alerta-exito">
                     ✅ Permisos actualizados correctamente.
                 </div>
             <?php elseif (isset($_GET['status']) && $_GET['status'] == 'admin_quitado'): ?>
-                <div class="alerta-exito" style="color: #ff4444; border-color: #ff4444; background: rgba(255, 68, 68, 0.1);">
+                <div class="alerta-error">
                     👤 El usuario ya no es administrador.
                 </div>
             <?php endif; ?>
@@ -94,38 +94,38 @@ $admins_activos = $stmt_a->fetchAll(PDO::FETCH_ASSOC);
             <?php if (count($admins_activos) > 0): ?>
                 <div class="lista-admins">
                     <?php foreach ($admins_activos as $admin): ?>
-                        <div class="admin-card" style="border-top: 5px solid var(--accent);">
-                            <h3 class="admin-nick" style="color: var(--accent);"><?php echo htmlspecialchars($admin['nick']); ?></h3>
+                        <div class="admin-card border-accent-top">
+                            <h3 class="admin-nick accent-text"><?php echo htmlspecialchars($admin['nick']); ?></h3>
                             <p class="admin-estado">Cargo: Administrator</p>
                             
-                            <form action="actions/procesar_permisos.php" method="POST" class="admin-actions" style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
+                            <form action="actions/procesar_permisos.php" method="POST" class="admin-actions p-15 bg-soft-dark border-radius">
                                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                 <input type="hidden" name="usuario_id" value="<?php echo $admin['id']; ?>">
                                 <input type="hidden" name="accion" value="actualizar_permisos">
                                 
-                                <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 15px;">
-                                    <label style="cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 0.9em;">
-                                        <input type="checkbox" name="permiso_insertar_dino" <?php echo ($admin['permiso_insertar_dino'] == 1) ? 'checked' : ''; ?> style="width: auto;"> 
+                                <div class="flex-column align-start gap-10 mb-15">
+                                    <label class="cursor-pointer d-flex align-center gap-10 f-09">
+                                        <input type="checkbox" name="permiso_insertar_dino" <?php echo ($admin['permiso_insertar_dino'] == 1) ? 'checked' : ''; ?> class="w-auto"> 
                                         Añadir Criaturas
                                     </label>
-                                    <label style="cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 0.9em;">
-                                        <input type="checkbox" name="permiso_eliminar_comentario" <?php echo ($admin['permiso_eliminar_comentario'] == 1) ? 'checked' : ''; ?> style="width: auto;"> 
+                                    <label class="cursor-pointer d-flex align-center gap-10 f-09">
+                                        <input type="checkbox" name="permiso_eliminar_comentario" <?php echo ($admin['permiso_eliminar_comentario'] == 1) ? 'checked' : ''; ?> class="w-auto"> 
                                         Gestionar Comentarios
                                     </label>
-                                    <label style="cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 0.9em;">
-                                        <input type="checkbox" name="permiso_moderar_usuarios" <?php echo ($admin['permiso_moderar_usuarios'] == 1) ? 'checked' : ''; ?> style="width: auto;"> 
+                                    <label class="cursor-pointer d-flex align-center gap-10 f-09">
+                                        <input type="checkbox" name="permiso_moderar_usuarios" <?php echo ($admin['permiso_moderar_usuarios'] == 1) ? 'checked' : ''; ?> class="w-auto"> 
                                         Moderar Usuarios (Vetos)
                                     </label>
                                 </div>
 
-                                <button type="submit" class="btn-activar" style="background-color: var(--bg-card); color: var(--accent); border: 1px solid var(--accent); font-size: 0.85em; padding: 10px;">Aplicar Permisos</button>
+                                <button type="submit" class="btn-activar f-085 p-10 bg-header-accent">Aplicar Permisos</button>
                             </form>
 
-                            <form action="actions/procesar_permisos.php" method="POST" style="width: 100%; margin-top: 10px;">
+                            <form action="actions/procesar_permisos.php" method="POST" class="w-100 mt-10">
                                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                 <input type="hidden" name="usuario_id" value="<?php echo $admin['id']; ?>">
                                 <input type="hidden" name="accion" value="quitar_admin">
-                                <button type="submit" class="btn-cancelar" style="font-size: 0.8em; padding: 8px;" onclick="return confirm('¿Seguro que quieres quitar el rango de admin a <?php echo htmlspecialchars($admin['nick']); ?>?');">Revocar Admin</button>
+                                <button type="submit" class="btn-cancelar f-08 p-8" onclick="return confirm('¿Seguro que quieres quitar el rango de admin a <?php echo htmlspecialchars($admin['nick']); ?>?');">Revocar Admin</button>
                             </form>
                         </div>
                     <?php endforeach; ?>
