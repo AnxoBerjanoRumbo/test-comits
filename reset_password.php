@@ -72,35 +72,5 @@ try {
             </form>
         <?php endif; ?>
 
-    <script>
-        const pass = document.getElementById('pass');
-        const confirm_pass = document.getElementById('confirm_pass');
-        const error_pass = document.getElementById('error_pass');
-        const form = document.querySelector('.form-ark');
-
-        if (form) {
-            function checkPass() {
-                if(pass.value !== confirm_pass.value && confirm_pass.value !== '') {
-                    error_pass.style.display = 'block';
-                    return false;
-                } else {
-                    error_pass.style.display = 'none';
-                    return true;
-                }
-            }
-
-            pass.addEventListener('input', checkPass);
-            confirm_pass.addEventListener('input', checkPass);
-
-            form.addEventListener('submit', function(e) {
-                if(!checkPass()) {
-                    e.preventDefault();
-                }
-                if(pass.value.length < 4) {
-                    alert("La contraseña debe tener al menos 4 caracteres.");
-                    e.preventDefault();
-                }
-            });
-        }
-    </script>
+    <script src="assets/js/reset_password.js"></script>
     <?php include 'includes/footer.php'; ?>
