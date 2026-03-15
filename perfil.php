@@ -92,12 +92,5 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
             <button type="submit" class="boton-insertar">Confirmar Cambio de Contraseña</button>
         </form>
 
-        <script>
-            // Auto-envío al seleccionar archivo
-            document.getElementById('foto_perfil').addEventListener('change', function() {
-                if (this.files && this.files[0]) {
-                    document.getElementById('form-foto').submit();
-                }
-            });
-        </script>
+        <script src="assets/js/perfil.js"></script>
     <?php include 'includes/footer.php'; ?>
