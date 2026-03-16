@@ -10,7 +10,7 @@ if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_tok
     die("Error de validación CSRF.");
 }
 
-$dino_id = $_POST['dino_id'];
+$dino_id = (int)$_POST['dino_id'];
 $texto = trim($_POST['texto']);
 $usuario_id = $_SESSION['usuario_id'];
 

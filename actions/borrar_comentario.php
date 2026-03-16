@@ -10,8 +10,8 @@ if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_tok
     die("Error de validación CSRF.");
 }
 
-$comentario_id = $_POST['comentario_id'];
-$dino_id = $_POST['dino_id'];
+$comentario_id = (int)$_POST['comentario_id'];
+$dino_id = (int)$_POST['dino_id'];
 
 try {
     if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_eliminar'] ?? 0) == 1) {
