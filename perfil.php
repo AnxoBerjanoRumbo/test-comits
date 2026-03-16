@@ -33,7 +33,7 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
         <h2>Mi Perfil</h2>
         
         <?php if (isset($_GET['status']) && $_GET['status'] == 'success'): ?>
-            <div style="background-color: #4CAF50; color: white; padding: 10px; border-radius: 5px; text-align: center; margin-bottom: 20px;">
+            <div class="alerta-exito">
                 ✅ Perfil actualizado correctamente.
             </div>
         <?php elseif (isset($_GET['error'])): ?>
@@ -55,10 +55,9 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
             <img src="<?php echo htmlspecialchars($src_p); ?>" 
                  alt="Foto de perfil" 
                  class="perfil-foto-main"
-                 style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid var(--accent); margin: 0 auto 15px auto; display: block;"
                  onerror="this.src='assets/img/perfil/default.png'">
             <p><strong><?php echo htmlspecialchars($usuario['nick']); ?></strong> 
-               <span style="color: var(--accent);">(<?php echo htmlspecialchars($usuario['rol']); ?>)</span>
+               <span class="accent-text">(<?php echo htmlspecialchars($usuario['rol']); ?>)</span>
             </p>
         </div>
 
@@ -67,13 +66,13 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
             <div class="campo">
                 <label>Cambiar foto de perfil:</label>
-                <input type="file" name="foto_perfil" id="foto_perfil" accept="image/*" style="display: none;">
+                <input type="file" name="foto_perfil" id="foto_perfil" accept="image/*" class="d-none">
                 <button type="button" class="boton-insertar" onclick="document.getElementById('foto_perfil').click()">Seleccionar Nueva Imagen</button>
-                <small style="display: block; margin-top: 10px; color: #aaa;">La foto se actualizará automáticamente al seleccionarla.</small>
+                <small class="texto-auxiliar">La foto se actualizará automáticamente al seleccionarla.</small>
             </div>
         </form>
 
-        <hr style="border: 0; height: 1px; background: #333; margin: 30px 0;">
+        <hr class="separador">
 
         <!-- Formulario para la Contraseña -->
         <form action="actions/procesar_password.php" method="POST" class="form-ark">
