@@ -37,9 +37,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $base_url = "http://" . $_SERVER['HTTP_HOST'] . str_replace('/actions', '', dirname($_SERVER['PHP_SELF']));
             $reset_link = $base_url . "/reset_password.php?token=" . $token;
             
-            // Logueamos el enlace para que el desarrollador pueda verlo (simulando envío)
-            $log_msg = "[" . date("Y-m-d H:i:s") . "] Recuperación para " . $email . ": " . $reset_link . PHP_EOL;
-            file_put_contents("recuperacion_log.txt", $log_msg, FILE_APPEND);
+            // Registramos el enlace de recuperación de forma segura (no accesible por web)
+            // En producción real esto debería enviarse por email (PHPMailer, etc.)
+            $log_msg = "[" . date("Y-m-d H:i:s") . "] Recuperacion para " . $email . ": " . $reset_link . PHP_EOL;
+            error_log("ARK-RECOVERY: " . $log_msg);
             
             // Nota para el usuario: "Se ha enviado un correo"
         }
