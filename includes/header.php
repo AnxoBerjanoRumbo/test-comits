@@ -39,17 +39,17 @@ if (isset($_SESSION['usuario_id'])) {
 ?>
 <header class="header-principal">
     <div class="logo-titulo">
-        <a href="<?php echo $path_prefix; ?>index.php" style="text-decoration: none;">
+        <a href="<?php echo $path_prefix; ?>index.php" class="no-decoration">
             <h1><?php echo $header_titulo ?? 'ARK Survival Hub'; ?></h1>
         </a>
     </div>
     
     <nav class="navegacion-usuario">
         <?php if (isset($_SESSION['nick'])): ?>
-            <a href="<?php echo $path_prefix; ?>perfil.php" class="enlace-perfil" style="color: white; text-decoration: none; margin-right: 10px; display: flex; align-items: center; gap: 10px;">
+            <a href="<?php echo $path_prefix; ?>perfil.php" class="enlace-perfil-header">
                 <img src="<?php echo htmlspecialchars($src_foto_h); ?>" 
                      alt="Perfil" 
-                     style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);"
+                     class="avatar-header"
                      onerror="this.src='<?php echo $path_prefix; ?>assets/img/perfil/default.png'">
                 <span class="bienvenida">Hola, <strong><?php echo htmlspecialchars($_SESSION['nick']); ?></strong></span>
             </a>
@@ -61,7 +61,7 @@ if (isset($_SESSION['usuario_id'])) {
 
         <?php if (isset($_SESSION['nick'])): ?>
             <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'superadmin'): ?>
-                <a href="<?php echo $path_prefix; ?>panel_superadmin.php" class="btn-nav" style="background-color: #ffcc00; color: #1a1a1a; border-color: #ffcc00;">Panel Superadmin</a>
+                <a href="<?php echo $path_prefix; ?>panel_superadmin.php" class="btn-nav btn-superadmin">Panel Superadmin</a>
             <?php endif; ?>
 
             <a href="<?php echo $path_prefix; ?>actions/logout.php" class="btn-nav">Cerrar Sesión</a>

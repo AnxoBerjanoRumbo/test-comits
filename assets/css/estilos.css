@@ -194,6 +194,35 @@ body {
     box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
 }
 
+.btn-superadmin {
+    background-color: #ffcc00 !important;
+    color: #1a1a1a !important;
+    border-color: #ffcc00 !important;
+}
+
+.btn-superadmin:hover {
+    background-color: #e6b800 !important;
+    border-color: #e6b800 !important;
+}
+
+.enlace-perfil-header {
+    color: white;
+    text-decoration: none;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar-header {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent);
+}
+
+
 header {
     text-align: center;
     margin-bottom: 20px;
