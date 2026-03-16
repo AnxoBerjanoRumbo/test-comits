@@ -25,19 +25,19 @@ if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true) {
         <h2>Identificación de Usuario</h2>
 
         <?php if (isset($_GET['status']) && $_GET['status'] == 'registrado'): ?>
-            <div style="background-color: #4CAF50; color: white; padding: 10px; border-radius: 5px; text-align: center; margin-bottom: 20px;">
+            <div class="alerta-exito">
                 ✅ Registro completado. Ya puedes iniciar sesión.
             </div>
         <?php endif; ?>
 
         <?php if (isset($_GET['status']) && $_GET['status'] == 'pass_cambiada'): ?>
-            <div style="background-color: #4CAF50; color: white; padding: 10px; border-radius: 5px; text-align: center; margin-bottom: 20px;">
+            <div class="alerta-exito">
                 ✅ Tu contraseña ha sido cambiada correctamente. Ya puedes acceder.
             </div>
         <?php endif; ?>
 
         <?php if (isset($_GET['status']) && $_GET['status'] == 'expulsado'): ?>
-            <div class="alerta-error" style="background: rgba(255, 68, 68, 0.1); color: #ff4444; border-color: #ff4444;">
+            <div class="alerta-error">
                 🚫 El usuario ha sido expulsado permanentemente del servidor.
             </div>
         <?php endif; ?>
@@ -48,16 +48,16 @@ if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true) {
                     Usuario o contraseña incorrectos. Acceso denegado.
                 </div>
             <?php elseif ($_GET['error'] == 'email_bloqueado'): ?>
-                <div class="alerta-error" style="background: rgba(255, 68, 68, 0.1); color: #ff4444; border-color: #ff4444;">
+                <div class="alerta-error">
                     🚫 Este correo electrónico tiene un bloqueo total y no puede acceder ni registrarse.
                 </div>
             <?php elseif ($_GET['error'] == 'baneado_permanente'): ?>
-                <div class="alerta-error" style="background: rgba(255, 68, 68, 0.1); color: #ff4444; border-color: #ff4444;">
+                <div class="alerta-error">
                     🛑 <strong>CUENTA BANEADA PERMANENTEMENTE</strong><br>
                     Motivo: <?php echo htmlspecialchars($_SESSION['ban_motivo'] ?? 'Incumplimiento de normas'); ?>
                 </div>
             <?php elseif ($_GET['error'] == 'baneado_temporal'): ?>
-                <div class="alerta-error" style="background: rgba(255, 68, 68, 0.1); color: #ff4444; border-color: #ff4444;">
+                <div class="alerta-error">
                     ⏳ <strong>CUENTA SUSPENDIDA TEMPORALMENTE</strong><br>
                     Hasta: <?php echo date("d/m/Y H:i", strtotime($_SESSION['ban_hasta'] ?? 'now')); ?><br>
                     Motivo: <?php echo htmlspecialchars($_SESSION['ban_motivo'] ?? 'Revisión técnica'); ?>
@@ -82,9 +82,9 @@ if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true) {
                 <input type="password" name="password" required placeholder="••••••••">
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <a href="recuperar.php" style="color: #4CAF50; font-size: 0.9em; text-decoration: none;">¿Olvidaste tu contraseña?</a>
-                <a href="registro.php" style="color: #fff; font-size: 0.9em; text-decoration: none;">Regístrate aquí</a>
+            <div class="flex-between-center mb-20">
+                <a href="recuperar.php" class="accent-link f-09 no-decoration">¿Olvidaste tu contraseña?</a>
+                <a href="registro.php" class="text-muted f-09 no-decoration">Regístrate aquí</a>
             </div>
 
             <button type="submit" class="boton-insertar">Iniciar Sesión</button>

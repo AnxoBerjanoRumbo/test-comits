@@ -49,7 +49,7 @@ try {
             <div class="alerta-error">
                 <?php echo $error; ?>
             </div>
-            <div style="text-align: center; margin-top: 20px;">
+            <div class="text-center mt-20">
                 <a href="recuperar.php" class="btn-nav">Solicitar otro enlace</a>
             </div>
         <?php else: ?>
@@ -65,7 +65,7 @@ try {
                 <div class="campo">
                     <label>Confirmar Contraseña:</label>
                     <input type="password" name="confirmar_password" required placeholder="Repite la contraseña" id="confirm_pass">
-                    <small id="error_pass" style="color: #ff4444; display: none; margin-top: 5px;">Las contraseñas no coinciden.</small>
+                    <small id="error_pass" class="error-validacion">Las contraseñas no coinciden.</small>
                 </div>
 
                 <button type="submit" class="boton-insertar">Cambiar Contraseña</button>

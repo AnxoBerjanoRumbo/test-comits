@@ -26,7 +26,7 @@ if (isset($_SESSION['nick'])) {
         <h2>Únete a la Wiki</h2>
         
         <?php if (isset($_GET['status']) && $_GET['status'] == 'espera'): ?>
-            <div class="alerta-error" style="color: orange; border-color: orange; background: rgba(255,165,0,0.1);">
+            <div class="alerta-warning">
                 <strong>Solicitud de Admin registrada.</strong> Tu cuenta está bloqueada. El Superadministrador (Anxo) debe asignarte una contraseña para poder acceder.
             </div>
         <?php endif; ?>
@@ -50,7 +50,7 @@ if (isset($_SESSION['nick'])) {
         <?php endif; ?>
 
         <?php if (isset($_GET['error']) && $_GET['error'] == 'nick_admin_activo'): ?>
-            <div class="alerta-error" style="color: orange; border-color: orange; background: rgba(255,165,0,0.1);">
+            <div class="alerta-warning">
                 Ya existe un <strong>administrador</strong> activo o una solicitud pendiente con este nick exacto.
             </div>
         <?php endif; ?>
@@ -72,13 +72,13 @@ if (isset($_SESSION['nick'])) {
             <div class="campo">
                 <label>Nick de Usuario:</label>
                 <input type="text" name="nick" required placeholder="Ej: Superviviente99 o admin1">
-                <small style="color: #aaa;">Si tu nick incluye "admin", requerirá aprobación manual.</small>
+                <small class="texto-ayuda">Si tu nick incluye "admin", requerirá aprobación manual.</small>
             </div>
 
             <div class="campo">
                 <label>Correo Electrónico:</label>
                 <input type="email" name="email" required placeholder="tu@email.com">
-                <small style="color: #aaa;">Necesario para recuperar tu contraseña.</small>
+                <small class="texto-ayuda">Necesario para recuperar tu contraseña.</small>
             </div>
 
             <div class="campo">
@@ -89,7 +89,7 @@ if (isset($_SESSION['nick'])) {
             <div class="campo">
                 <label>Confirmar Contraseña:</label>
                 <input type="password" name="confirm_password" required placeholder="••••••••" id="confirm_pass">
-                <small id="error_pass" style="color: #ff4444; display: none; margin-top: 5px;">Las contraseñas no coinciden.</small>
+                <small id="error_pass" class="error-validacion">Las contraseñas no coinciden.</small>
             </div>
 
             <button type="submit" class="boton-insertar">Registrarse</button>
