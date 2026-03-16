@@ -1,9 +1,9 @@
     </main>
-    <footer style="margin-top: 50px; padding: 30px 5%; background: var(--bg-header); border-top: 1px solid var(--border-color); text-align: center;">
-        <p style="color: #888; font-size: 0.9rem; margin: 0;">
+    <footer class="footer-principal">
+        <p class="footer-copyright">
             &copy; <?php echo date('Y'); ?> <strong>ARK Survival Hub</strong> - Wiki de Supervivencia.
         </p>
-        <p style="color: #555; font-size: 0.8rem; margin-top: 5px;">
+        <p class="footer-texto">
             Desarrollado para la comunidad de supervivientes. Todos los derechos reservados.
         </p>
     </footer>

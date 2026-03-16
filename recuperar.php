@@ -18,10 +18,10 @@ session_start();
 
     <main class="contenedor-formulario">
         <h2>¿Olvidaste tu contraseña?</h2>
-        <p style="text-align: center; color: #ccc; margin-bottom: 20px;">Introduce tu correo electrónico y te enviaremos un enlace para restablecerla.</p>
+        <p class="text-center text-muted mb-20">Introduce tu correo electrónico y te enviaremos un enlace para restablecerla.</p>
 
         <?php if (isset($_GET['status']) && $_GET['status'] == 'enviado'): ?>
-            <div style="background-color: #4CAF50; color: white; padding: 15px; border-radius: 5px; text-align: center; margin-bottom: 20px;">
+            <div class="alerta-exito">
                 ✅ Si el correo existe en nuestra base de datos, recibirás un enlace en unos minutos.
             </div>
         <?php endif; ?>

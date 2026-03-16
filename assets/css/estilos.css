@@ -137,6 +137,28 @@ body {
     margin-bottom: 30px;
 }
 
+/* ------------------- FOOTER (PIE DE PÁGINA) ------------------- */
+.footer-principal {
+    margin-top: 50px;
+    padding: 30px 5%;
+    background: var(--bg-header);
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.footer-copyright {
+    color: #888;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.footer-texto {
+    color: #555;
+    font-size: 0.8rem;
+    margin-top: 5px;
+}
+
+
 .logo-titulo h1 {
     margin: 0;
     color: var(--accent);
