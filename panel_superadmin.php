@@ -35,8 +35,8 @@ $admins_activos = $stmt_a->fetchAll(PDO::FETCH_ASSOC);
     include 'includes/header.php'; 
     ?>
 
-    <main class="contenedor-detalle" style="max-width: 1000px;">
-        <section style="margin-bottom: 50px;">
+    <main class="contenedor-detalle max-w-1000">
+        <section class="mb-50">
             <h2>Solicitudes de Administrador (Pendientes)</h2>
             
             <?php if (isset($_GET['status']) && $_GET['status'] == 'actualizado'): ?>
@@ -44,7 +44,7 @@ $admins_activos = $stmt_a->fetchAll(PDO::FETCH_ASSOC);
                     ✅ Contraseña asignada correctamente. El admin ya puede entrar.
                 </div>
             <?php elseif (isset($_GET['status']) && $_GET['status'] == 'cancelado'): ?>
-                <div class="alerta-exito" style="color: #ff4444; border-color: #ff4444; background: rgba(255, 68, 68, 0.1);">
+                <div class="alerta-error">
                     ❌ Solicitud de administrador cancelada y eliminada.
                 </div>
             <?php endif; ?>
@@ -64,7 +64,7 @@ $admins_activos = $stmt_a->fetchAll(PDO::FETCH_ASSOC);
                                     <button type="submit" class="btn-activar">Activar Acceso</button>
                                 </form>
                                 
-                                <form action="actions/procesar_cancelar_admin.php" method="POST" style="width: 100%;">
+                                <form action="actions/procesar_cancelar_admin.php" method="POST" class="w-100">
                                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                     <input type="hidden" name="id_usuario" value="<?php echo $admin['id']; ?>">
                                     <button type="submit" class="btn-cancelar" onclick="return confirm('¿Rechazar a <?php echo htmlspecialchars($admin['nick']); ?>?');">Rechazar Solicitud</button>
