@@ -67,7 +67,7 @@ $admins_activos = $stmt_a->fetchAll(PDO::FETCH_ASSOC);
                                 <form action="actions/procesar_cancelar_admin.php" method="POST" class="w-100">
                                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                     <input type="hidden" name="id_usuario" value="<?php echo $admin['id']; ?>">
-                                    <button type="submit" class="btn-cancelar" onclick="return confirm('¿Rechazar a <?php echo htmlspecialchars($admin['nick']); ?>?');">Rechazar Solicitud</button>
+                                    <button type="submit" class="btn-cancelar" data-confirm="¿Rechazar a <?php echo htmlspecialchars($admin['nick']); ?>?">Rechazar Solicitud</button>
                                 </form>
                             </div>
                         </div>
@@ -125,7 +125,7 @@ $admins_activos = $stmt_a->fetchAll(PDO::FETCH_ASSOC);
                                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                 <input type="hidden" name="usuario_id" value="<?php echo $admin['id']; ?>">
                                 <input type="hidden" name="accion" value="quitar_admin">
-                                <button type="submit" class="btn-cancelar f-08 p-8" onclick="return confirm('¿Seguro que quieres quitar el rango de admin a <?php echo htmlspecialchars($admin['nick']); ?>?');">Revocar Admin</button>
+                                <button type="submit" class="btn-cancelar f-08 p-8" data-confirm="¿Seguro que quieres quitar el rango de admin a <?php echo htmlspecialchars($admin['nick']); ?>?">Revocar Admin</button>
                             </form>
                         </div>
                     <?php endforeach; ?>

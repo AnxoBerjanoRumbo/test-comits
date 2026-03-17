@@ -96,8 +96,8 @@ endif; ?>
         <h2>Diccionario de Criaturas</h2>
         
         <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
-            <div style="text-align: center; margin-bottom: 25px;">
-                <a href="admin/insertar.php" class="btn-nav btn-registro" style="padding: 10px 20px; font-size: 1.1rem; text-decoration: none; display: inline-block;">
+            <div class="text-center mb-25">
+                <a href="admin/insertar.php" class="btn-nav btn-registro p-10-20 f-11 no-decoration d-inline-block">
                     Añadir Nueva Criatura
                 </a>
             </div>
@@ -113,7 +113,7 @@ endif; ?>
                                 <?php 
                                 $src_dino = (strpos($dino['imagen'], 'http') === 0) ? $dino['imagen'] : "assets/img/dinos/" . $dino['imagen'];
                                 ?>
-                                <img src="<?php echo htmlspecialchars($src_dino); ?>" alt="<?php echo htmlspecialchars($dino['nombre']); ?>" class="dino-img" onerror="this.src='assets/img/dinos/default_dino.jpg'">
+                                <img src="<?php echo htmlspecialchars($src_dino); ?>" alt="<?php echo htmlspecialchars($dino['nombre']); ?>" class="dino-img">
                             </div>
                         <?php endif; ?>
                         <h3>
@@ -126,7 +126,7 @@ endif; ?>
     endforeach; ?>
             <?php
 else: ?>
-                <p style="grid-column: 1/-1; text-align: center; color: #888;">
+                <p class="grid-span-all text-center text-muted">
                 No se han encontrado criaturas que coincidan con "<strong><?php echo htmlspecialchars($busqueda); ?></strong>".
                 </p>
             <?php
@@ -134,7 +134,7 @@ endif; ?>
         </div>
 
         <?php if ($total_paginas > 1): ?>
-        <div class="paginacion" style="margin-top: 40px; text-align: center;">
+        <div class="paginacion mt-40 text-center">
             <?php
             $query_params = $_GET;
             for ($i = 1; $i <= $total_paginas; $i++):

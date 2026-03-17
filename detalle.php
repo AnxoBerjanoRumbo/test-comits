@@ -74,11 +74,11 @@ $comentarios = $stmt_comments->fetchAll(PDO::FETCH_ASSOC);
             <h2 class="nombre-dino"><?php echo htmlspecialchars($dino['nombre']); ?></h2>
             
             <?php if(!empty($dino['imagen'])): ?>
-                <div class="dino-img-detalle" style="text-align: center; margin-bottom: 20px;">
+                <div class="dino-img-detalle text-center mb-20">
                     <?php 
                     $src_dino_d = (strpos($dino['imagen'], 'http') === 0) ? $dino['imagen'] : "assets/img/dinos/" . $dino['imagen'];
                     ?>
-                    <img src="<?php echo htmlspecialchars($src_dino_d); ?>" alt="<?php echo htmlspecialchars($dino['nombre']); ?>" style="max-width: 100%; border-radius: 8px;" onerror="this.src='assets/img/dinos/default_dino.jpg'">
+                    <img src="<?php echo htmlspecialchars($src_dino_d); ?>" alt="<?php echo htmlspecialchars($dino['nombre']); ?>" class="w-100-max border-8">
                 </div>
             <?php endif; ?>
 
@@ -94,15 +94,15 @@ $comentarios = $stmt_comments->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <?php if(!empty($dino['descripcion'])): ?>
-                <div class="dino-descripcion" style="margin-top: 20px;">
+                <div class="dino-descripcion mt-20">
                     <h3>Descripción</h3>
-                    <p style="white-space: pre-wrap; color: #ccc;"><?php echo htmlspecialchars($dino['descripcion']); ?></p>
+                    <p class="pre-wrap text-muted"><?php echo htmlspecialchars($dino['descripcion']); ?></p>
                 </div>
             <?php endif; ?>
             
             <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_insertar'] ?? 0) == 1): ?>
-                <div style="margin-top: 20px; text-align: center;">
-                    <a href="admin/editar.php?id=<?php echo $dino['id']; ?>" class="btn-nav btn-registro" style="background-color: #007bff; border-color: #007bff; color: white;">Editar Criatura</a>
+                <div class="mt-20 text-center">
+                    <a href="admin/editar.php?id=<?php echo $dino['id']; ?>" class="btn-nav btn-registro btn-edit">Editar Criatura</a>
                 </div>
             <?php endif; ?>
         </section>
@@ -123,29 +123,27 @@ endif; ?>
             </div>
         </section>
 
-        <section class="seccion-comentarios" style="margin-top: 40px;">
+        <section class="seccion-comentarios mt-40">
             <h3>Comentarios y Aportes</h3>
             
             <?php if (isset($_SESSION['usuario_id'])): ?>
-                <form action="actions/procesar_comentario.php" method="POST" class="form-ark" style="margin-bottom: 25px;">
+                <form action="actions/procesar_comentario.php" method="POST" class="form-ark mb-25">
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="dino_id" value="<?php echo $dino['id']; ?>">
-                    <div style="display: flex; gap: 15px; margin-bottom: 10px;">
+                    <div class="d-flex gap-15 mb-10">
                         <?php 
                         $foto_mismo = $_SESSION['foto_perfil'] ?? 'default.png';
                         $src_mismo = (strpos($foto_mismo, 'http') === 0) ? $foto_mismo : "assets/img/perfil/" . $foto_mismo;
                         ?>
                         <img src="<?php echo htmlspecialchars($src_mismo); ?>" 
                              alt="Mi Perfil" 
-                             class="avatar-comentario"
-                             style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--success-color); flex-shrink: 0;"
-                             onerror="this.src='assets/img/perfil/default.png'">
-                        <textarea name="texto" required placeholder="Añade tu comentario o estrategia (máx 10.000 palabras)..." rows="4" style="width: 100%; border-radius: var(--radius);"></textarea>
+                             class="avatar-comentario avatar-40 flex-shrink-0">
+                        <textarea name="texto" required placeholder="Añade tu comentario o estrategia (máx 10.000 palabras)..." rows="4" class="w-100 border-radius"></textarea>
                     </div>
                     <button type="submit" class="boton-insertar">Comentar</button>
                 </form>
             <?php else: ?>
-                <p style="background-color: #333; padding: 10px; border-radius: 5px; text-align: center;">Debes <a href="login.php" style="color: #4CAF50;">iniciar sesión</a> para dejar un comentario.</p>
+                <p class="bg-soft p-10 border-radius text-center">Debes <a href="login.php" class="accent-link">iniciar sesión</a> para dejar un comentario.</p>
             <?php endif; ?>
 
             <div class="comentarios-lista">
@@ -153,7 +151,7 @@ endif; ?>
                     <?php foreach ($comentarios as $c): ?>
                         <div class="comentario <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? 'comentario-admin' : ''; ?>">
                             <div class="comentario-header">
-                                <div style="display: flex; align-items: center; gap: 10px;">
+                                <div class="d-flex align-center gap-10">
                                     <?php 
                                     $foto_c = $c['foto_perfil'] ?? 'default.png';
                                     $src_c = (strpos($foto_c, 'http') === 0) ? $foto_c : "assets/img/perfil/" . $foto_c;
@@ -163,13 +161,12 @@ endif; ?>
                                     ?>
                                     
                                     <?php if ($can_moderate): ?>
-                                        <a href="admin/moderar_usuario.php?id=<?php echo $c['usuario_id']; ?>" title="Moderar a <?php echo htmlspecialchars($c['nick']); ?>" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+                                        <a href="admin/moderar_usuario.php?id=<?php echo $c['usuario_id']; ?>" title="Moderar a <?php echo htmlspecialchars($c['nick']); ?>" class="d-flex align-center gap-10 no-decoration inherit-color">
                                     <?php endif; ?>
 
                                     <img src="<?php echo htmlspecialchars($src_c); ?>" 
                                          alt="Avatar" 
-                                         class="avatar-comentario"
-                                         onerror="this.src='assets/img/perfil/default.png'">
+                                         class="avatar-comentario">
                                     <strong class="comentario-nick <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? 'nick-admin' : ''; ?>">
                                         <?php echo htmlspecialchars($c['nick']); ?> <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '🛡️' : ''; ?>
                                     </strong>
@@ -180,11 +177,11 @@ endif; ?>
                                 </div>
                                 
                                 <?php if(isset($_SESSION['usuario_id']) && (($_SESSION['is_admin'] ?? false) === true || $_SESSION['usuario_id'] == $c['usuario_id'])): ?>
-                                    <form action="actions/borrar_comentario.php" method="POST" style="display: inline;">
+                                    <form action="actions/borrar_comentario.php" method="POST" class="d-inline">
                                         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                         <input type="hidden" name="comentario_id" value="<?php echo $c['id']; ?>">
                                         <input type="hidden" name="dino_id" value="<?php echo $dino['id']; ?>">
-                                        <button type="submit" onclick="return confirm('¿Borrar este comentario?');" class="btn-borrar-comentario">Eliminar</button>
+                                        <button type="submit" data-confirm="¿Borrar este comentario?" class="btn-borrar-comentario">Eliminar</button>
                                     </form>
                                 <?php endif; ?>
                             </div>
@@ -193,7 +190,7 @@ endif; ?>
                     <?php endforeach; ?>
 
                     <?php if ($total_paginas > 1): ?>
-                        <div class="paginacion-comentarios" style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+                        <div class="paginacion-comentarios d-flex justify-center gap-10 mt-20">
                             <?php if ($pagina_actual > 1): ?>
                                 <a href="detalle.php?id=<?php echo $id; ?>&p=<?php echo $pagina_actual - 1; ?>" class="btn-pag">« Anterior</a>
                             <?php endif; ?>
@@ -211,17 +208,17 @@ endif; ?>
                     <?php endif; ?>
 
                 <?php else: ?>
-                    <p class="sin-datos" style="text-align: center; color: #888;">No hay comentarios todavía. ¡Sé el primero en aportar info!</p>
+                    <p class="sin-datos text-center text-muted">No hay comentarios todavía. ¡Sé el primero en aportar info!</p>
                 <?php endif; ?>
             </div>
         </section>
 
         <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_insertar'] ?? 0) == 1): ?>
-            <div style="margin-top: 40px; text-align: center; border-top: 1px solid #444; padding-top: 20px;">
-                <form action="actions/admin/procesar_eliminar.php" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que quieres extinguir a <?php echo htmlspecialchars($dino['nombre']); ?>? Esta acción borrará sus datos de la base de datos y NO se puede deshacer.');">
+            <div class="mt-40 text-center border-top-thin p-20">
+                <form action="actions/admin/procesar_eliminar.php" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de que quieres extinguir a <?php echo htmlspecialchars($dino['nombre']); ?>? Esta acción borrará sus datos de la base de datos y NO se puede deshacer.');">
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="id" value="<?php echo $dino['id']; ?>">
-                    <button type="submit" class="boton-eliminar" style="border: none; cursor: pointer;">
+                    <button type="submit" class="boton-eliminar no-border cursor-pointer">
                         Eliminar Criatura
                     </button>
                 </form>

@@ -49,8 +49,7 @@ if (isset($_SESSION['usuario_id'])) {
             <a href="<?php echo $path_prefix; ?>perfil.php" class="enlace-perfil-header">
                 <img src="<?php echo htmlspecialchars($src_foto_h); ?>" 
                      alt="Perfil" 
-                     class="avatar-header"
-                     onerror="this.src='<?php echo $path_prefix; ?>assets/img/perfil/default.png'">
+                     class="avatar-header">
                 <span class="bienvenida">Hola, <strong><?php echo htmlspecialchars($_SESSION['nick']); ?></strong></span>
             </a>
         <?php endif; ?>

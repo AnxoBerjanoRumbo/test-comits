@@ -110,26 +110,48 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // 4. Confirmaciones con animaciones suaves antes de borrar contenido
-    const confirmButtons = document.querySelectorAll('form[action="actions/borrar_comentario.php"] button, .boton-eliminar');
-    confirmButtons.forEach(btn => {
-        // Remove native inline onclick attributes to override them
-        if(btn.hasAttribute('onclick')) {
-            const originalConfirm = btn.getAttribute('onclick');
-            btn.removeAttribute('onclick');
-            
-            btn.addEventListener('click', function(e) {
+    // 4. Confirmaciones genéricas mediante data-confirm
+    document.addEventListener('click', function(e) {
+        const target = e.target.closest('[data-confirm]');
+        if (target) {
+            const mensaje = target.getAttribute('data-confirm') || '¿Estás seguro de realizar esta acción?';
+            if (!confirm(mensaje)) {
                 e.preventDefault();
-                // Custom confirm dialog logic could go here, 
-                // for now fallback to browser confirm but without the string being hardcoded in html
-                if (confirm('¿Estás seguro de que deseas realizar esta acción irreversible?')) {
-                    if (btn.tagName.toLowerCase() === 'button') {
-                        btn.closest('form').submit();
-                    } else if (btn.tagName.toLowerCase() === 'a') {
-                        window.location.href = btn.href;
-                    }
+                e.stopImmediatePropagation();
+            }
+        }
+    });
+
+    // Compatibilidad adicional para formularios de borrado que no usen data-confirm todavía
+    const legacyConfirmButtons = document.querySelectorAll('form[action="actions/borrar_comentario.php"] button, .boton-eliminar');
+    legacyConfirmButtons.forEach(btn => {
+        if (!btn.hasAttribute('data-confirm')) {
+            btn.addEventListener('click', function(e) {
+                if (!confirm('¿Estás seguro de que deseas realizar esta acción irreversible?')) {
+                    e.preventDefault();
                 }
             });
         }
     });
+
+    // 5. Manejo global de errores de imágenes (Fallback)
+    // Usamos delegación en la fase de captura porque el evento 'error' no burbujea
+    document.addEventListener('error', function(e) {
+        if (e.target.tagName === 'IMG') {
+            // Intentar detectar si es perfil o dino según clase
+            const cl = e.target.classList;
+            const isProfile = cl.contains('perfil-foto-main') || 
+                              cl.contains('avatar-header') || 
+                              cl.contains('avatar-comentario') ||
+                              cl.contains('moderacion-avatar') ||
+                              cl.contains('perfil-avatar-nav');
+            
+            const root = typeof path_prefix !== 'undefined' ? path_prefix : '';
+            const fallback = isProfile ? root + 'assets/img/perfil/default.png' : root + 'assets/img/dinos/default_dino.jpg';
+            
+            if (e.target.src !== window.location.origin + window.location.pathname && !e.target.src.includes(fallback)) {
+                e.target.src = fallback;
+            }
+        }
+    }, true);
 });
