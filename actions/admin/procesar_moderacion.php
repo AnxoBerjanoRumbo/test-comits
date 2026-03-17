@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tipo = $_POST['tipo_ban'];
 
     // Obtener datos del usuario a moderar
-    $stmt = $conexion->prepare("SELECT id, email, rol FROM usuarios WHERE id = :id");
+    $stmt = $conexion->prepare("SELECT id, email, rol, foto_perfil FROM usuarios WHERE id = :id");
     $stmt->execute([':id' => $id_moderado]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -37,19 +37,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         if ($tipo === 'expulsion') {
+            include_once '../../config/cloudinary_helper.php';
+
             // 1. Bloquear Email
             $sql_bloqueo = "INSERT IGNORE INTO emails_bloqueados (email, motivo) VALUES (:email, :motivo)";
             $stmt_b = $conexion->prepare($sql_bloqueo);
             $stmt_b->execute([':email' => $user['email'], ':motivo' => $motivo]);
 
-            // 2. Eliminar Usuario
+            // 2. Borrar Foto de Perfil (Local o Cloudinary)
+            $foto = $user['foto_perfil'];
+            if ($foto && $foto !== 'default.png') {
+                if (strpos($foto, 'http') !== false) {
+                    eliminarImagenDeCloudinary($foto);
+                } else {
+                    $local_path = '../../assets/img/perfil/' . $foto;
+                    if (file_exists($local_path)) unlink($local_path);
+                }
+            }
+
+            // 3. Eliminar Comentarios del usuario
+            $stmt_comm = $conexion->prepare("DELETE FROM comentarios WHERE usuario_id = :id");
+            $stmt_comm->execute([':id' => $id_moderado]);
+
+            // 4. Eliminar Usuario
             $sql_del = "DELETE FROM usuarios WHERE id = :id";
             $stmt_d = $conexion->prepare($sql_del);
             $stmt_d->execute([':id' => $id_moderado]);
 
-            header("Location: ../../index.php?status=expulsado");
+            header("Location: ../../login.php?status=expulsado");
             exit();
         }
+
 
         // Calcular fecha de fin para bans temporales
         $baneado_hasta = null;
