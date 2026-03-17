@@ -22,13 +22,12 @@ document.addEventListener('DOMContentLoaded', function() {
         confirm_pass.addEventListener('input', checkPass);
 
         form.addEventListener('submit', function(e) {
-            if (!checkPass()) {
+            if (pass.value.length < 4) {
+                e.preventDefault();
+                alert("La contraseña debe tener al menos 4 caracteres.");
+            } else if (!checkPass()) {
                 e.preventDefault();
                 alert("Las contraseñas no coinciden.");
-            }
-            if (pass.value.length < 4) {
-                alert("La contraseña debe tener al menos 4 caracteres.");
-                e.preventDefault();
             }
         });
     }
