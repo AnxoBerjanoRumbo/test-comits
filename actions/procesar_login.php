@@ -11,18 +11,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
 
     try {
-        // 1. Verificar si el email está bloqueado totalmente
-        $checkBlocked = $conexion->prepare("SELECT COUNT(*) FROM emails_bloqueados WHERE email = :email");
-        $checkBlocked->execute([':email' => $nick]); // $nick puede ser nick o email
-        if ($checkBlocked->fetchColumn() > 0) {
-            header("Location: ../login.php?error=email_bloqueado");
-            exit();
-        }
-
         $sql = "SELECT * FROM usuarios WHERE nick = :nick OR email = :nick";
         $stmt = $conexion->prepare($sql);
         $stmt->execute([':nick' => $nick]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            // 1. Verificar si el email del usuario está bloqueado totalmente
+            $checkBlocked = $conexion->prepare("SELECT COUNT(*) FROM emails_bloqueados WHERE email = :email");
+            $checkBlocked->execute([':email' => $user['email']]);
+            if ($checkBlocked->fetchColumn() > 0) {
+                header("Location: ../login.php?error=email_bloqueado");
+                exit();
+            }
+        }
 
         if ($user && password_verify($password, $user['password'])) {
             // 2. Verificar si el usuario está bajo baneo (temporal o permanente)

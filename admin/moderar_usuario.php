@@ -34,8 +34,18 @@ $header_titulo = "Moderar Usuario: " . htmlspecialchars($user['nick']);
 $header_volver_link = "../index.php";
 $header_volver_texto = "Cancelar";
 $is_admin_panel = true;
-include '../includes/header.php';
 ?>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $header_titulo; ?> - ARK Hub</title>
+    <link rel="stylesheet" href="../assets/css/estilos.css?v=1.4">
+</head>
+<body class="admin-body">
+    <?php include '../includes/header.php'; ?>
 
 <main class="contenedor-moderacion">
     <div class="moderacion-card">

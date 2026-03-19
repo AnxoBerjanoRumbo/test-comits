@@ -54,7 +54,8 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
             ?>
             <img src="<?php echo htmlspecialchars($src_p); ?>" 
                  alt="Foto de perfil" 
-                 class="perfil-foto-main">
+                 class="perfil-foto-main"
+                 onerror="this.src='assets/img/perfil/default.png'">
             <p><strong><?php echo htmlspecialchars($usuario['nick']); ?></strong> 
                <span class="accent-text">(<?php echo htmlspecialchars($usuario['rol']); ?>)</span>
             </p>
@@ -66,7 +67,7 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
             <div class="campo">
                 <label>Cambiar foto de perfil:</label>
                 <input type="file" name="foto_perfil" id="foto_perfil" accept="image/*" class="d-none">
-                <button type="button" class="boton-insertar" id="btn-seleccionar-foto">Seleccionar Nueva Imagen</button>
+                <button type="button" class="boton-insertar" onclick="document.getElementById('foto_perfil').click()">Seleccionar Nueva Imagen</button>
                 <small class="texto-auxiliar">La foto se actualizará automáticamente al seleccionarla.</small>
             </div>
         </form>

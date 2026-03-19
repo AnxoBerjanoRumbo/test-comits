@@ -12,10 +12,5 @@ document.addEventListener('DOMContentLoaded', function() {
                 formFoto.submit();
             }
         });
-
-        const btnSeleccionar = document.getElementById('btn-seleccionar-foto');
-        if (btnSeleccionar) {
-            btnSeleccionar.addEventListener('click', () => fotoPerfil.click());
-        }
     }
 });
