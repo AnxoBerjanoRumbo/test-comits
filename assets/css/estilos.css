@@ -437,19 +437,23 @@ header h1 {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: var(--radius);
 }
 
 .buscador input[type="text"],
 .buscador select {
-    background-color: var(--bg-main);
+    background-color: #1a1a1a;
     border: 1px solid var(--border-color);
-    color: var(--text-main);
-    padding: 12px 20px;
-    border-radius: var(--radius);
+    color: white;
+    padding: 14px 20px;
+    border-radius: 8px;
     font-size: 1rem;
     font-family: 'Outfit', sans-serif;
     outline: none;
     transition: all 0.3s;
+    min-width: 200px;
 }
 
 .buscador input[type="text"]:focus,
@@ -706,7 +710,7 @@ header h1 {
 .form-ark textarea {
     width: 100%;
     padding: 14px;
-    background-color: var(--bg-main);
+    background-color: #1a1a1a;
     border: 1px solid var(--border-color);
     color: white;
     border-radius: 8px;
@@ -714,6 +718,12 @@ header h1 {
     font-family: inherit;
     font-size: 1rem;
     transition: 0.3s;
+}
+
+.form-ark input[type="file"] {
+    padding: 10px;
+    cursor: pointer;
+    background: #252525;
 }
 
 .form-ark input:focus,
@@ -932,10 +942,29 @@ header h1 {
 }
 
 /* ------------------- RESPONSIVE ------------------- */
+@media (max-width: 992px) {
+    .contenedor-detalle, .contenedor-moderacion {
+        padding: 30px;
+        margin: 20px 10px;
+    }
+}
+
 @media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+
     .header-principal {
         flex-direction: column;
         gap: 20px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .navegacion-usuario {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
     }
 
     .buscador form {
@@ -943,32 +972,61 @@ header h1 {
         align-items: stretch;
     }
 
-    .admin-card {
-        flex-direction: column;
-        align-items: stretch;
+    .buscador input[type="text"] {
+        min-width: 0;
+    }
+
+    .contenedor-dinos {
+        grid-template-columns: 1fr;
         gap: 20px;
+    }
+
+    .dino-img-container {
+        height: 280px;
+    }
+
+    .admin-card {
+        padding: 20px;
     }
 
     .form-activar {
         flex-direction: column;
-        width: 100%;
-        background: transparent;
-        border: none;
-        padding: 0;
-    }
-
-    .input-password {
-        width: 100%;
-        background-color: var(--bg-main);
-        border: 1px solid var(--border-color);
-    }
-
-    .btn-activar {
-        width: 100%;
     }
 
     .info-grid {
         grid-template-columns: 1fr;
+    }
+
+    .moderacion-card {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .moderacion-usuario-info {
+        min-width: 0;
+    }
+
+    .comentario-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .avatar-comentario {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-titulo h1 {
+        font-size: 1.5rem;
+    }
+
+    .btn-nav {
+        width: 100%;
+        font-size: 0.85rem;
     }
 }
 

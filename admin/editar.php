@@ -97,8 +97,18 @@ $mapas_seleccionados = $stmt_dm->fetchAll(PDO::FETCH_COLUMN);
             </div>
 
             <div class="campo">
-                <label>Imagen de la criatura (dejar en blanco para mantener la actual <?php echo htmlspecialchars($dino['imagen'] ?? ''); ?>):</label>
+                <label>Imagen de la criatura:</label>
+                <?php if(!empty($dino['imagen'])): ?>
+                    <div class="mb-15">
+                        <p class="f-08 text-muted mb-10">Imagen actual:</p>
+                        <?php 
+                        $src_dino_edit = (strpos($dino['imagen'], 'http') === 0) ? $dino['imagen'] : "../assets/img/dinos/" . $dino['imagen'];
+                        ?>
+                        <img src="<?php echo htmlspecialchars($src_dino_edit); ?>" class="border-8" style="max-width: 200px; height: auto; border: 2px solid var(--accent);">
+                    </div>
+                <?php endif; ?>
                 <input type="file" name="imagen" accept="image/*">
+                <small class="texto-auxiliar">Dejar vacío para mantener la imagen actual.</small>
             </div>
 
             <div class="campo">
