@@ -64,10 +64,6 @@ if (isset($_SESSION['usuario_id'])) {
                 <a href="<?php echo $path_prefix; ?>panel_superadmin.php" class="btn-nav btn-superadmin">Panel Superadmin</a>
             <?php endif; ?>
 
-            <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
-                <a href="<?php echo $path_prefix; ?>admin/panel_admin.php" class="btn-nav">Gestión Admin</a>
-            <?php endif; ?>
-
             <a href="<?php echo $path_prefix; ?>actions/logout.php" class="btn-nav">Cerrar Sesión</a>
         <?php else: ?>
             <?php 
