@@ -214,7 +214,7 @@ $tab_activa = (!empty($busqueda) || isset($_GET['tab_usuarios'])) ? 'usuarios' :
             <?php endif; ?>
 
             <?php if (count($resultados_busq) > 1 && !$usuario_encontrado): ?>
-                <div class="comentarios-lista">
+                <div class="comentarios-lista mt-30">
                     <h3 class="mb-15">Usuarios encontrados con ese nombre:</h3>
                     <?php foreach ($resultados_busq as $res): ?>
                         <div class="comentario" style="border-left-color: var(--accent);">
@@ -228,7 +228,7 @@ $tab_activa = (!empty($busqueda) || isset($_GET['tab_usuarios'])) ? 'usuarios' :
             <?php endif; ?>
 
             <?php if ($usuario_encontrado): ?>
-                <div class="ficha-principal border-accent-top">
+                <div class="ficha-principal border-accent-top mt-30">
                     <div class="flex-between-center mb-30" style="flex-wrap: wrap; gap: 20px;">
                         <div class="d-flex align-center gap-20">
                             <?php 
