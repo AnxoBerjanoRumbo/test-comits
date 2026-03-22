@@ -71,24 +71,24 @@ if (isset($_SESSION['nick'])) {
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <div class="campo">
                 <label>Nick de Usuario:</label>
-                <input type="text" name="nick" required placeholder="Ej: Superviviente99 o admin1">
-                <small class="texto-ayuda">Si tu nick incluye "admin", requerirá aprobación manual.</small>
+                <input type="text" name="nick" required placeholder="Ej: Superviviente99 o admin1" maxlength="25">
+                <small class="texto-ayuda">Máximo 25 caracteres. Si incluye "admin", requerirá aprobación.</small>
             </div>
 
             <div class="campo">
                 <label>Correo Electrónico:</label>
-                <input type="email" name="email" required placeholder="tu@email.com">
+                <input type="email" name="email" required placeholder="tu@email.com" maxlength="100">
                 <small class="texto-ayuda">Necesario para recuperar tu contraseña.</small>
             </div>
 
             <div class="campo">
                 <label>Contraseña (solo usuarios normales):</label>
-                <input type="password" name="password" required placeholder="••••••••" id="pass">
+                <input type="password" name="password" required placeholder="••••••••" id="pass" maxlength="100">
             </div>
 
             <div class="campo">
                 <label>Confirmar Contraseña:</label>
-                <input type="password" name="confirm_password" required placeholder="••••••••" id="confirm_pass">
+                <input type="password" name="confirm_password" required placeholder="••••••••" id="confirm_pass" maxlength="100">
                 <small id="error_pass" class="error-validacion">Las contraseñas no coinciden.</small>
             </div>
 

@@ -57,7 +57,7 @@ $comentarios = $stmt_comments->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $dino['nombre']; ?> - ARK Hub</title>
+    <title><?php echo htmlspecialchars($dino['nombre']); ?> - ARK Hub</title>
     <link rel="stylesheet" href="assets/css/estilos.css?v=1.3">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -112,7 +112,7 @@ $comentarios = $stmt_comments->fetchAll(PDO::FETCH_ASSOC);
             <div class="lista-mapas">
                 <?php if (count($mapas) > 0): ?>
                     <?php foreach ($mapas as $mapa): ?>
-                        <span class="tag-mapa"><?php echo $mapa['nombre_mapa']; ?></span>
+                        <span class="tag-mapa"><?php echo htmlspecialchars($mapa['nombre_mapa']); ?></span>
                     <?php
     endforeach; ?>
                 <?php

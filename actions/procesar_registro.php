@@ -11,6 +11,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password_introducida = $_POST['password'];
     $confirm_password_introducida = $_POST['confirm_password'];
 
+    // Validaciones de longitud para evitar ataques de desbordamiento y rotura de UI
+    if (mb_strlen($nick) > 25 || mb_strlen($email) > 100 || mb_strlen($password_introducida) > 100) {
+        header("Location: ../registro.php?error=longitud_excedida");
+        exit();
+    }
+
     if ($password_introducida !== $confirm_password_introducida) {
         header("Location: ../registro.php?error=pass_mismatch");
         exit();

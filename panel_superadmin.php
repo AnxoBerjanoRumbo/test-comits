@@ -230,14 +230,14 @@ $tab_activa = (!empty($busqueda) || isset($_GET['tab_usuarios'])) ? 'usuarios' :
             <?php if ($usuario_encontrado): ?>
                 <div class="ficha-principal border-accent-top mt-30">
                     <div class="flex-between-center mb-40" style="flex-wrap: wrap; gap: 20px;">
-                        <div class="d-flex align-center gap-20">
+                        <div class="d-flex align-center gap-20" style="flex: 1; min-width: 0;">
                             <?php 
                             $f_u = $usuario_encontrado['foto_perfil'] ?? 'default.png';
                             $src_u = (strpos($f_u, 'http') === 0) ? $f_u : "assets/img/perfil/" . $f_u;
                             ?>
-                            <img src="<?php echo htmlspecialchars($src_u); ?>" class="perfil-foto-main" style="margin: 0; width: 100px; height: 100px; border-width: 3px;">
-                            <div>
-                                <h1 class="f-15" style="margin-bottom: 5px;"><?php echo htmlspecialchars($usuario_encontrado['nick']); ?></h1>
+                            <img src="<?php echo htmlspecialchars($src_u); ?>" class="perfil-foto-main" style="margin: 0; width: 100px; height: 100px; border-width: 3px; flex-shrink: 0;">
+                            <div style="min-width: 0; flex: 1;">
+                                <h1 class="f-15" style="margin-bottom: 5px; word-break: break-word; line-height: 1.2;"><?php echo htmlspecialchars($usuario_encontrado['nick']); ?></h1>
                                 <p class="accent-text f-09"><strong>RANGO:</strong> <?php echo strtoupper($usuario_encontrado['rol']); ?></p>
                             </div>
                         </div>

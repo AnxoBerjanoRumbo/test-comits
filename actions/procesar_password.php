@@ -29,6 +29,11 @@ if (strlen($nueva_password) < 4) {
     exit();
 }
 
+if (strlen($nueva_password) > 100) {
+    header("Location: ../perfil.php?error=pass_larga");
+    exit();
+}
+
 try {
     $hash = password_hash($nueva_password, PASSWORD_DEFAULT);
     $sqlPass = "UPDATE usuarios SET password = :p WHERE id = :id";

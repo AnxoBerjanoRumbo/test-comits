@@ -80,12 +80,12 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
             <h3>Cambiar Contraseña</h3>
             <div class="campo">
                 <label>Nueva contraseña:</label>
-                <input type="password" name="nueva_password" placeholder="Mínimo 4 caracteres" required>
+                <input type="password" name="nueva_password" placeholder="Mínimo 4 caracteres" required maxlength="100">
             </div>
 
             <div class="campo">
                 <label>Confirmar nueva contraseña:</label>
-                <input type="password" name="confirmar_password" placeholder="Repite la nueva contraseña" required>
+                <input type="password" name="confirmar_password" placeholder="Repite la nueva contraseña" required maxlength="100">
             </div>
 
             <button type="submit" class="boton-insertar">Confirmar Cambio de Contraseña</button>

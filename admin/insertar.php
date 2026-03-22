@@ -50,12 +50,12 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <div class="campo">
                 <label>Nombre de la criatura:</label>
-                <input type="text" name="nombre" required placeholder="Ej: Thylacoleo">
+                <input type="text" name="nombre" required placeholder="Ej: Thylacoleo" maxlength="40">
             </div>
 
             <div class="campo">
                 <label>Especie:</label>
-                <input type="text" name="especie" required placeholder="Ej: Thylacoleo furtimorsus">
+                <input type="text" name="especie" required placeholder="Ej: Thylacoleo furtimorsus" maxlength="60">
             </div>
 
             <div class="campo">
@@ -70,7 +70,7 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="campo">
                 <label>Descripción:</label>
-                <textarea name="descripcion" required placeholder="Breve descripción de la criatura..." rows="4"></textarea>
+                <textarea name="descripcion" required placeholder="Breve descripción de la criatura..." rows="4" maxlength="500"></textarea>
             </div>
 
             <div class="campo">

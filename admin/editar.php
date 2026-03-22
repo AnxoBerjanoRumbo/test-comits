@@ -73,12 +73,12 @@ $mapas_seleccionados = $stmt_dm->fetchAll(PDO::FETCH_COLUMN);
             
             <div class="campo">
                 <label>Nombre de la criatura:</label>
-                <input type="text" name="nombre" required value="<?php echo htmlspecialchars($dino['nombre']); ?>">
+                <input type="text" name="nombre" required value="<?php echo htmlspecialchars($dino['nombre']); ?>" maxlength="40">
             </div>
 
             <div class="campo">
                 <label>Especie:</label>
-                <input type="text" name="especie" required value="<?php echo htmlspecialchars($dino['especie']); ?>">
+                <input type="text" name="especie" required value="<?php echo htmlspecialchars($dino['especie']); ?>" maxlength="60">
             </div>
 
             <div class="campo">
@@ -93,7 +93,7 @@ $mapas_seleccionados = $stmt_dm->fetchAll(PDO::FETCH_COLUMN);
 
             <div class="campo">
                 <label>Descripción:</label>
-                <textarea name="descripcion" required rows="4"><?php echo htmlspecialchars($dino['descripcion']); ?></textarea>
+                <textarea name="descripcion" required rows="4" maxlength="500"><?php echo htmlspecialchars($dino['descripcion']); ?></textarea>
             </div>
 
             <div class="campo">

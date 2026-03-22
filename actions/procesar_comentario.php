@@ -14,8 +14,8 @@ $dino_id = (int)$_POST['dino_id'];
 $texto = trim($_POST['texto']);
 $usuario_id = $_SESSION['usuario_id'];
 
-// Limitar el texto aproximado a 10000 palabras (asumiendo 1 palabra = ~6 caracteres promedio)
-$texto = substr($texto, 0, 60000);
+// Limitar el texto a 2000 caracteres para evitar abusos y problemas de layout
+$texto = mb_substr($texto, 0, 2000);
 
 if (!empty($texto) && !empty($dino_id)) {
     try {
