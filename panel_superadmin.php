@@ -229,7 +229,7 @@ $tab_activa = (!empty($busqueda) || isset($_GET['tab_usuarios'])) ? 'usuarios' :
 
             <?php if ($usuario_encontrado): ?>
                 <div class="ficha-principal border-accent-top mt-30">
-                    <div class="flex-between-center mb-30" style="flex-wrap: wrap; gap: 20px;">
+                    <div class="flex-between-center mb-40" style="flex-wrap: wrap; gap: 20px;">
                         <div class="d-flex align-center gap-20">
                             <?php 
                             $f_u = $usuario_encontrado['foto_perfil'] ?? 'default.png';
@@ -237,14 +237,14 @@ $tab_activa = (!empty($busqueda) || isset($_GET['tab_usuarios'])) ? 'usuarios' :
                             ?>
                             <img src="<?php echo htmlspecialchars($src_u); ?>" class="perfil-foto-main" style="margin: 0; width: 100px; height: 100px; border-width: 3px;">
                             <div>
-                                <h1 class="f-15"><?php echo htmlspecialchars($usuario_encontrado['nick']); ?></h1>
+                                <h1 class="f-15" style="margin-bottom: 5px;"><?php echo htmlspecialchars($usuario_encontrado['nick']); ?></h1>
                                 <p class="accent-text f-09"><strong>RANGO:</strong> <?php echo strtoupper($usuario_encontrado['rol']); ?></p>
                             </div>
                         </div>
                         <a href="admin/moderar_usuario.php?id=<?php echo $usuario_encontrado['id']; ?>" class="boton-eliminar" style="background-color: #ff9800; border-radius: 8px;">Ir a Moderación</a>
                     </div>
 
-                    <div class="info-grid">
+                    <div class="info-grid mt-20" style="gap: 30px;">
                         <div class="dato"><span class="text-muted">ID:</span> <strong>#<?php echo $usuario_encontrado['id']; ?></strong></div>
                         <div class="dato"><span class="text-muted">Correo:</span> <strong><?php echo htmlspecialchars($usuario_encontrado['email']); ?></strong></div>
                         <div class="dato"><span class="text-muted">Estado:</span> 
