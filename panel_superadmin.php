@@ -257,7 +257,7 @@ $tab_activa = (!empty($busqueda) || isset($_GET['tab_usuarios'])) ? 'usuarios' :
                             <form action="actions/admin/procesar_borrar_usuario.php" method="POST" onsubmit="return confirm('⚠️ ¿ESTÁS SEGURO? Esto borrará al usuario y todos sus comentarios PERMANENTEMENTE.');" style="margin:0; padding:0; background:none; border:none; box-shadow:none;">
                                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                 <input type="hidden" name="id_usuario" value="<?php echo $usuario_encontrado['id']; ?>">
-                                <button type="submit" class="boton-eliminar" style="border-radius: 8px;">Eliminar Permanente</button>
+                                <button type="submit" class="boton-eliminar" style="border-radius: 8px;">Eliminar</button>
                             </form>
                         </div>
                     </div>
