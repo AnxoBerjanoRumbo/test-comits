@@ -70,7 +70,7 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="campo">
                 <label>Descripción:</label>
-                <textarea name="descripcion" required placeholder="Breve descripción de la criatura..." rows="4" maxlength="500"></textarea>
+                <textarea name="descripcion" required placeholder="Aquí va la información importante de la criatura (habilidades, tameo, etc.)..." rows="10" maxlength="10000"></textarea>
             </div>
 
             <div class="campo">

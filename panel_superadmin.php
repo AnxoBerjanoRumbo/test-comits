@@ -228,20 +228,38 @@ $tab_activa = (!empty($busqueda) || isset($_GET['tab_usuarios'])) ? 'usuarios' :
             <?php endif; ?>
 
             <?php if ($usuario_encontrado): ?>
+                <?php if (isset($_GET['status']) && $_GET['status'] == 'usuario_borrado'): ?>
+                    <div class="alerta-error" style="background: rgba(255, 68, 68, 0.2); border-color: #ff4444; color: #fff;">
+                        🗑️ Usuario eliminado por completo de la base de datos.
+                    </div>
+                <?php endif; ?>
+
+                <?php if (isset($_GET['error']) && $_GET['error'] == 'autoborrado'): ?>
+                    <div class="alerta-error">⚠️ No puedes eliminar tu propia cuenta de superadministrador.</div>
+                <?php endif; ?>
+
                 <div class="ficha-principal border-accent-top mt-30">
-                    <div class="flex-between-center mb-40" style="flex-wrap: wrap; gap: 20px;">
-                        <div class="d-flex align-center gap-20" style="flex: 1; min-width: 0;">
+                    <div class="d-flex align-start mb-40" style="justify-content: space-between; flex-wrap: wrap; gap: 30px;">
+                        <div class="d-flex align-center" style="flex: 1; min-width: 0; gap: 40px;">
                             <?php 
                             $f_u = $usuario_encontrado['foto_perfil'] ?? 'default.png';
                             $src_u = (strpos($f_u, 'http') === 0) ? $f_u : "assets/img/perfil/" . $f_u;
                             ?>
                             <img src="<?php echo htmlspecialchars($src_u); ?>" class="perfil-foto-main" style="margin: 0; width: 100px; height: 100px; border-width: 3px; flex-shrink: 0;">
-                            <div style="min-width: 0; flex: 1;">
+                            <div style="min-width: 0; flex: 1; padding-left: 20px;">
                                 <h1 class="f-15" style="margin-bottom: 5px; word-break: break-word; line-height: 1.2;"><?php echo htmlspecialchars($usuario_encontrado['nick']); ?></h1>
                                 <p class="accent-text f-09"><strong>RANGO:</strong> <?php echo strtoupper($usuario_encontrado['rol']); ?></p>
                             </div>
                         </div>
-                        <a href="admin/moderar_usuario.php?id=<?php echo $usuario_encontrado['id']; ?>" class="boton-eliminar" style="background-color: #ff9800; border-radius: 8px;">Ir a Moderación</a>
+                        <div class="d-flex gap-10 flex-wrap">
+                            <a href="admin/moderar_usuario.php?id=<?php echo $usuario_encontrado['id']; ?>" class="boton-eliminar" style="background-color: #ff9800; border-radius: 8px;">Ir a Moderación</a>
+                            
+                            <form action="actions/admin/procesar_borrar_usuario.php" method="POST" onsubmit="return confirm('⚠️ ¿ESTÁS SEGURO? Esto borrará al usuario y todos sus comentarios PERMANENTEMENTE.');" style="margin:0; padding:0; background:none; border:none; box-shadow:none;">
+                                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                <input type="hidden" name="id_usuario" value="<?php echo $usuario_encontrado['id']; ?>">
+                                <button type="submit" class="boton-eliminar" style="border-radius: 8px;">Eliminar Permanente</button>
+                            </form>
+                        </div>
                     </div>
 
                     <div class="info-grid mt-20" style="gap: 30px;">

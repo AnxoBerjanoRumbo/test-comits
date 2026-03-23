@@ -93,7 +93,7 @@ $mapas_seleccionados = $stmt_dm->fetchAll(PDO::FETCH_COLUMN);
 
             <div class="campo">
                 <label>Descripción:</label>
-                <textarea name="descripcion" required rows="4" maxlength="500"><?php echo htmlspecialchars($dino['descripcion']); ?></textarea>
+                <textarea name="descripcion" required rows="10" maxlength="10000"><?php echo htmlspecialchars($dino['descripcion']); ?></textarea>
             </div>
 
             <div class="campo">
