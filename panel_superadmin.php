@@ -172,8 +172,8 @@ $tab_activa = (!empty($busqueda) || isset($_GET['tab_usuarios'])) ? 'usuarios' :
                                     <input type="hidden" name="usuario_id" value="<?php echo $admin['id']; ?>">
                                     <input type="hidden" name="accion" value="actualizar_permisos">
                                     <div class="flex-column align-start gap-10 mb-15">
-                                        <label class="cursor-pointer d-flex align-center gap-10 f-09"><input type="checkbox" name="permiso_insertar_dino" <?php echo ($admin['permiso_insertar_dino'] == 1) ? 'checked' : ''; ?> class="w-auto"> Añadir Criaturas</label>
-                                        <label class="cursor-pointer d-flex align-center gap-10 f-09"><input type="checkbox" name="permiso_eliminar_comentario" <?php echo ($admin['permiso_eliminar_comentario'] == 1) ? 'checked' : ''; ?> class="w-auto"> Borrar Comentarios</label>
+                                        <label class="cursor-pointer d-flex align-center gap-10 f-09"><input type="checkbox" name="permiso_insertar_dino" <?php echo ($admin['permiso_insertar_dino'] == 1) ? 'checked' : ''; ?> class="w-auto"> Añadir/Editar Criaturas</label>
+                                        <label class="cursor-pointer d-flex align-center gap-10 f-09"><input type="checkbox" name="permiso_eliminar_comentario" <?php echo ($admin['permiso_eliminar_comentario'] == 1) ? 'checked' : ''; ?> class="w-auto"> Borrar/Contestar Comentarios</label>
                                         <label class="cursor-pointer d-flex align-center gap-10 f-09"><input type="checkbox" name="permiso_moderar_usuarios" <?php echo ($admin['permiso_moderar_usuarios'] == 1) ? 'checked' : ''; ?> class="w-auto"> Moderar (Vetos)</label>
                                     </div>
                                     <button type="submit" class="btn-activar f-085 p-10 bg-header-accent">Guardar Cambios</button>

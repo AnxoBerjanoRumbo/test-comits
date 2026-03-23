@@ -14,14 +14,15 @@ $dino_id = (int)$_POST['dino_id'];
 $texto = trim($_POST['texto']);
 $usuario_id = $_SESSION['usuario_id'];
 
-// Limitar el texto a 2000 caracteres para evitar abusos y problemas de layout
-$texto = mb_substr($texto, 0, 2000);
+$respuesta_a = isset($_POST['respuesta_a']) ? (int)$_POST['respuesta_a'] : null;
+$texto = mb_substr($texto, 0, 10000);
 
 if (!empty($texto) && !empty($dino_id)) {
     try {
-        $stmt = $conexion->prepare("INSERT INTO comentarios (texto, usuario_id, dino_id) VALUES (:texto, :u_id, :d_id)");
-        $stmt->execute([':texto' => $texto, ':u_id' => $usuario_id, ':d_id' => $dino_id]);
-    } catch(PDOException $e) {
+        $stmt = $conexion->prepare("INSERT INTO comentarios (texto, usuario_id, dino_id, respuesta_a) VALUES (:texto, :u_id, :d_id, :resp_a)");
+        $stmt->execute([':texto' => $texto, ':u_id' => $usuario_id, ':d_id' => $dino_id, ':resp_a' => $respuesta_a]);
+    }
+    catch (PDOException $e) {
         error_log("Error al insertar comentario: " . $e->getMessage());
     }
 }

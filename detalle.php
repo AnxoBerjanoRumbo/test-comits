@@ -38,9 +38,11 @@ $total_comentarios = $stmt_count->fetchColumn();
 $total_paginas = ceil($total_comentarios / $comentarios_por_pagina);
 
 // 4.2. Consulta de comentarios con LIMIT y OFFSET
-$sql_comments = "SELECT c.*, u.nick, u.rol, u.foto_perfil 
+$sql_comments = "SELECT c.*, u.nick, u.rol, u.foto_perfil, u2.nick as nick_respuesta 
                  FROM comentarios c 
                  JOIN usuarios u ON c.usuario_id = u.id 
+                 LEFT JOIN comentarios c2 ON c.respuesta_a = c2.id
+                 LEFT JOIN usuarios u2 ON c2.usuario_id = u2.id
                  WHERE c.dino_id = :id 
                  ORDER BY c.id DESC 
                  LIMIT :limit OFFSET :offset";
@@ -127,9 +129,15 @@ endif; ?>
             <h3>Comentarios y Aportes</h3>
             
             <?php if (isset($_SESSION['usuario_id'])): ?>
-                <form action="actions/procesar_comentario.php" method="POST" class="form-ark" style="margin-bottom: 25px;">
+                <form action="actions/procesar_comentario.php" method="POST" class="form-ark" style="margin-bottom: 25px;" id="form-comentario">
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="dino_id" value="<?php echo $dino['id']; ?>">
+                    <input type="hidden" name="respuesta_a" id="input_respuesta_a" value="">
+                    
+                    <div id="indicador-respuesta" style="display: none; background: rgba(0, 255, 204, 0.1); padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px dashed var(--accent);">
+                        <span class="f-09">Respondiendo a <strong id="nick-respuesta">@usuario</strong></span>
+                        <button type="button" onclick="cancelarRespuesta()" style="background: none; border: none; color: #ff5555; cursor: pointer; float: right; font-weight: bold;">[X] Cancelar</button>
+                    </div>
                     <div style="display: flex; gap: 15px; margin-bottom: 10px;">
                         <?php 
                         $foto_mismo = $_SESSION['foto_perfil'] ?? 'default.png';
@@ -179,15 +187,25 @@ endif; ?>
                                     <?php endif; ?>
                                 </div>
                                 
-                                <?php if(isset($_SESSION['usuario_id']) && (($_SESSION['is_admin'] ?? false) === true || $_SESSION['usuario_id'] == $c['usuario_id'])): ?>
-                                    <form action="actions/borrar_comentario.php" method="POST" style="display: inline;">
-                                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                                        <input type="hidden" name="comentario_id" value="<?php echo $c['id']; ?>">
-                                        <input type="hidden" name="dino_id" value="<?php echo $dino['id']; ?>">
-                                        <button type="submit" onclick="return confirm('¿Borrar este comentario?');" class="btn-borrar-comentario">Eliminar</button>
-                                    </form>
-                                <?php endif; ?>
+                                <div class="d-flex align-center gap-10">
+                                    <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
+                                        <button type="button" class="btn-nav f-08" style="padding: 4px 10px; border-color: var(--accent); color: var(--accent);" onclick="prepararRespuesta(<?php echo $c['id']; ?>, '<?php echo addslashes($c['nick']); ?>')">Contestar</button>
+                                    <?php endif; ?>
+                                    <?php if(isset($_SESSION['usuario_id']) && (($_SESSION['is_admin'] ?? false) === true || $_SESSION['usuario_id'] == $c['usuario_id'])): ?>
+                                        <form action="actions/borrar_comentario.php" method="POST" style="display: inline;">
+                                            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                            <input type="hidden" name="comentario_id" value="<?php echo $c['id']; ?>">
+                                            <input type="hidden" name="dino_id" value="<?php echo $dino['id']; ?>">
+                                            <button type="submit" onclick="return confirm('¿Borrar este comentario?');" class="btn-borrar-comentario">Eliminar</button>
+                                        </form>
+                                    <?php endif; ?>
+                                </div>
                             </div>
+                            <?php if (!empty($c['nick_respuesta'])): ?>
+                                <div class="mb-10 f-085 text-muted" style="border-left: 2px solid #555; padding-left: 10px; margin-left: 5px;">
+                                    En respuesta a <span class="accent-text">@<?php echo htmlspecialchars($c['nick_respuesta']); ?></span>
+                                </div>
+                            <?php endif; ?>
                             <p class="comentario-texto"><?php echo nl2br(htmlspecialchars($c['texto'])); ?></p>
                         </div>
                     <?php endforeach; ?>
@@ -228,4 +246,22 @@ endif; ?>
             </div>
         <?php
 endif; ?>
+
+    <script>
+        function prepararRespuesta(id, nick) {
+            document.getElementById('input_respuesta_a').value = id;
+            document.getElementById('nick-respuesta').innerText = '@' + nick;
+            document.getElementById('indicador-respuesta').style.display = 'block';
+            
+            // Hacer scroll suave hasta el formulario
+            document.getElementById('form-comentario').scrollIntoView({ behavior: 'smooth' });
+            // Enfocar el textarea
+            document.querySelector('#form-comentario textarea').focus();
+        }
+
+        function cancelarRespuesta() {
+            document.getElementById('input_respuesta_a').value = '';
+            document.getElementById('indicador-respuesta').style.display = 'none';
+        }
+    </script>
     <?php include 'includes/footer.php'; ?>
