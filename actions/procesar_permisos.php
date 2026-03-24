@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt = $conexion->prepare($sql);
             $stmt->execute([':p_i' => $p_insertar, ':p_e' => $p_eliminar, ':p_m' => $p_moderar, ':id' => $usuario_id]);
             
-            header("Location: ../panel_superadmin.php?status=permisos_actualizados");
+            header("Location: ../panel_superadmin.php?status=permisos_actualizados#gestion-equipo");
         } 
         elseif ($accion === 'quitar_admin') {
             // Al revocar admin, liberamos el nick de admin (ej: admin42) renombrándolo
@@ -34,16 +34,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt = $conexion->prepare($sql);
             $stmt->execute([':id' => $usuario_id]);
             
-            header("Location: ../panel_superadmin.php?status=admin_quitado");
+            header("Location: ../panel_superadmin.php?status=admin_quitado#gestion-equipo");
         }
         exit();
 
     } catch (PDOException $e) {
         error_log("Error en procesamiento de permisos: " . $e->getMessage());
-        header("Location: ../panel_superadmin.php?error=db");
+        header("Location: ../panel_superadmin.php?error=db#gestion-equipo");
         exit();
     }
 } else {
-    header("Location: ../panel_superadmin.php");
+    header("Location: ../panel_superadmin.php#gestion-equipo");
     exit();
 }

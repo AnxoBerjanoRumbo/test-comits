@@ -131,9 +131,20 @@ $tab_activa = (!empty($busqueda) || isset($_GET['tab_usuarios'])) ? 'usuarios' :
         </div>
 
         <!-- CONTENIDO: GESTIÓN DE ADMINS -->
-        <div id="tab-admins" class="tab-content <?php echo $tab_activa == 'admins' ? 'active' : ''; ?>">
+        <div id="gestion-equipo" class="tab-content <?php echo $tab_activa == 'admins' ? 'active' : ''; ?>">
             <section class="mb-50">
                 <h2 class="mb-20">Aspirantes (Pendientes)</h2>
+                
+                <?php if (isset($_GET['status']) && $_GET['status'] == 'actualizado'): ?>
+                    <div class="alerta-exito mb-20">🛡️ Se ha activado la credencial del nuevo Administrador.</div>
+                <?php endif; ?>
+                <?php if (isset($_GET['status']) && $_GET['status'] == 'permisos_actualizados'): ?>
+                    <div class="alerta-exito mb-20">✅ Permisos de usuario actualizados correctamente.</div>
+                <?php endif; ?>
+                <?php if (isset($_GET['status']) && $_GET['status'] == 'admin_quitado'): ?>
+                    <div class="alerta-exito mb-20">⚠️ Rango de Administrador revocado satisfactoriamente.</div>
+                <?php endif; ?>
+
                 <?php if (count($admins_pendientes) > 0): ?>
                     <div class="lista-admins">
                         <?php foreach ($admins_pendientes as $admin): ?>
@@ -194,10 +205,10 @@ $tab_activa = (!empty($busqueda) || isset($_GET['tab_usuarios'])) ? 'usuarios' :
         </div>
 
         <!-- CONTENIDO: BUSCADOR DE USUARIOS -->
-        <div id="tab-usuarios" class="tab-content <?php echo $tab_activa == 'usuarios' ? 'active' : ''; ?>">
+        <div id="buscador-usuarios" class="tab-content <?php echo $tab_activa == 'usuarios' ? 'active' : ''; ?>">
             <div class="busqueda-header mb-40">
                 <h2 class="accent-text mb-15">Registro Civil de Supervivientes</h2>
-                <form action="panel_superadmin.php" method="GET" class="buscador" style="margin-bottom: 0; padding: 0; background: transparent; border: none; box-shadow: none;">
+                <form action="panel_superadmin.php#buscador-usuarios" method="GET" class="buscador" style="margin-bottom: 0; padding: 0; background: transparent; border: none; box-shadow: none;">
                     <input type="hidden" name="tab_usuarios" value="1">
                     <div style="display: flex; gap: 15px; width: 100%;">
                         <input type="text" name="buscar_usuario" placeholder="Introduce Nick o Email completo..." value="<?php echo htmlspecialchars($busqueda); ?>" style="flex: 1;">
@@ -211,6 +222,13 @@ $tab_activa = (!empty($busqueda) || isset($_GET['tab_usuarios'])) ? 'usuarios' :
 
             <?php if ($error_busq): ?>
                 <div class="alerta-error"><?php echo $error_busq; ?></div>
+            <?php endif; ?>
+
+            <?php if (isset($_GET['status']) && $_GET['status'] == 'usuario_borrado'): ?>
+                <div class="alerta-exito mb-20">🗑️ Expediente de usuario eliminado permanentemente.</div>
+            <?php endif; ?>
+            <?php if (isset($_GET['error']) && $_GET['error'] == 'autoborrado'): ?>
+                <div class="alerta-error mb-20">❌ Error: No puedes eliminar tu propio expediente de superadministrador.</div>
             <?php endif; ?>
 
             <?php if (count($resultados_busq) > 1 && !$usuario_encontrado): ?>

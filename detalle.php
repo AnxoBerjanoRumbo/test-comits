@@ -90,6 +90,9 @@ if (count($comentarios) > 0) {
     ?>
 
     <main class="contenedor-detalle">
+        <?php if (isset($_GET['status']) && $_GET['status'] == 'edit_success'): ?>
+            <div class="alerta-exito mb-20" style="text-align: center;">🦖 ¡Información de la criatura actualizada correctamente!</div>
+        <?php endif; ?>
         <section class="ficha-principal">
             <h2 class="nombre-dino"><?php echo htmlspecialchars($dino['nombre']); ?></h2>
             
@@ -143,7 +146,7 @@ endif; ?>
             </div>
         </section>
 
-        <section class="seccion-comentarios" style="margin-top: 40px;">
+        <section id="comentarios" class="seccion-comentarios" style="margin-top: 40px;">
             <h3>Comentarios y Aportes</h3>
             
             <?php if (isset($_SESSION['usuario_id'])): ?>

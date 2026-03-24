@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmtMapa->execute([':dino_id' => $id, ':mapa_id' => $mapa_id]);
 
         $conexion->commit();
-        header("Location: ../../detalle.php?id=" . $id);
+        header("Location: ../../detalle.php?id=" . $id . "&status=edit_success");
         exit();
 
     }

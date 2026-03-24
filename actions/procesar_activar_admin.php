@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nueva_password = $_POST['nueva_password'];
 
     if (empty($nueva_password)) {
-        header("Location: ../panel_superadmin.php?error=vacio");
+        header("Location: ../panel_superadmin.php?error=vacio#gestion-equipo");
         exit();
     }
 
@@ -31,16 +31,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ':id'   => $id_usuario
         ]);
 
-        header("Location: ../panel_superadmin.php?status=actualizado");
+        header("Location: ../panel_superadmin.php?status=actualizado#gestion-equipo");
         exit();
 
     } catch (PDOException $e) {
         error_log("Error al activar admin: " . $e->getMessage());
-        header("Location: ../panel_superadmin.php?error=db");
+        header("Location: ../panel_superadmin.php?error=db#gestion-equipo");
         exit();
     }
 } else {
-    header("Location: ../panel_superadmin.php");
+    header("Location: ../panel_superadmin.php#gestion-equipo");
     exit();
 }
 ?>

@@ -1,9 +1,9 @@
-document.addEventListener('DOMContentLoaded', function() {
-    
+document.addEventListener('DOMContentLoaded', function () {
+
     // 1. Funcionalidad del botón de volver arriba
     const btnArriba = document.getElementById('btnArriba');
     if (btnArriba) {
-        window.addEventListener('scroll', function() {
+        window.addEventListener('scroll', function () {
             if (window.scrollY > 300) {
                 btnArriba.style.display = 'block';
                 btnArriba.style.opacity = '1';
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
         btnArriba.style.opacity = '0';
         btnArriba.style.transform = 'translateY(20px)';
 
-        btnArriba.addEventListener('click', function(e) {
+        btnArriba.addEventListener('click', function (e) {
             e.preventDefault();
             window.scrollTo({
                 top: 0,
@@ -36,14 +36,14 @@ document.addEventListener('DOMContentLoaded', function() {
     textareas.forEach(textarea => {
         const span = document.createElement('div');
         span.className = 'contador-caracteres';
-        
+
         // Estimar unas 10.000 palabras = 60.000 caracteres
-        const maxLength = 60000;
-        
+        const maxLength = 10000;
+
         span.textContent = `0 / ${maxLength} caracteres`;
         textarea.parentNode.insertBefore(span, textarea.nextSibling);
 
-        textarea.addEventListener('input', function() {
+        textarea.addEventListener('input', function () {
             const currentLength = this.value.length;
             span.textContent = `${currentLength} / ${maxLength} caracteres`;
 
@@ -67,28 +67,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // 3. Previsualizar la imagen antes de subirla
     const imageInputs = document.querySelectorAll('input[type="file"][accept="image/*"]');
     imageInputs.forEach(input => {
-        input.addEventListener('change', function(e) {
+        input.addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     // Ver si ya existe una preview
                     let preview = input.parentNode.querySelector('.img-preview-container img');
                     let container = input.parentNode.querySelector('.img-preview-container');
-                    
+
                     if (!container) {
                         container = document.createElement('div');
                         container.className = 'img-preview-container';
                         input.parentNode.appendChild(container);
-                        
+
                         preview = document.createElement('img');
                         container.appendChild(preview);
                     }
-                    
+
                     // Decidir qué clase aplicar según el input
                     const isProfile = input.name.includes('perfil') || input.id.includes('perfil');
                     preview.className = isProfile ? 'foto-perfil-preview' : 'img-preview';
-                    
+
                     if (isProfile) {
                         preview.style.width = '150px';
                         preview.style.height = '150px';
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         preview.style.maxHeight = '300px';
                         preview.style.borderRadius = '8px';
                     }
-                    
+
                     preview.src = e.target.result;
                     preview.style.display = 'block';
                     preview.style.margin = '15px auto';
@@ -114,11 +114,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmButtons = document.querySelectorAll('form[action="actions/borrar_comentario.php"] button, .boton-eliminar');
     confirmButtons.forEach(btn => {
         // Remove native inline onclick attributes to override them
-        if(btn.hasAttribute('onclick')) {
+        if (btn.hasAttribute('onclick')) {
             const originalConfirm = btn.getAttribute('onclick');
             btn.removeAttribute('onclick');
-            
-            btn.addEventListener('click', function(e) {
+
+            btn.addEventListener('click', function (e) {
                 e.preventDefault();
                 // Custom confirm dialog logic could go here, 
                 // for now fallback to browser confirm but without the string being hardcoded in html

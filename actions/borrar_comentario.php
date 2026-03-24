@@ -35,6 +35,6 @@ try {
     error_log("Error al borrar comentario: " . $e->getMessage());
 }
 
-header("Location: ../detalle.php?id=" . $dino_id);
+header("Location: ../detalle.php?id=" . $dino_id . "#comentarios");
 exit();
 ?>

@@ -14,7 +14,7 @@ $dino_id = (int)$_POST['dino_id'];
 $texto = trim($_POST['texto']);
 $usuario_id = $_SESSION['usuario_id'];
 
-$respuesta_a = isset($_POST['respuesta_a']) ? (int)$_POST['respuesta_a'] : null;
+$respuesta_a = (!empty($_POST['respuesta_a'])) ? (int)$_POST['respuesta_a'] : null;
 $texto = mb_substr($texto, 0, 10000);
 
 if (!empty($texto) && !empty($dino_id)) {
@@ -27,6 +27,6 @@ if (!empty($texto) && !empty($dino_id)) {
     }
 }
 
-header("Location: ../detalle.php?id=" . $dino_id);
+header("Location: ../detalle.php?id=" . $dino_id . "#comentarios");
 exit();
 ?>
