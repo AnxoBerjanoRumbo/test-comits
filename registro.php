@@ -37,15 +37,9 @@ if (isset($_SESSION['nick'])) {
             </div>
         <?php endif; ?>
 
-        <?php if (isset($_GET['error']) && $_GET['error'] == 'email_en_uso'): ?>
+        <?php if (isset($_GET['error']) && ($_GET['error'] == 'email_en_uso' || $_GET['error'] == 'nick_en_uso' || $_GET['error'] == 'datos_en_uso')): ?>
             <div class="alerta-error">
-                Este <strong>correo electrónico</strong> ya está registrado. Intenta con otro o recupera tu contraseña.
-            </div>
-        <?php endif; ?>
-
-        <?php if (isset($_GET['error']) && $_GET['error'] == 'nick_en_uso'): ?>
-            <div class="alerta-error">
-                El <strong>nick</strong> ya está en uso por otro superviviente.
+                Este <strong>nick o correo electrónico</strong> ya está en uso por otro superviviente.
             </div>
         <?php endif; ?>
 

@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $checkEmail = $conexion->prepare("SELECT COUNT(*) FROM usuarios WHERE email = :email");
             $checkEmail->execute([':email' => $email]);
             if ($checkEmail->fetchColumn() > 0) {
-                header("Location: ../registro.php?error=email_en_uso");
+                header("Location: ../registro.php?error=datos_en_uso");
                 exit();
             }
 
@@ -87,11 +87,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $check->execute([':nick' => $nick, ':email' => $email]);
             $conflicto = $check->fetch(PDO::FETCH_ASSOC);
             if ($conflicto) {
-                if ($conflicto['email'] === $email) {
-                    header("Location: ../registro.php?error=email_en_uso");
-                } else {
-                    header("Location: ../registro.php?error=nick_en_uso");
-                }
+                // Evitamos dar detalles sobre qué campo falló para prevenir enumeración de usuarios
+                header("Location: ../registro.php?error=datos_en_uso");
                 exit();
             }
 

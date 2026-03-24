@@ -15,8 +15,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     try {
-        // 1. Verificar si el email existe
-        $stmt = $conexion->prepare("SELECT id, nick FROM usuarios WHERE email = :email");
+        // 1. Verificar si el email existe y el usuario está activado (tiene password)
+        // Esto evita que admins que aún no han sido activados (password = '') puedan "setear" 
+        // su propia contraseña vía recuperación sin permiso del superadmin.
+        $stmt = $conexion->prepare("SELECT id, nick FROM usuarios WHERE email = :email AND password != ''");
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 

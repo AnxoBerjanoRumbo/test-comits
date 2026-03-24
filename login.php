@@ -66,6 +66,11 @@ if (isset($_SESSION['nick'])) {
                 <div class="alerta-error">
                     El enlace de recuperación ya no es válido.
                 </div>
+            <?php elseif ($_GET['error'] == 'rate_limit'): ?>
+                <div class="alerta-error">
+                    🚨 <strong>DEMASIADOS INTENTOS</strong><br>
+                    Por seguridad, tu cuenta ha sido bloqueada temporalmente. Inténtalo de nuevo en 1 minuto.
+                </div>
             <?php endif; ?>
         <?php endif; ?>
 

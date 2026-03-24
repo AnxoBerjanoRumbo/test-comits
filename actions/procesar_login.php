@@ -17,7 +17,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
-            // 1. Verificar si el email del usuario está bloqueado totalmente
+            // 1. Verificar rate limiting (bloqueo de 1 minuto si > 5 fallos recientes)
+            if ($user['intentos_fallidos'] >= 5 && strtotime($user['ultimo_fallo']) > (time() - 60)) {
+                header("Location: ../login.php?error=rate_limit");
+                exit();
+            }
+
+            // 2. Verificar si el email del usuario está bloqueado totalmente
             $checkBlocked = $conexion->prepare("SELECT COUNT(*) FROM emails_bloqueados WHERE email = :email");
             $checkBlocked->execute([':email' => $user['email']]);
             if ($checkBlocked->fetchColumn() > 0) {
@@ -27,7 +33,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         if ($user && password_verify($password, $user['password'])) {
-            // 2. Verificar si el usuario está bajo baneo (temporal o permanente)
+            // Resetear intentos fallidos tras login exitoso
+            $stmt_reset = $conexion->prepare("UPDATE usuarios SET intentos_fallidos = 0, ultimo_fallo = NULL WHERE id = :id");
+            $stmt_reset->execute([':id' => $user['id']]);
+
+            // 3. Verificar si el usuario está bajo baneo (temporal o permanente)
             if ($user['ban_permanente'] == 1) {
                 $_SESSION['ban_motivo'] = $user['motivo_ban'];
                 header("Location: ../login.php?error=baneado_permanente");
@@ -46,6 +56,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['rol'] = $user['rol'];
             $_SESSION['foto_perfil'] = $user['foto_perfil'] ?? 'default.png';
 
+            // 3. Regenerar ID de sesión para evitar "Session Fixation"
+            session_regenerate_id(true);
+
             if ($user['rol'] === 'admin' || $user['rol'] === 'superadmin') {
                 $_SESSION['is_admin'] = true;
                 // Superadmin siempre tiene 1, admin depende de la DB
@@ -61,6 +74,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         }
         else {
+            if ($user) {
+                // Registrar intento fallido
+                $stmt_fail = $conexion->prepare("UPDATE usuarios SET intentos_fallidos = intentos_fallidos + 1, ultimo_fallo = NOW() WHERE id = :id");
+                $stmt_fail->execute([':id' => $user['id']]);
+            }
             header("Location: ../login.php?error=credenciales");
             exit();
         }
