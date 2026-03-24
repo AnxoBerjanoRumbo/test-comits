@@ -29,21 +29,19 @@ $pagina_actual = isset($_GET['p']) && is_numeric($_GET['p']) ? (int)$_GET['p'] :
 if ($pagina_actual < 1) $pagina_actual = 1;
 $offset = ($pagina_actual - 1) * $comentarios_por_pagina;
 
-// 4.1. Contar total de comentarios para este dino
-$sql_count = "SELECT COUNT(*) FROM comentarios WHERE dino_id = :id";
+// 4.1. Contar total de comentarios RAÍZ (los que no son respuesta)
+$sql_count = "SELECT COUNT(*) FROM comentarios WHERE dino_id = :id AND respuesta_a IS NULL";
 $stmt_count = $conexion->prepare($sql_count);
 $stmt_count->bindParam(':id', $id);
 $stmt_count->execute();
 $total_comentarios = $stmt_count->fetchColumn();
 $total_paginas = ceil($total_comentarios / $comentarios_por_pagina);
 
-// 4.2. Consulta de comentarios con LIMIT y OFFSET
-$sql_comments = "SELECT c.*, u.nick, u.rol, u.foto_perfil, u2.nick as nick_respuesta 
+// 4.2. Consulta de comentarios RAÍZ con LIMIT y OFFSET
+$sql_comments = "SELECT c.*, u.nick, u.rol, u.foto_perfil 
                  FROM comentarios c 
                  JOIN usuarios u ON c.usuario_id = u.id 
-                 LEFT JOIN comentarios c2 ON c.respuesta_a = c2.id
-                 LEFT JOIN usuarios u2 ON c2.usuario_id = u2.id
-                 WHERE c.dino_id = :id 
+                 WHERE c.dino_id = :id AND c.respuesta_a IS NULL
                  ORDER BY c.id DESC 
                  LIMIT :limit OFFSET :offset";
 $stmt_comments = $conexion->prepare($sql_comments);
@@ -52,6 +50,26 @@ $stmt_comments->bindParam(':limit', $comentarios_por_pagina, PDO::PARAM_INT);
 $stmt_comments->bindParam(':offset', $offset, PDO::PARAM_INT);
 $stmt_comments->execute();
 $comentarios = $stmt_comments->fetchAll(PDO::FETCH_ASSOC);
+
+// 4.3. Recoger todas las respuestas para estos comentarios
+$respuestas = [];
+if (count($comentarios) > 0) {
+    $ids_raiz = array_column($comentarios, 'id');
+    $placeholders = implode(',', array_fill(0, count($ids_raiz), '?'));
+    
+    $sql_resp = "SELECT c.*, u.nick, u.rol, u.foto_perfil 
+                 FROM comentarios c 
+                 JOIN usuarios u ON c.usuario_id = u.id 
+                 WHERE c.respuesta_a IN ($placeholders)
+                 ORDER BY c.id ASC";
+    $stmt_resp = $conexion->prepare($sql_resp);
+    $stmt_resp->execute($ids_raiz);
+    $all_resp = $stmt_resp->fetchAll(PDO::FETCH_ASSOC);
+    
+    foreach ($all_resp as $r) {
+        $respuestas[$r['respuesta_a']][] = $r;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -201,13 +219,37 @@ endif; ?>
                                     <?php endif; ?>
                                 </div>
                             </div>
-                            <?php if (!empty($c['nick_respuesta'])): ?>
-                                <div class="mb-10 f-085 text-muted" style="border-left: 2px solid #555; padding-left: 10px; margin-left: 5px;">
-                                    En respuesta a <span class="accent-text">@<?php echo htmlspecialchars($c['nick_respuesta']); ?></span>
-                                </div>
-                            <?php endif; ?>
                             <p class="comentario-texto"><?php echo nl2br(htmlspecialchars($c['texto'])); ?></p>
                         </div>
+                        
+                        <?php if (isset($respuestas[$c['id']])): ?>
+                            <?php foreach ($respuestas[$c['id']] as $r): ?>
+                                <div class="comentario comentario-admin comentario-respuesta">
+                                    <div class="comentario-header">
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <?php 
+                                            $foto_r = $r['foto_perfil'] ?? 'default.png';
+                                            $src_r = (strpos($foto_r, 'http') === 0) ? $foto_r : "assets/img/perfil/" . $foto_r;
+                                            ?>
+                                            <img src="<?php echo htmlspecialchars($src_r); ?>" alt="Avatar" class="avatar-comentario" onerror="this.src='assets/img/perfil/default.png'">
+                                            <strong class="comentario-nick nick-admin">
+                                                <?php echo htmlspecialchars($r['nick']); ?> 🛡️
+                                            </strong>
+                                            <span class="f-08 text-muted">ha respondido</span>
+                                        </div>
+                                        <?php if(isset($_SESSION['usuario_id']) && (($_SESSION['is_admin'] ?? false) === true || $_SESSION['usuario_id'] == $r['usuario_id'])): ?>
+                                            <form action="actions/borrar_comentario.php" method="POST" style="display: inline;">
+                                                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                                <input type="hidden" name="comentario_id" value="<?php echo $r['id']; ?>">
+                                                <input type="hidden" name="dino_id" value="<?php echo $dino['id']; ?>">
+                                                <button type="submit" onclick="return confirm('¿Borrar esta respuesta?');" class="btn-borrar-comentario">Eliminar</button>
+                                            </form>
+                                        <?php endif; ?>
+                                    </div>
+                                    <p class="comentario-texto"><?php echo nl2br(htmlspecialchars($r['texto'])); ?></p>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     <?php endforeach; ?>
 
                     <?php if ($total_paginas > 1): ?>

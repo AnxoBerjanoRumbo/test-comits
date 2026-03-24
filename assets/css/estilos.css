@@ -1202,6 +1202,19 @@ body {
     border-left: 4px solid #ffcc00;
 }
 
+.comentario-respuesta {
+    margin-left: 40px !important;
+    margin-top: -10px !important;
+    border-left: 3px solid var(--accent) !important;
+    background: rgba(0, 255, 204, 0.05) !important;
+    font-size: 0.95rem;
+    box-shadow: none !important;
+}
+
+.comentario-respuesta:hover {
+    transform: translateX(3px) !important;
+}
+
 .comentario-header {
     display: flex;
     justify-content: space-between;
