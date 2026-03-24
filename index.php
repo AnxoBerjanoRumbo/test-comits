@@ -112,12 +112,22 @@ endif; ?>
                             <div class="dino-img-container">
                                 <?php 
                                 $src_dino = (strpos($dino['imagen'], 'http') === 0) ? $dino['imagen'] : "assets/img/dinos/" . $dino['imagen'];
+                                
+                                // Optimización de Cloudinary para el listado principal
+                                if (strpos($src_dino, 'res.cloudinary.com') !== false) {
+                                    $src_dino = str_replace('/upload/', '/upload/w_400,c_fill,g_auto,f_auto,q_auto/', $src_dino);
+                                }
                                 ?>
                                 <img src="<?php echo htmlspecialchars($src_dino); ?>" alt="<?php echo htmlspecialchars($dino['nombre']); ?>" class="dino-img" onerror="this.src='assets/img/dinos/default_dino.jpg'">
                             </div>
                         <?php endif; ?>
                         <h3>
-                            <a href="detalle.php?id=<?php echo $dino['id']; ?>" class="enlace-dino">
+                            <?php
+                            $query_detalle = $_GET;
+                            $query_detalle['id'] = $dino['id'];
+                            $link_detalle = 'detalle.php?' . http_build_query($query_detalle);
+                            ?>
+                            <a href="<?php echo htmlspecialchars($link_detalle); ?>" class="enlace-dino">
                                 <?php echo htmlspecialchars($dino['nombre']); ?>
                             </a>
                         </h3>

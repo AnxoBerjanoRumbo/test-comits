@@ -13,6 +13,11 @@ $stmt->bindParam(':id', $id);
 $stmt->execute();
 $dino = $stmt->fetch(PDO::FETCH_ASSOC);
 
+if (!$dino) {
+    header("Location: index.php");
+    exit();
+}
+
 // 3. Consulta de mapas con JOIN 
 $sql_mapas = "SELECT m.nombre_mapa 
               FROM mapas m 
@@ -83,8 +88,14 @@ if (count($comentarios) > 0) {
 </head>
 <body>
     <?php 
+    // Recuperar todos los parámetros GET menos el ID para mantener el contexto de búsqueda/filtros
+    $params_volver = $_GET;
+    unset($params_volver['id']);
+    // Quitamos 'p' (página de comentarios) si existe para no confundirlo con la página del listado
+    unset($params_volver['p']);
+    
     $header_titulo = "Ficha de Criatura";
-    $header_volver_link = "index.php";
+    $header_volver_link = "index.php" . (!empty($params_volver) ? '?' . http_build_query($params_volver) : '');
     $header_volver_texto = "Volver al listado";
     include 'includes/header.php'; 
     ?>
@@ -100,6 +111,11 @@ if (count($comentarios) > 0) {
                 <div class="dino-img-detalle" style="text-align: center; margin-bottom: 20px;">
                     <?php 
                     $src_dino_d = (strpos($dino['imagen'], 'http') === 0) ? $dino['imagen'] : "assets/img/dinos/" . $dino['imagen'];
+                    
+                    if (strpos($src_dino_d, 'res.cloudinary.com') !== false) {
+                        // En el detalle usamos w_1200 o simplemente calidad auto
+                        $src_dino_d = str_replace('/upload/', '/upload/f_auto,q_auto,w_1200,c_limit/', $src_dino_d);
+                    }
                     ?>
                     <img src="<?php echo htmlspecialchars($src_dino_d); ?>" alt="<?php echo htmlspecialchars($dino['nombre']); ?>" style="max-width: 100%; border-radius: 8px;" onerror="this.src='assets/img/dinos/default_dino.jpg'">
                 </div>
@@ -154,6 +170,12 @@ endif; ?>
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="dino_id" value="<?php echo $dino['id']; ?>">
                     <input type="hidden" name="respuesta_a" id="input_respuesta_a" value="">
+                    
+                    <!-- Honeypot para evitar spam de bots -->
+                    <div style="display:none !important;">
+                        <label>No rellenar este campo:</label>
+                        <input type="text" name="website_url" value="">
+                    </div>
                     
                     <div id="indicador-respuesta" style="display: none; background: rgba(0, 255, 204, 0.1); padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px dashed var(--accent);">
                         <span class="f-09">Respondiendo a <strong id="nick-respuesta">@usuario</strong></span>

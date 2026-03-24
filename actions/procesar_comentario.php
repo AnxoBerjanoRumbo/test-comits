@@ -10,6 +10,13 @@ if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_tok
     die("Error de validación CSRF.");
 }
 
+// Honeypot: si este campo está relleno, es un bot
+if (!empty($_POST['website_url'])) {
+    error_log("Spam detectado de bot.");
+    header("Location: ../detalle.php?id=" . (int)$_POST['dino_id']);
+    exit();
+}
+
 $dino_id = (int)$_POST['dino_id'];
 $texto = trim($_POST['texto']);
 $usuario_id = $_SESSION['usuario_id'];
@@ -19,6 +26,21 @@ $texto = mb_substr($texto, 0, 10000);
 
 if (!empty($texto) && !empty($dino_id)) {
     try {
+        // Verificar jerarquía: si es una respuesta, el padre debe pertenecer al mismo dinosaurio
+        // Verificar jerarquía: si es una respuesta, el padre debe pertenecer al mismo dinosaurio
+        if ($respuesta_a !== null) {
+            // Solo los administradores pueden responder
+            if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
+                $respuesta_a = null;
+            } else {
+                $stmt_check = $conexion->prepare("SELECT COUNT(*) FROM comentarios WHERE id = :p_id AND dino_id = :d_id");
+                $stmt_check->execute([':p_id' => $respuesta_a, ':d_id' => $dino_id]);
+                if ($stmt_check->fetchColumn() == 0) {
+                    $respuesta_a = null; // Evita romper la visualización si el ID es falso o de otro dino
+                }
+            }
+        }
+
         $stmt = $conexion->prepare("INSERT INTO comentarios (texto, usuario_id, dino_id, respuesta_a) VALUES (:texto, :u_id, :d_id, :resp_a)");
         $stmt->execute([':texto' => $texto, ':u_id' => $usuario_id, ':d_id' => $dino_id, ':resp_a' => $respuesta_a]);
     }
