@@ -401,11 +401,13 @@ body {
     justify-content: center;
 }
 
-.btn-nav:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
-    transform: translateY(-2px);
+@media (hover: hover) {
+    .btn-nav:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+        transform: translateY(-2px);
+    }
 }
 
 .btn-registro {
@@ -414,10 +416,12 @@ body {
     border-color: var(--accent);
 }
 
-.btn-registro:hover {
-    background-color: var(--accent-hover);
-    color: #121212;
-    box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+@media (hover: hover) {
+    .btn-registro:hover {
+        background-color: var(--accent-hover);
+        color: #121212;
+        box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+    }
 }
 
 .btn-superadmin {
@@ -426,9 +430,11 @@ body {
     border-color: #ffcc00 !important;
 }
 
-.btn-superadmin:hover {
-    background-color: #e6b800 !important;
-    border-color: #e6b800 !important;
+@media (hover: hover) {
+    .btn-superadmin:hover {
+        background-color: #e6b800 !important;
+        border-color: #e6b800 !important;
+    }
 }
 
 .btn-edit {
@@ -453,10 +459,12 @@ body {
     letter-spacing: 1px;
 }
 
-.boton-insertar:hover {
-    background-color: var(--accent-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0, 255, 204, 0.3);
+@media (hover: hover) {
+    .boton-insertar:hover {
+        background-color: var(--accent-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 255, 204, 0.3);
+    }
 }
 
 .boton-eliminar {
@@ -471,10 +479,12 @@ body {
     border: none;
 }
 
-.boton-eliminar:hover {
-    background-color: #cc0000;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 68, 68, 0.4);
+@media (hover: hover) {
+    .boton-eliminar:hover {
+        background-color: #cc0000;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 68, 68, 0.4);
+    }
 }
 
 .btn-arriba {
@@ -499,11 +509,13 @@ body {
     line-height: 56px;
 }
 
-.btn-arriba:hover {
-    background-color: var(--accent);
-    color: #121212;
-    transform: translateY(-5px) !important;
-    box-shadow: 0 8px 25px rgba(0, 255, 204, 0.5);
+@media (hover: hover) {
+    .btn-arriba:hover {
+        background-color: var(--accent);
+        color: #121212;
+        transform: translateY(-5px) !important;
+        box-shadow: 0 8px 25px rgba(0, 255, 204, 0.5);
+    }
 }
 
 .contenedor-formulario {
@@ -654,9 +666,11 @@ body {
     transition: 0.3s;
 }
 
-.buscador button:hover {
-    background-color: var(--accent-hover);
-    transform: translateY(-2px);
+@media (hover: hover) {
+    .buscador button:hover {
+        background-color: var(--accent-hover);
+        transform: translateY(-2px);
+    }
 }
 
 .boton-limpiar {
@@ -670,9 +684,11 @@ body {
     transition: 0.3s;
 }
 
-.boton-limpiar:hover {
-    background-color: #444;
-    color: white;
+@media (hover: hover) {
+    .boton-limpiar:hover {
+        background-color: #444;
+        color: white;
+    }
 }
 
 .contenedor-dinos {
@@ -696,10 +712,12 @@ body {
     height: 100%;
 }
 
-.dino-card:hover {
-    transform: translateY(-8px);
-    border-color: var(--accent);
-    box-shadow: 0 12px 20px rgba(0, 255, 204, 0.15);
+@media (hover: hover) {
+    .dino-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--accent);
+        box-shadow: 0 12px 20px rgba(0, 255, 204, 0.15);
+    }
 }
 
 .dino-card h3 {
@@ -726,8 +744,10 @@ body {
     transition: transform 0.6s ease;
 }
 
-.dino-card:hover .dino-img {
-    transform: scale(1.1);
+@media (hover: hover) {
+    .dino-card:hover .dino-img {
+        transform: scale(1.1);
+    }
 }
 
 .enlace-dino {
@@ -1211,8 +1231,10 @@ body {
     box-shadow: none !important;
 }
 
-.comentario-respuesta:hover {
-    transform: translateX(3px) !important;
+@media (hover: hover) {
+    .comentario-respuesta:hover {
+        transform: translateX(3px) !important;
+    }
 }
 
 .comentario-header {
@@ -1265,9 +1287,11 @@ body {
     transition: all 0.3s;
 }
 
-.btn-borrar-comentario:hover {
-    background: rgba(255, 85, 85, 0.1);
-    color: #ff3333;
+@media (hover: hover) {
+    .btn-borrar-comentario:hover {
+        background: rgba(255, 85, 85, 0.1);
+        color: #ff3333;
+    }
 }
 
 .comentario-texto {
@@ -1316,10 +1340,12 @@ body {
     text-align: center;
 }
 
-.btn-pag:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+@media (hover: hover) {
+    .btn-pag:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+    }
 }
 
 .btn-pag.active {
@@ -1348,9 +1374,24 @@ body {
 
     .header-principal {
         flex-direction: column;
-        gap: 20px;
-        padding: 20px;
+        gap: 15px;
+        padding: 15px;
         text-align: center;
+    }
+
+    .logo-titulo h1 {
+        font-size: 1.6rem;
+    }
+
+    .enlace-perfil-header {
+        margin-right: 0;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .avatar-header {
+        width: 30px;
+        height: 30px;
     }
 
     .navegacion-usuario {
