@@ -124,10 +124,9 @@ $tab_activa = (!empty($busqueda) || isset($_GET['tab_usuarios'])) ? 'usuarios' :
 
     <main class="contenedor-detalle max-w-1000">
         
-        <!-- Selectores de Pestaña -->
         <div class="tabs-container">
-            <button class="tab-button <?php echo $tab_activa == 'admins' ? 'active' : ''; ?>" onclick="switchTab('admins')">GESTOR DE EQUIPO</button>
-            <button class="tab-button <?php echo $tab_activa == 'usuarios' ? 'active' : ''; ?>" onclick="switchTab('usuarios')">BUSCADOR DE USUARIOS</button>
+            <button class="tab-button <?php echo $tab_activa == 'admins' ? 'active' : ''; ?>" onclick="switchTab(event, 'admins')">GESTOR DE EQUIPO</button>
+            <button class="tab-button <?php echo $tab_activa == 'usuarios' ? 'active' : ''; ?>" onclick="switchTab(event, 'usuarios')">BUSCADOR DE USUARIOS</button>
         </div>
 
         <!-- CONTENIDO: GESTIÓN DE ADMINS -->
@@ -314,16 +313,22 @@ $tab_activa = (!empty($busqueda) || isset($_GET['tab_usuarios'])) ? 'usuarios' :
     </main>
 
     <script>
-        function switchTab(tab) {
+        const tabIdMap = {
+            'admins': 'gestion-equipo',
+            'usuarios': 'buscador-usuarios'
+        };
+
+        function switchTab(e, tab) {
             // Ocultar todos los contenidos
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
 
-            // Mostrar el seleccionado
-            document.getElementById('tab-' + tab).classList.add('active');
-            event.currentTarget.classList.add('active');
+            // Mostrar el seleccionado usando el mapa de IDs correcto
+            const targetId = tabIdMap[tab];
+            if (targetId) document.getElementById(targetId).classList.add('active');
+            e.currentTarget.classList.add('active');
             
-            // Actualizar URL sin recargar para mantener estado visual (opcional)
+            // Actualizar URL sin recargar para mantener estado visual
             const newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?tab_' + tab + '=1';
             window.history.pushState({path:newurl},'',newurl);
         }

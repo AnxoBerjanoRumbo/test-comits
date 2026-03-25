@@ -3,7 +3,10 @@ session_start();
 include '../config/db.php';
 
 // Verificar permisos: Solo admin con permiso de moderar o superadmin
-if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['p_moderar']) || $_SESSION['p_moderar'] != 1) {
+$es_superadmin = isset($_SESSION['rol']) && $_SESSION['rol'] === 'superadmin';
+$es_admin_moderador = isset($_SESSION['p_moderar']) && $_SESSION['p_moderar'] == 1;
+
+if (!isset($_SESSION['usuario_id']) || (!$es_superadmin && !$es_admin_moderador)) {
     header("Location: ../index.php");
     exit();
 }

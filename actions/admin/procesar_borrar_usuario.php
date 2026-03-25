@@ -22,7 +22,11 @@ if ($id_usuario > 0) {
     }
 
     try {
+        // Borrar las respuestas a los comentarios del usuario (para evitar húerfanos)
+        $stmt_h = $conexion->prepare("DELETE c1 FROM comentarios c1 INNER JOIN comentarios c2 ON c1.respuesta_a = c2.id WHERE c2.usuario_id = :id");
+        $stmt_h->execute([':id' => $id_usuario]);
 
+        // Borrar los comentarios del usuario
         $stmt_c = $conexion->prepare("DELETE FROM comentarios WHERE usuario_id = :id");
         $stmt_c->execute([':id' => $id_usuario]);
 

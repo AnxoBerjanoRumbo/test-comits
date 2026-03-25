@@ -55,7 +55,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
 
-            // 3. Eliminar Comentarios del usuario
+            // 3. Eliminar Comentarios del usuario y respuestas huérfanas
+            $stmt_h = $conexion->prepare("DELETE c1 FROM comentarios c1 INNER JOIN comentarios c2 ON c1.respuesta_a = c2.id WHERE c2.usuario_id = :id");
+            $stmt_h->execute([':id' => $id_moderado]);
+
             $stmt_comm = $conexion->prepare("DELETE FROM comentarios WHERE usuario_id = :id");
             $stmt_comm->execute([':id' => $id_moderado]);
 
