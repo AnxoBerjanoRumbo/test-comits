@@ -78,12 +78,47 @@ El proyecto implementa medidas de seguridad críticas:
 
 ## Instalación y Configuración
 
-1.  **Entorno**: Clonar el repositorio en la carpeta htdocs de un servidor local (XAMPP/WAMP).
-2.  **Base de Datos**: 
-    *   Importar el archivo SQL desde la carpeta database.
-    *   Asegurarse de tener un usuario superadmin inicial.
-3.  **Configuración**: Editar config/db.php con las credenciales correspondientes.
-4.  **Ejecución**: Acceder a la URL de localhost correspondiente en el navegador.
+### 1. Entorno
+Clonar el repositorio dentro de la carpeta `htdocs` de XAMPP (o `www` de WAMP):
+```
+git clone https://github.com/AnxoBerjanoRumbo/test-comits.git ark-survival-hub
+```
+
+### 2. Base de Datos
+- Abrir **phpMyAdmin** (`http://localhost/phpmyadmin`)
+- Crear una base de datos llamada `ark_hub`
+- Importar el archivo SQL que se encuentra en la carpeta `database/`
+- La conexión ya está preconfigurada para XAMPP (usuario `root`, sin contraseña). Si tu entorno es distinto, edita `config/db.php`.
+
+### 3. Archivos de Configuración Necesarios (⚠️ Obligatorio)
+
+Por seguridad, las credenciales privadas **no se suben a GitHub**. Tienes que crear estos dos archivos manualmente a partir de las plantillas incluidas:
+
+#### 3a. Cloudinary (gestión de imágenes)
+1. Copia `config/cloudinary_config.example.php` y renómbralo a `config/cloudinary_config.php`
+2. Crea una cuenta gratuita en [cloudinary.com](https://cloudinary.com)
+3. En el Dashboard de Cloudinary, copia tu **Cloud Name**, **API Key** y **API Secret**
+4. Pégalos en el archivo `config/cloudinary_config.php`
+
+> **Nota:** Sin Cloudinary, la subida de imágenes guardará los archivos en local (`assets/img/`) como fallback automático.
+
+#### 3b. Email / PHPMailer (envío de correos)
+1. Copia `config/mailer_config.example.php` y renómbralo a `config/mailer_config.php`
+2. Rellena con los datos de tu cuenta de correo SMTP
+3. **Si usas Gmail**: genera una *Contraseña de Aplicación* en [myaccount.google.com](https://myaccount.google.com) → Seguridad → Contraseñas de aplicación
+
+> **Nota:** Sin PHPMailer configurado, el sistema seguirá funcionando, pero no se enviarán correos de verificación, recuperación de contraseña ni notificaciones de sanción.
+
+### 4. Ejecución
+Accede desde el navegador a:
+```
+http://localhost/ark-survival-hub/
+```
+
+### 5. Cuenta Superadmin Inicial
+El archivo SQL incluye un usuario superadmin predefinido. Puedes usar en `login.php`:
+- **Nick**: `superadmin`
+- **Contraseña**: la que esté en el script SQL importado
 
 ---
-© 2024 ARK Survival Hub - Proyecto Wiki de Alto Rendimiento.
+© 2025 ARK Survival Hub - Proyecto Wiki de Alto Rendimiento.
