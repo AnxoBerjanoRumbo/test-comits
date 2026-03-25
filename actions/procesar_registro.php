@@ -92,15 +92,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit();
             }
 
-            $sql = "INSERT INTO usuarios (nick, email, password, rol) VALUES (:nick, :email, :password, :rol)";
+            $codigo = random_int(100000, 999999);
+            $sql = "INSERT INTO usuarios (nick, email, password, rol, verificado, codigo_verificacion) VALUES (:nick, :email, :password, :rol, 0, :codigo)";
             $stmt = $conexion->prepare($sql);
             $stmt->execute([
                 ':nick' => $nick,
                 ':email' => $email,
                 ':password' => $password_final,
-                ':rol' => $rol
+                ':rol' => $rol,
+                ':codigo' => $codigo
             ]);
-            header("Location: ../login.php?status=registrado");
+
+            // Enviar email con el código
+            include_once '../config/mailer.php';
+            $cuerpo = "<h3>Bienvenido a ARK Hub, " . htmlspecialchars($nick) . "!</h3>
+                       <p>Para activar tu cuenta, introduce el siguiente código de verificación en la web de guardado:</p>
+                       <h2 style='color:#00ffcc;'>$codigo</h2>
+                       <p>Si no fuiste tú, ignora este mensaje.</p>";
+            sendArkEmail($email, "Verifica tu cuenta - ARK Hub", $cuerpo);
+
+            header("Location: ../verificar.php?email=" . urlencode($email));
             exit();
         }
 

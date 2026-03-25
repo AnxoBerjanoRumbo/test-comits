@@ -3,6 +3,7 @@ actualizar_passwords.php
 ajustar_base_datos.php
 config/config.php
 config/cloudinary_config.php
+config/mailer_config.php
 .env
 
 # Imágenes y Archivos de Usuario (Subidas)

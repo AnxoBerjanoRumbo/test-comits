@@ -51,6 +51,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit();
             }
 
+            // 4. Verificar si la cuenta ha sido confirmada por correo
+            if (isset($user['verificado']) && $user['verificado'] == 0) {
+                // Como sabemos que la contraseña era correcta, le redirigimos a verificar
+                header("Location: ../verificar.php?email=" . urlencode($user['email']));
+                exit();
+            }
+
             $_SESSION['usuario_id'] = $user['id'];
             $_SESSION['nick'] = $user['nick'];
             $_SESSION['rol'] = $user['rol'];

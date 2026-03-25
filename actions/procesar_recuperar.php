@@ -35,16 +35,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 ':id' => $user['id']
             ]);
 
-            // 4. "Simular" envío de correo (En un entorno real se usaría mail() o PHPMailer)
+            // 4. Enviar correo usando PHPMailer
             $base_url = "http://" . $_SERVER['HTTP_HOST'] . str_replace('/actions', '', dirname($_SERVER['PHP_SELF']));
             $reset_link = $base_url . "/reset_password.php?token=" . $token;
             
-            // Registramos el enlace de recuperación de forma segura (no accesible por web)
-            // En producción real esto debería enviarse por email (PHPMailer, etc.)
-            $log_msg = "[" . date("Y-m-d H:i:s") . "] Recuperacion para " . $email . ": " . $reset_link . PHP_EOL;
-            error_log("ARK-RECOVERY: " . $log_msg);
-            
-            // Nota para el usuario: "Se ha enviado un correo"
+            include_once '../config/mailer.php';
+            $cuerpo = "<h3>Hola, " . htmlspecialchars($user['nick']) . "!</h3>
+                       <p>Has solicitado restablecer tu contraseña en ARK Hub.</p>
+                       <p>Haz clic en el siguiente enlace para cambiarla (caduca en 1 hora):</p>
+                       <p><a href='$reset_link' style='padding: 10px 20px; background: #00ffcc; color: #000; text-decoration: none; border-radius: 5px;'>Restablecer Contraseña</a></p>
+                       <p>Si no fuiste tú, puedes ignorar este correo.</p>";
+
+            sendArkEmail($email, "Instrucciones de recuperación - ARK Hub", $cuerpo);
         }
 
         // Siempre redirigimos a éxito por seguridad (para no revelar si el correo existe o no)

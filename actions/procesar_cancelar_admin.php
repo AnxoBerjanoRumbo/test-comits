@@ -14,12 +14,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_usuario = (int)$_POST['id_usuario'];
 
     try {
-        // Eliminamos la solicitud pendiente. No usamos AND password = '' porque en
-        // algunos entornos el campo puede estar almacenado como NULL en vez de '',
-        // lo que haría que el DELETE fallara silenciosamente y el nick quedara bloqueado.
-        $sql = "DELETE FROM usuarios WHERE id = :id AND rol = 'admin'";
-        $stmt = $conexion->prepare($sql);
-        $stmt->execute([':id' => $id_usuario]);
+        // Obtener el email del usuario antes de borrarlo
+        $stmt_u = $conexion->prepare("SELECT email, nick FROM usuarios WHERE id = :id");
+        $stmt_u->execute([':id' => $id_usuario]);
+        $user = $stmt_u->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            // Mandar el correo de aviso de rechazo
+            include_once '../config/mailer.php';
+            $cuerpo = "<h3>Hola " . htmlspecialchars($user['nick']) . ",</h3>
+                       <p>Lamentamos informarte que tu solicitud de acceso como Administrador en ARK Hub ha sido denegada.</p>
+                       <p>Tu registro provisional ha sido eliminado.</p>";
+            sendArkEmail($user['email'], "Solicitud de Admin denegada - ARK Hub", $cuerpo);
+
+            $sql = "DELETE FROM usuarios WHERE id = :id AND rol = 'admin'";
+            $stmt = $conexion->prepare($sql);
+            $stmt->execute([':id' => $id_usuario]);
+        }
 
         header("Location: ../panel_superadmin.php?status=cancelado");
         exit();

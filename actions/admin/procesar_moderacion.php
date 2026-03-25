@@ -32,6 +32,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sql = "UPDATE usuarios SET baneado_hasta = NULL, motivo_ban = NULL, ban_permanente = 0 WHERE id = :id";
             $stmt = $conexion->prepare($sql);
             $stmt->execute([':id' => $id_moderado]);
+
+            include_once '../../config/mailer.php';
+            $cuerpo = "<h3>Hola " . htmlspecialchars($user['email']) . ",</h3>
+                       <p>Buenas noticias: Se han levantado todas tus restricciones en ARK Hub.</p>
+                       <p>Ya puedes volver a participar en la comunidad.</p>";
+            sendArkEmail($user['email'], "Sanción levantada - ARK Hub", $cuerpo);
+
             header("Location: ../../admin/moderar_usuario.php?id=$id_moderado&status=quitado");
             exit();
         }
@@ -67,6 +74,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt_d = $conexion->prepare($sql_del);
             $stmt_d->execute([':id' => $id_moderado]);
 
+            include_once '../../config/mailer.php';
+            $cuerpo = "<h3>Hola " . htmlspecialchars($user['email']) . ",</h3>
+                       <p>Lamentamos informarte de que has sido <strong>EXPULSADO PERMANENTEMENTE</strong> de ARK Hub.</p>
+                       <p>Motivo proporcionado por moderación:</p>
+                       <blockquote style='background:#f4f4f4; padding:10px; border-left:5px solid #ff4444;'>
+                       " . nl2br(htmlspecialchars($motivo)) . "
+                       </blockquote>
+                       <p>Tu cuenta y la información asociada han sido eliminadas.</p>";
+            sendArkEmail($user['email'], "Aviso Crítico: Cuenta Expulsada - ARK Hub", $cuerpo);
+
             header("Location: ../../login.php?status=expulsado");
             exit();
         }
@@ -100,6 +117,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ':perm' => $permanente,
             ':id' => $id_moderado
         ]);
+
+        include_once '../../config/mailer.php';
+        $duracion_txt = $permanente ? "forma permanente" : "hasta el " . date("d/m/Y H:i", strtotime($baneado_hasta));
+        $cuerpo = "<h3>Aviso de Moderación: " . htmlspecialchars($user['email']) . "</h3>
+                   <p>Tu cuenta ha sido suspendida de $duracion_txt.</p>
+                   <p>Motivo de la sanción:</p>
+                   <blockquote style='background:#f4f4f4; padding:10px; border-left:5px solid #ffaa00;'>
+                   " . nl2br(htmlspecialchars($motivo)) . "
+                   </blockquote>
+                   <p>Si consideras que es un error, contacta con el administrador.</p>";
+        sendArkEmail($user['email'], "Aviso de Sanción en ARK Hub", $cuerpo);
 
         header("Location: ../../admin/moderar_usuario.php?id=$id_moderado&status=sancionado");
         exit();
