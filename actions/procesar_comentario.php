@@ -5,6 +5,8 @@ if (!isset($_SESSION['usuario_id']) || $_SERVER["REQUEST_METHOD"] !== "POST") {
     exit();
 }
 include '../config/db.php';
+include_once '../config/verificar_sesion.php';
+check_user_active_status($conexion);
 
 if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
     die("Error de validación CSRF.");
@@ -27,12 +29,12 @@ $texto = mb_substr($texto, 0, 10000);
 if (!empty($texto) && !empty($dino_id)) {
     try {
         // Verificar jerarquía: si es una respuesta, el padre debe pertenecer al mismo dinosaurio
-        // Verificar jerarquía: si es una respuesta, el padre debe pertenecer al mismo dinosaurio
         if ($respuesta_a !== null) {
             // Solo los administradores pueden responder
             if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                 $respuesta_a = null;
-            } else {
+            }
+            else {
                 $stmt_check = $conexion->prepare("SELECT COUNT(*) FROM comentarios WHERE id = :p_id AND dino_id = :d_id");
                 $stmt_check->execute([':p_id' => $respuesta_a, ':d_id' => $dino_id]);
                 if ($stmt_check->fetchColumn() == 0) {

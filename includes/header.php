@@ -37,6 +37,12 @@ if (isset($_SESSION['usuario_id'])) {
             header("Location: " . $path_prefix . "login.php?error=" . $err_type);
             exit();
         }
+    } else {
+        // El usuario tiene sesión iniciada PERO no existe en la base de datos (fue expulsado/borrado)
+        session_unset();
+        session_destroy();
+        header("Location: " . $path_prefix . "login.php?error=expulsado");
+        exit();
     }
 }
 ?>

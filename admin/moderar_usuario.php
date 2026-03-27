@@ -69,7 +69,7 @@ $is_admin_panel = true;
 
                 <div class="campo">
                     <label>Motivo de la Sanción / Mensaje para el usuario:</label>
-                    <textarea name="motivo" placeholder="Escribe el motivo del ban o un mensaje para el usuario..." required class="h-100"><?php echo htmlspecialchars($user['motivo_ban'] ?? ''); ?></textarea>
+                    <textarea name="motivo" placeholder="Escribe el motivo del ban o un mensaje para el usuario..." required class="h-100"></textarea>
                 </div>
 
                 <div class="campo">
