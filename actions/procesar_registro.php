@@ -6,6 +6,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         die("Error de validación CSRF.");
     }
+    // 1. HONEYPOT: Si este campo tiene algo, es un bot
+    if (!empty($_POST['trampa_bot'])) {
+        die("Acceso denegado: Bot detectado.");
+    }
+
+    // 2. RATE LIMITING: Bloquear si se intenta registrar muchísimas cuentas seguidas
+    $ahora = time();
+    $ultimo_registro = $_SESSION['last_reg_attempt'] ?? 0;
+    if (($ahora - $ultimo_registro) < 30) { // Menos de 30 segundos entre intentos
+        header("Location: ../registro.php?error=spam");
+        exit();
+    }
+    $_SESSION['last_reg_attempt'] = $ahora;
+
     $nick = trim($_POST['nick']);
     $email = trim($_POST['email']);
     $password_introducida = $_POST['password'];

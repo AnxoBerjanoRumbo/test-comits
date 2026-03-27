@@ -63,6 +63,13 @@ if (isset($_SESSION['nick'])) {
 
         <form action="actions/procesar_registro.php" method="POST" class="form-ark">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+            
+            <!-- Campo Honeypot contra bots (invisible para humanos) -->
+            <div style="display:none;">
+                <label>Si eres humano, deja esto vacío:</label>
+                <input type="text" name="trampa_bot" value="">
+            </div>
+
             <div class="campo">
                 <label>Nick de Usuario:</label>
                 <input type="text" name="nick" required placeholder="Ej: Superviviente99 o admin1" maxlength="25">

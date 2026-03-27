@@ -5,6 +5,8 @@ if (!isset($_SESSION['usuario_id']) || $_SERVER["REQUEST_METHOD"] !== "POST") {
     exit();
 }
 include '../config/db.php';
+include_once '../config/verificar_sesion.php';
+check_user_active_status($conexion);
 
 if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
     die("Error de validación CSRF.");

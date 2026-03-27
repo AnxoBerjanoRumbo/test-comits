@@ -11,39 +11,11 @@ if (isset($_SESSION['usuario_id'])) {
     if (!isset($conexion)) {
         include_once ($path_prefix ?: './') . 'config/db.php';
     }
-    $stmt_check = $conexion->prepare("SELECT baneado_hasta, ban_permanente, motivo_ban FROM usuarios WHERE id = :id");
-    $stmt_check->execute([':id' => $_SESSION['usuario_id']]);
-    $ban_status = $stmt_check->fetch(PDO::FETCH_ASSOC);
-
-    if ($ban_status) {
-        $is_permanente = ($ban_status['ban_permanente'] == 1);
-        $is_temporal = (!empty($ban_status['baneado_hasta']) && strtotime($ban_status['baneado_hasta']) > time());
-
-        if ($is_permanente || $is_temporal) {
-            $motivo = $ban_status['motivo_ban'];
-            $hasta = $ban_status['baneado_hasta'];
-            
-            // Destruir sesión y redirigir
-            session_unset();
-            session_destroy();
-            session_start();
-            $_SESSION['ban_motivo'] = $motivo;
-            if ($is_temporal) $_SESSION['ban_hasta'] = $hasta;
-            
-            // VOLVER A GENERAR EL TOKEN CSRF (Si no, login.php peta)
-            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-            
-            $err_type = $is_permanente ? 'baneado_permanente' : 'baneado_temporal';
-            header("Location: " . $path_prefix . "login.php?error=" . $err_type);
-            exit();
-        }
-    } else {
-        // El usuario tiene sesión iniciada PERO no existe en la base de datos (fue expulsado/borrado)
-        session_unset();
-        session_destroy();
-        header("Location: " . $path_prefix . "login.php?error=expulsado");
-        exit();
-    }
+    include_once ($path_prefix ?: './') . 'config/verificar_sesion.php';
+    
+    // Adaptar ruta de redirección según el contexto
+    $login_path = $path_prefix . "login.php";
+    check_user_active_status($conexion, $login_path);
 }
 ?>
 <header class="header-principal">

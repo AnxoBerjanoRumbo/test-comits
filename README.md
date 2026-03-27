@@ -1,124 +1,77 @@
-# ARK Survival Hub - Wiki Project
+# ARK Survival Hub - Digital Wiki Encyclopedia
 
-Una enciclopedia dinámica y sistema de gestión sobre el universo de ARK: Survival Ascended, desarrollada como una aplicación web completa, segura y de alto rendimiento.
+[Versión 3.0 Stable](https://github.com/AnxoBerjanoRumbo/test-comits) | [Seguridad Blindada](https://github.com/AnxoBerjanoRumbo/test-comits) | [Stack: PHP PDO MySQL](https://github.com/AnxoBerjanoRumbo/test-comits)
 
----
-
-## Índice
-1. [Visión General](#visión-general)
-2. [Arquitectura de Base de Datos](#arquitectura-de-base-de-datos)
-3. [Stack Tecnológico](#stack-tecnológico)
-4. [Características Principales](#características-principales)
-    * [UI/UX y Diseño](#uiux-y-diseño)
-    * [Seguridad y Autenticación](#seguridad-y-autenticación)
-    * [Gestión de Contenido (CRUD)](#gestión-de-contenido-crud)
-    * [Panel Administrativo (RBAC)](#panel-administrativo-rbac)
-5. [Seguridad Avanzada](#seguridad-avanzada)
-6. [Instalación y Configuración](#instalación-y-configuración)
+Una plataforma web integral diseñada para la catalogación, exploración y gestión comunitaria del universo de ARK: Survival Ascended. Este proyecto implementa una arquitectura segura, eficiente y con una experiencia de usuario optimizada para alto rendimiento.
 
 ---
 
-## Visión General
-ARK Survival Hub es una plataforma robusta que permite a los usuarios explorar criaturas, descubrir sus localizaciones en diferentes mapas y participar mediante un sistema de comentarios. Los administradores disponen de herramientas avanzadas para la moderación y actualización del ecosistema de la wiki.
+## Arquitectura del Sistema
+
+El proyecto se basa en una arquitectura modular separando la lógica de negocio (Actions) de la persistencia de datos (Config) y la interfaz de usuario (Assets/Templates).
+
+*   Persistencia Atómica: Integridad absoluta mediante transacciones y borrado en cascada (Cascade Deletes).
+*   Gestión de Medios: Sistema híbrido de almacenamiento (Cloudinary SaaS + Fallback Local) para garantizar disponibilidad total de imágenes.
+*   Control de Acceso (RBAC): Diferenciación de privilegios entre Superviviente, Administrador y SuperAdmin.
 
 ---
 
-## Arquitectura de Base de Datos
-El sistema utiliza una estructura relacional en MariaDB diseñada para la escalabilidad y la integridad de los datos:
+## Seguridad Avanzada (Core Features)
 
-*   **Entidades Core**: Usuarios, Dinosaurios, Mapas y Comentarios.
-*   **Relaciones Relacionales**:
-    *   **1:N (Uno a Muchos)**: Usuarios -> Comentarios / Dinosaurios -> Comentarios.
-    *   **N:M (Muchos a Muchos)**: Dinosaurios <-> Mapas (a través de dino_mapas), permitiendo que una criatura habite múltiples regiones y que cada región albergue diversas especies.
-*   **Integridad Referencial**: Implementación de eliminaciones en cascada y transacciones SQL para mantener la coherencia absoluta de los datos.
+*   Protección de Datos: Encriptación de contraseñas mediante algoritmo BCRYPT y protección contra Session Fixation con regeneración de IDs.
+*   Neutralización de Vectores de Ataque: Blindaje contra inyección SQL (PDO Prepared Statements) y escape sistemático de salidas contra XSS (Cross-Site Scripting).
+*   Medidas Anti-Spam: Implementación de Honeypot (campo trampa), Rate Limiting por IP (Control de tasa de peticiones) y validación de tokens CSRF en todos los formularios de acción.
+*   Validación Email: Flujo de verificación de cuentas mediante PHPMailer para garantizar la legitimidad de los usuarios registrados.
 
 ---
 
 ## Stack Tecnológico
-*   **Backend**: PHP 8.x con arquitectura modular orientada a la seguridad.
-*   **Acceso a Datos**: PHP Data Objects (PDO) con sentencias preparadas para blindaje contra SQL Injection.
-*   **Base de Datos**: MariaDB / MySQL.
-*   **Frontend**: HTML5 Semántico, CSS3 avanzado (Variables, Grid, Flexbox, Glassmorphism) y JavaScript Vanilla para interactividad fluida y validaciones.
-*   **Versionado**: Git y GitHub con flujo de trabajo profesional.
+
+| Componente | Tecnología |
+| :--- | :--- |
+| Backend | PHP 8.1+ (Procedural Modular) |
+| Base de Datos | MariaDB / MySQL (UTF-8 Latin CI) |
+| Frontend | HTML5 Semántico, CSS3 (Modern Flex/Grid), JS Vanilla |
+| Email Service | PHPMailer Library (SMTP Integration) |
+| Cloud Service | Cloudinary API (Media Management) |
 
 ---
 
-## Características Principales
+## Guía de Instalación (Entorno Local)
 
-### UI/UX y Diseño
-*   **Estética Premium**: Diseño Dark Mode con acentos en colores neón para una inmersión total.
-*   **Vertical Card Design**: Tarjetas de dinosaurios con estilo póster, imágenes de gran tamaño, efectos de zoom dinámico y pies de página integrados con degradados.
-*   **Paginación Inteligente**: Listados optimizados (9 criaturas por página) para una carga rápida y navegación organizada.
-*   **Responsive**: Adaptabilidad total en todos los dispositivos mediante sistemas de rejillas flexibles.
+### 1. Requisitos Previos
+*   Servidor web (Apache/NGINX) con PHP 8.1+ y soporte PDO.
+*   Gestor de base de datos (MariaDB/MySQL).
+*   Recomendado: XAMPP para entornos Windows.
 
-### Seguridad y Autenticación
-*   **Sistema de Cuentas**: Gestión de sesiones seguras mediante variables de sesión.
-*   **Recuperación de Contraseña**: Flujo con tokens temporales de un solo uso con expiración automática.
-*   **Hashing de Seguridad**: Uso de password_hash con algoritmo BCRYPT.
-*   **Validación CSRF**: Protección en todos los formularios de acción mediante tokens aleatorios para prevenir ataques de falsificación de peticiones.
+### 2. Configuración de Base de Datos
+1. Acceda a su interfaz de gestión SQL (phpMyAdmin).
+2. Cree una base de datos denominada ark_hub.
+3. Importe el archivo database/ark_hub.sql incluido en este repositorio.
+4. Verifique la conexión en config/db.php.
 
-### Gestión de Contenido (CRUD)
-*   **Panel de Administración**: Gestión de criaturas (Alta, Baja, Modificación).
-*   **Subida de Archivos**: Sistema de carga de imágenes con validación de tipos y limpieza automática de archivos huérfanos al editar o borrar.
-*   **Sistema de Comentarios**: Interacción social con herramientas de moderación.
+### 3. Configuración del Entorno (Variables Privadas)
+Por motivos de seguridad, los archivos de configuración sensibles han sido excluidos. Siga estos pasos para el despliegue:
 
-### Panel Administrativo (RBAC)
-*   **Control de Roles**: Diferenciación entre Usuario, Admin y SuperAdmin.
-*   **Aprobación de Moderadores**: El SuperAdmin valida y activa solicitudes de administradores, asignando credenciales iniciales y gestionando permisos.
+*   Imágenes (Cloudinary): Copie config/cloudinary_config.example.php a config/cloudinary_config.php y complete sus credenciales.
+*   Correo (SMTP): Copie config/mailer_config.example.php a config/mailer_config.php y configure su servidor SMTP (Ej: Gmail App Password).
 
 ---
 
-## Seguridad Avanzada
-El proyecto implementa medidas de seguridad críticas:
-1.  **Blindaje de subidas**: Validación de extensiones y verificación de contenido real de imagen mediante getimagesize para evitar RCE (ejecución remota de código).
-2.  **Transacciones Atómicas**: Uso de transacciones para garantizar que los cambios en múltiples tablas se realicen por completo o se reviertan totalmente en caso de error.
-3.  **Logs de Error**: Registro interno de excepciones en el servidor para evitar la exposición de datos técnicos al usuario final.
+## Panel de Control (Acceso Inicial)
+
+Para las pruebas de corrección, el script SQL incluye una cuenta de nivel SuperAdministrador con todos los privilegios activos:
+
+*   Identificador: Anxo
+*   Credential: Admin1234 (Se recomienda cambiarla inmediatamente al iniciar sesión)
 
 ---
 
-## Instalación y Configuración
+## Características de Gestión 
 
-### 1. Entorno
-Clonar el repositorio dentro de la carpeta `htdocs` de XAMPP (o `www` de WAMP):
-```
-git clone https://github.com/AnxoBerjanoRumbo/test-comits.git ark-survival-hub
-```
-
-### 2. Base de Datos
-- Abrir **phpMyAdmin** (`http://localhost/phpmyadmin`)
-- Crear una base de datos llamada `ark_hub`
-- Importar el archivo SQL que se encuentra en la carpeta `database/`
-- La conexión ya está preconfigurada para XAMPP (usuario `root`, sin contraseña). Si tu entorno es distinto, edita `config/db.php`.
-
-### 3. Archivos de Configuración Necesarios (⚠️ Obligatorio)
-
-Por seguridad, las credenciales privadas **no se suben a GitHub**. Tienes que crear estos dos archivos manualmente a partir de las plantillas incluidas:
-
-#### 3a. Cloudinary (gestión de imágenes)
-1. Copia `config/cloudinary_config.example.php` y renómbralo a `config/cloudinary_config.php`
-2. Crea una cuenta gratuita en [cloudinary.com](https://cloudinary.com)
-3. En el Dashboard de Cloudinary, copia tu **Cloud Name**, **API Key** y **API Secret**
-4. Pégalos en el archivo `config/cloudinary_config.php`
-
-> **Nota:** Sin Cloudinary, la subida de imágenes guardará los archivos en local (`assets/img/`) como fallback automático.
-
-#### 3b. Email / PHPMailer (envío de correos)
-1. Copia `config/mailer_config.example.php` y renómbralo a `config/mailer_config.php`
-2. Rellena con los datos de tu cuenta de correo SMTP
-3. **Si usas Gmail**: genera una *Contraseña de Aplicación* en [myaccount.google.com](https://myaccount.google.com) → Seguridad → Contraseñas de aplicación
-
-> **Nota:** Sin PHPMailer configurado, el sistema seguirá funcionando, pero no se enviarán correos de verificación, recuperación de contraseña ni notificaciones de sanción.
-
-### 4. Ejecución
-Accede desde el navegador a:
-```
-http://localhost/ark-survival-hub/
-```
-
-### 5. Cuenta Superadmin Inicial
-El archivo SQL incluye un usuario superadmin predefinido. Puedes usar en `login.php`:
-- **Nick**: `superadmin`
-- **Contraseña**: la que esté en el script SQL importado
+*   Dino-Mapa Integrado: Relación Muchos-a-Muchos entre especies y localizaciones geográficas.
+*   Sistema de Moderación: Herramientas integradas para Baneo Temporal, Expulsión Total y Gestión de Lista Negra (Blacklist).
+*   Comentarios en Hilo: Sistema jerárquico de respuestas con moderación activa y notificaciones automáticas.
 
 ---
-© 2025 ARK Survival Hub - Proyecto Wiki de Alto Rendimiento.
+© 2025 ARK Survival Hub - Digital Wiki Encyclopedia. Desarrollado por Anxo Berjano.
