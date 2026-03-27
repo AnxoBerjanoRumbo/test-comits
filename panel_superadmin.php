@@ -318,6 +318,8 @@ if (isset($_GET['tab_blacklist'])) $tab_activa = 'blacklist';
                     </div>
                 </div>
             <?php endif; ?>
+        </div>
+
         <!-- CONTENIDO: LISTA NEGRA -->
         <div id="lista-negra" class="tab-content <?php echo $tab_activa == 'blacklist' ? 'active' : ''; ?>">
             <section class="mb-50">
