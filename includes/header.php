@@ -30,6 +30,9 @@ if (isset($_SESSION['usuario_id'])) {
             $_SESSION['ban_motivo'] = $motivo;
             if ($is_temporal) $_SESSION['ban_hasta'] = $hasta;
             
+            // VOLVER A GENERAR EL TOKEN CSRF (Si no, login.php peta)
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+            
             $err_type = $is_permanente ? 'baneado_permanente' : 'baneado_temporal';
             header("Location: " . $path_prefix . "login.php?error=" . $err_type);
             exit();
