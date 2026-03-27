@@ -51,8 +51,16 @@ if (!empty($busqueda)) {
     }
 }
 
+// --- Lógica de Lista Negra ---
+$sql_blacklist = "SELECT * FROM emails_bloqueados ORDER BY fecha_bloqueo DESC";
+$stmt_bl = $conexion->prepare($sql_blacklist);
+$stmt_bl->execute();
+$emails_bloqueados = $stmt_bl->fetchAll(PDO::FETCH_ASSOC);
+
 // Determinar pestaña inicial
-$tab_activa = (!empty($busqueda) || isset($_GET['tab_usuarios'])) ? 'usuarios' : 'admins';
+$tab_activa = 'admins';
+if (!empty($busqueda) || isset($_GET['tab_usuarios'])) $tab_activa = 'usuarios';
+if (isset($_GET['tab_blacklist'])) $tab_activa = 'blacklist';
 ?>
 
 <!DOCTYPE html>
@@ -127,6 +135,7 @@ $tab_activa = (!empty($busqueda) || isset($_GET['tab_usuarios'])) ? 'usuarios' :
         <div class="tabs-container">
             <button class="tab-button <?php echo $tab_activa == 'admins' ? 'active' : ''; ?>" onclick="switchTab(event, 'admins')">GESTOR DE EQUIPO</button>
             <button class="tab-button <?php echo $tab_activa == 'usuarios' ? 'active' : ''; ?>" onclick="switchTab(event, 'usuarios')">BUSCADOR DE USUARIOS</button>
+            <button class="tab-button <?php echo $tab_activa == 'blacklist' ? 'active' : ''; ?>" onclick="switchTab(event, 'blacklist')">LISTA NEGRA</button>
         </div>
 
         <!-- CONTENIDO: GESTIÓN DE ADMINS -->
@@ -309,13 +318,46 @@ $tab_activa = (!empty($busqueda) || isset($_GET['tab_usuarios'])) ? 'usuarios' :
                     </div>
                 </div>
             <?php endif; ?>
+        <!-- CONTENIDO: LISTA NEGRA -->
+        <div id="lista-negra" class="tab-content <?php echo $tab_activa == 'blacklist' ? 'active' : ''; ?>">
+            <section class="mb-50">
+                <h2 class="error-color mb-15">Zona de Exclusión (Correos Bloqueados)</h2>
+                <p class="text-muted mb-30">Los correos en esta lista han sido expulsados permanentemente. No podrán crear nuevas cuentas.</p>
+
+                <?php if (isset($_GET['status']) && $_GET['status'] == 'desbloqueado'): ?>
+                    <div class="alerta-exito mb-20">✅ Email desbloqueado. El usuario ya puede volver a registrarse.</div>
+                <?php endif; ?>
+
+                <?php if (count($emails_bloqueados) > 0): ?>
+                    <div class="comentarios-lista">
+                        <?php foreach ($emails_bloqueados as $e): ?>
+                            <div class="comentario" style="border-left-color: var(--error-color);">
+                                <div class="comentario-header">
+                                    <span class="comentario-nick"><?php echo htmlspecialchars($e['email']); ?></span>
+                                    <span class="f-08 text-muted"><?php echo date("d/m/Y H:i", strtotime($e['fecha_bloqueo'])); ?></span>
+                                </div>
+                                <p class="comentario-texto f-09 mb-15"><strong>Motivo:</strong> <?php echo htmlspecialchars($e['motivo'] ?? 'Incumplimiento de normas (Expulsión Total)'); ?></p>
+                                
+                                <form action="actions/admin/procesar_desbloqueo_email.php" method="POST" onsubmit="return confirm('¿Retirar el bloqueo a este email? Podrá volver a crearse una cuenta.');">
+                                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                    <input type="hidden" name="id_bloqueo" value="<?php echo $e['id']; ?>">
+                                    <button type="submit" class="btn-nav f-08" style="border-color: var(--error-color); color: var(--error-color);">Retirar de Lista Negra</button>
+                                </form>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <p class="mensaje-vacio">No hay ningún correo en la lista negra.</p>
+                <?php endif; ?>
+            </section>
         </div>
     </main>
 
     <script>
         const tabIdMap = {
             'admins': 'gestion-equipo',
-            'usuarios': 'buscador-usuarios'
+            'usuarios': 'buscador-usuarios',
+            'blacklist': 'lista-negra'
         };
 
         function switchTab(e, tab) {
