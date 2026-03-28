@@ -1,34 +1,66 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    // 1. Funcionalidad del botón de volver arriba
+    // 1. Funcionalidad de Accesibilidad (Temas y Daltonismo)
+    const btnAcc = document.getElementById('btnAcc');
+    const accMenu = document.getElementById('accMenu');
+
+    if (btnAcc && accMenu) {
+        btnAcc.addEventListener('click', function (e) {
+            e.stopPropagation();
+            accMenu.classList.toggle('active');
+        });
+
+        // Cerrar menú al hacer click fuera
+        document.addEventListener('click', function () {
+            accMenu.classList.remove('active');
+        });
+
+        accMenu.addEventListener('click', function (e) {
+            e.stopPropagation(); // No cerrar si clicamos dentro del menú
+        });
+    }
+
+    // 2. Funcionalidad del botón de volver arriba (Scroll)
+    const scrollContainer = document.getElementById('scrollContainer');
     const btnArriba = document.getElementById('btnArriba');
-    if (btnArriba) {
+
+    if (scrollContainer && btnArriba) {
         window.addEventListener('scroll', function () {
-            if (window.scrollY > 300) {
-                btnArriba.style.display = 'block';
-                btnArriba.style.opacity = '1';
-                btnArriba.style.transform = 'translateY(0)';
+            if (window.scrollY > 400) {
+                scrollContainer.style.opacity = '1';
+                scrollContainer.style.visibility = 'visible';
+                scrollContainer.style.transform = 'translateY(0)';
             } else {
-                btnArriba.style.opacity = '0';
-                btnArriba.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    if (window.scrollY <= 300) btnArriba.style.display = 'none';
-                }, 300);
+                scrollContainer.style.opacity = '0';
+                scrollContainer.style.visibility = 'hidden';
+                scrollContainer.style.transform = 'translateY(20px)';
             }
         });
 
-        // Estilos iniciales para la animación
-        btnArriba.style.transition = 'all 0.3s ease';
-        btnArriba.style.opacity = '0';
-        btnArriba.style.transform = 'translateY(20px)';
-
         btnArriba.addEventListener('click', function (e) {
             e.preventDefault();
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
+    }
+
+    // Sistema de Temas Dinámicos (Global)
+    window.setTheme = function(themeName) {
+        // Eliminar temas anteriores
+        document.body.classList.remove('theme-ragnarok', 'theme-aberration', 'theme-extinction', 'theme-scorched', 'theme-daltonico');
+        
+        // Aplicar nuevo tema
+        document.body.classList.add('theme-' + themeName);
+        
+        // Guardar preferencia
+        localStorage.setItem('ark_hub_theme', themeName);
+    }
+
+    // Cargar tema guardado al iniciar
+    const savedTheme = localStorage.getItem('ark_hub_theme');
+    if (savedTheme) {
+        setTheme(savedTheme);
+    } else {
+        setTheme('ragnarok'); // Tema por defecto
     }
 
     // 2. Contador de caracteres para los campos textarea (Comentarios y descripciones)

@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $cuerpo = "<h3>Hola, " . htmlspecialchars($user['nick']) . "!</h3>
                        <p>Has solicitado restablecer tu contraseña en ARK Hub.</p>
                        <p>Haz clic en el siguiente enlace para cambiarla (caduca en 1 hora):</p>
-                       <p><a href='$reset_link' style='padding: 10px 20px; background: #00ffcc; color: #000; text-decoration: none; border-radius: 5px;'>Restablecer Contraseña</a></p>
+                       <p><a href='$reset_link' style='padding: 10px 20px; background: var(--accent); color: #000; text-decoration: none; border-radius: 5px;'>Restablecer Contraseña</a></p>
                        <p>Si no fuiste tú, puedes ignorar este correo.</p>";
 
             sendArkEmail($email, "Instrucciones de recuperación - ARK Hub", $cuerpo);

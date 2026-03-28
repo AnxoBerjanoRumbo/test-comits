@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
 /* ==========================================================================
    1. VARIABLES Y ROOT
@@ -11,11 +12,16 @@
     --text-muted: #a0a0a0;
     --accent: #00ffcc;
     --accent-hover: #00ccaa;
+    --accent-rgb: 0, 255, 204;
     --border-color: #333333;
     --error-color: #ff4444;
     --success-color: #00e676;
+    --input-bg: #1a1a1a;
+    --input-text: #ffffff;
     --shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    --hover-shadow: 0 8px 20px rgba(var(--accent-rgb), 0.2);
     --radius: 12px;
+    --accent-text: #121212;
 }
 
 /* ==========================================================================
@@ -205,8 +211,14 @@ body {
     text-align: center;
 }
 
-.accent-text {
+.accent-link {
     color: var(--accent);
+    transition: all 0.3s;
+}
+
+.accent-link:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
 }
 
 .inherit-color {
@@ -286,7 +298,7 @@ body {
 .separador {
     border: 0;
     height: 1px;
-    background: #333;
+    background: var(--border-color);
     margin: 30px 0;
 }
 
@@ -295,10 +307,6 @@ body {
     margin-top: 10px;
     color: var(--text-muted);
     font-size: 0.85rem;
-}
-
-.accent-link {
-    color: #4CAF50;
 }
 
 .error-validacion {
@@ -405,22 +413,22 @@ body {
     .btn-nav:hover {
         border-color: var(--accent);
         color: var(--accent);
-        box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+        box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.2);
         transform: translateY(-2px);
     }
 }
 
 .btn-registro {
     background-color: var(--accent);
-    color: #121212;
+    color: var(--accent-text);
     border-color: var(--accent);
 }
 
 @media (hover: hover) {
     .btn-registro:hover {
         background-color: var(--accent-hover);
-        color: #121212;
-        box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+        color: var(--accent-text);
+        box-shadow: 0 0 15px rgba(var(--accent-rgb), 0.4);
     }
 }
 
@@ -438,16 +446,16 @@ body {
 }
 
 .btn-edit {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: white;
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-text);
 }
 
 .boton-insertar {
     width: 100%;
     padding: 16px;
     background-color: var(--accent);
-    color: #121212;
+    color: var(--accent-text);
     border: none;
     border-radius: 8px;
     font-weight: 800;
@@ -463,7 +471,7 @@ body {
     .boton-insertar:hover {
         background-color: var(--accent-hover);
         transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(0, 255, 204, 0.3);
+        box-shadow: 0 6px 15px rgba(var(--accent-rgb), 0.3);
     }
 }
 
@@ -500,7 +508,7 @@ body {
     font-size: 1.8rem;
     cursor: pointer;
     display: none;
-    box-shadow: 0 4px 15px rgba(0, 255, 204, 0.2);
+    box-shadow: 0 4px 15px rgba(var(--accent-rgb), 0.2);
     z-index: 1000;
     transition: all 0.3s ease;
     align-items: center;
@@ -512,9 +520,9 @@ body {
 @media (hover: hover) {
     .btn-arriba:hover {
         background-color: var(--accent);
-        color: #121212;
+        color: var(--accent-text);
         transform: translateY(-5px) !important;
-        box-shadow: 0 8px 25px rgba(0, 255, 204, 0.5);
+        box-shadow: 0 8px 25px rgba(var(--accent-rgb), 0.5);
     }
 }
 
@@ -551,9 +559,9 @@ body {
 .form-ark textarea {
     width: 100%;
     padding: 14px;
-    background-color: #1a1a1a;
+    background-color: var(--input-bg) !important;
     border: 1px solid var(--border-color);
-    color: white;
+    color: var(--input-text) !important;
     border-radius: 8px;
     outline: none;
     font-family: inherit;
@@ -564,13 +572,15 @@ body {
 .form-ark input[type="file"] {
     padding: 10px;
     cursor: pointer;
-    background: #252525;
+    background: var(--input-bg);
+    color: var(--input-text);
 }
 
 .form-ark input:focus,
-.form-ark select:focus {
+.form-ark select:focus,
+.form-ark textarea:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 8px rgba(0, 255, 204, 0.2);
+    box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.2);
 }
 
 .alerta-error {
@@ -595,7 +605,7 @@ body {
 }
 
 .alerta-info {
-    background: rgba(0, 255, 204, 0.05);
+    background: rgba(var(--accent-rgb), 0.05);
     color: var(--accent);
     padding: 15px 20px;
     border-radius: 8px;
@@ -640,9 +650,9 @@ body {
 
 .buscador input[type="text"],
 .buscador select {
-    background-color: #1a1a1a;
+    background-color: var(--input-bg);
     border: 1px solid var(--border-color);
-    color: white;
+    color: var(--input-text);
     padding: 14px 20px;
     border-radius: 8px;
     font-size: 1rem;
@@ -655,7 +665,7 @@ body {
 .buscador input[type="text"]:focus,
 .buscador select:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 8px rgba(0, 255, 204, 0.3);
+    box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.3);
 }
 
 .buscador input[type="text"] {
@@ -665,7 +675,7 @@ body {
 
 .buscador button {
     background-color: var(--accent);
-    color: #121212;
+    color: var(--accent-text);
     border: none;
     padding: 12px 25px;
     border-radius: var(--radius);
@@ -726,7 +736,7 @@ body {
     .dino-card:hover {
         transform: translateY(-8px);
         border-color: var(--accent);
-        box-shadow: 0 12px 20px rgba(0, 255, 204, 0.15);
+        box-shadow: var(--hover-shadow);
     }
 }
 
@@ -738,6 +748,7 @@ body {
     width: 100%;
     margin-top: auto;
     text-align: center;
+    color: #ffffff;
 }
 
 .dino-img-container {
@@ -943,14 +954,14 @@ body {
     object-fit: cover;
     border: 4px solid var(--accent);
     margin-bottom: 20px;
-    box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+    box-shadow: 0 0 15px rgba(var(--accent-rgb), 0.2);
     transition: all 0.3s ease;
     display: block;
 }
 
 .foto-perfil-preview:hover {
     transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
+    box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.4);
 }
 
 .img-preview {
@@ -1218,7 +1229,7 @@ body {
     margin-bottom: 12px;
     padding: 16px;
     border-radius: var(--radius);
-    border-left: 4px solid var(--success-color);
+    border-left: 4px solid var(--accent);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -1236,7 +1247,7 @@ body {
     margin-left: 40px !important;
     margin-top: -10px !important;
     border-left: 3px solid var(--accent) !important;
-    background: rgba(0, 255, 204, 0.05) !important;
+    background: rgba(var(--accent-rgb), 0.05) !important;
     font-size: 0.95rem;
     box-shadow: none !important;
 }
@@ -1261,7 +1272,7 @@ body {
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid var(--success-color);
+    border: 2px solid var(--accent);
 }
 
 .avatar-40 {
@@ -1269,7 +1280,7 @@ body {
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid var(--success-color);
+    border: 2px solid var(--accent);
 }
 
 .comentario-admin .avatar-comentario {
@@ -1354,7 +1365,7 @@ body {
     .btn-pag:hover {
         border-color: var(--accent);
         color: var(--accent);
-        box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+        box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.2);
     }
 }
 
@@ -1362,7 +1373,7 @@ body {
     background-color: var(--accent);
     color: #121212;
     border-color: var(--accent);
-    box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+    box-shadow: 0 0 15px rgba(var(--accent-rgb), 0.3);
 }
 
 /* ==========================================================================
@@ -1471,4 +1482,349 @@ body {
         width: 100%;
         font-size: 0.85rem;
     }
+}
+
+/* ==========================================================================
+   11. COMPONENTES EXTRA: SELECTOR DE MAPAS Y TEMAS
+   ========================================================================== */
+
+/* Selector de mapas estilo "tags" compactas */
+.grid-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.checkbox-tag {
+    cursor: pointer;
+    display: inline-block;
+}
+
+.checkbox-tag input {
+    display: none;
+}
+
+.checkbox-tag span {
+    display: block;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.checkbox-tag input:checked + span {
+    background: rgba(var(--accent-rgb), 0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.2);
+}
+
+.checkbox-tag:hover span {
+    border-color: var(--accent);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Botón Scroll-to-Top Rediseñado e Integrado */
+.scroll-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.scroll-container.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.btn-scroll-main {
+    width: 50px;
+    height: 50px;
+    background: var(--bg-card);
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(var(--accent-rgb), 0.1);
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-scroll-main:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(var(--accent-rgb), 0.3);
+    background: var(--accent) !important;
+    color: #000 !important;
+}
+
+/* Menú de Temas (Accesibilidad) */
+.theme-menu {
+    position: absolute;
+    bottom: 65px;
+    right: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: var(--shadow);
+    transform: scale(0.8) translateY(20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    min-width: 140px;
+}
+
+.scroll-container:hover .theme-menu {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    pointer-events: all;
+}
+
+.theme-opt {
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-main);
+    transition: background 0.2s;
+}
+
+.theme-opt:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+/* Definición de Temas Atmosféricos Completos */
+
+/* TEMA DEFAULT: RAGNAROK (Verde/Cian) */
+body.theme-ragnarok { 
+    --bg-main: #121212;
+    --bg-card: #1e1e1e;
+    --accent: #00ffcc; 
+    --accent-hover: #00ccaa; 
+    --accent-rgb: 0, 255, 204;
+    --hover-shadow: 0 12px 25px rgba(0, 255, 204, 0.2);
+}
+
+/* TEMA ABERRATION (Púrpura/Azul) */
+body.theme-aberration { 
+    --bg-main: #0a0510;
+    --bg-card: #140a1c;
+    --accent: #b300ff; 
+    --accent-hover: #cc33ff;
+    --accent-rgb: 179, 0, 255;
+    --border-color: #2b153b;
+    --hover-shadow: 0 12px 25px rgba(179, 0, 255, 0.25);
+    --accent-text: #ffffff;
+}
+
+/* TEMA EXTINCTION (Azufre/Ceniza) */
+body.theme-extinction { 
+    --bg-main: #141411;
+    --bg-card: #21211b;
+    --accent: #ffcc00; 
+    --accent-hover: #ffd900;
+    --accent-rgb: 255, 204, 0;
+    --border-color: #38382c;
+    --hover-shadow: 0 12px 25px rgba(255, 204, 0, 0.2);
+}
+
+/* TEMA SCORCHED EARTH (Arena/Fuego) */
+body.theme-scorched { 
+    --bg-main: #1a120b;
+    --bg-card: #2d1e12;
+    --accent: #ff6600; 
+    --accent-hover: #ff8533;
+    --accent-rgb: 255, 102, 0;
+    --border-color: #4a321e;
+    --hover-shadow: 0 12px 25px rgba(255, 102, 0, 0.25);
+    --accent-text: #ffffff;
+}
+
+
+
+/* Ajuste Modo Accesible (Daltónico) */
+body.theme-daltonico { 
+    --bg-main: #0a0a0a;
+    --bg-card: #161616;
+    --bg-header: #000000;
+    --text-main: #ffffff;
+    --text-muted: #ffffff;
+    --accent: #ffff00; 
+    --accent-hover: #e6e600;
+    --accent-rgb: 255, 255, 0;
+    --border-color: #ffffff;
+    --input-bg: #000000;
+    --input-text: #ffffff;
+    --shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    --hover-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* Estilo para el título de sección dinámico */
+.titulo-seccion {
+    color: var(--accent);
+    text-align: center;
+    font-size: 2.2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 40px 0;
+    position: relative;
+    padding-bottom: 15px;
+    transition: color 0.4s ease;
+}
+
+.titulo-seccion::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: var(--accent);
+    border-radius: 2px;
+    box-shadow: 0 0 10px var(--accent);
+    transition: all 0.4s ease;
+}
+
+/* Panel de Accesibilidad (Izquierda) */
+.accessibility-panel {
+    position: fixed;
+    left: 20px;
+    bottom: 30px;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-accessibility {
+    width: 55px;
+    height: 55px;
+    background: var(--bg-card);
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+}
+
+.btn-accessibility:hover {
+    background: var(--accent);
+    color: #121212;
+    transform: scale(1.1) rotate(15deg);
+}
+
+.accessibility-menu {
+    background: rgba(30, 30, 30, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--accent);
+    border-radius: 16px;
+    padding: 12px;
+    min-width: 190px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    display: none; /* Controlado por JS con clase .active */
+    flex-direction: column;
+    gap: 5px;
+    transform: translateY(10px);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.accessibility-menu.active {
+    display: flex;
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.theme-opt {
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-main);
+    transition: all 0.2s;
+}
+
+.theme-opt:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(5px);
+}
+
+.theme-opt .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px; /* Cuadraditos modernos */
+}
+
+/* Material Icons Integration */
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+}
+
+/* Scroll button refactor */
+.scroll-container {
+    position: fixed;
+    right: 25px;
+    bottom: 30px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease;
+}
+
+.btn-scroll-main {
+    width: 55px;
+    height: 55px;
+    background: rgba(30, 30, 30, 0.8);
+    backdrop-filter: blur(5px);
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    border-radius: 12px; /* Cuadrado redondeado para diferenciar */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-scroll-main:hover {
+    background: var(--accent);
+    color: #121212;
 }
