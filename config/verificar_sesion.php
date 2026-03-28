@@ -12,6 +12,8 @@ function check_user_active_status($conexion, $path_to_login = '../login.php') {
             // Usuario ya no existe (expulsado/borrado)
             session_unset();
             session_destroy();
+            session_start();
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
             header("Location: $path_to_login?error=expulsado");
             exit();
         }

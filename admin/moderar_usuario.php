@@ -68,8 +68,8 @@ $is_admin_panel = true;
                 <input type="hidden" name="usuario_id" value="<?php echo $user['id']; ?>">
 
                 <div class="campo">
-                    <label>Motivo de la Sanción / Mensaje para el usuario:</label>
-                    <textarea name="motivo" placeholder="Escribe el motivo del ban o un mensaje para el usuario..." required class="h-100"></textarea>
+                    <label>Motivo de la Sanción / Mensaje para el usuario (opcional):</label>
+                    <textarea name="motivo" placeholder="Ej: Comportamiento tóxico... (Si lo dejas vacío, el usuario recibirá un aviso genérico)" class="h-100"></textarea>
                 </div>
 
                 <div class="campo">

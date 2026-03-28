@@ -75,13 +75,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt_d->execute([':id' => $id_moderado]);
 
             include_once '../../config/mailer.php';
+            $msg_motivo = !empty($motivo) ? "<p>Motivo proporcionado por moderación:</p>
+                           <blockquote style='background:#f4f4f4; padding:10px; border-left:5px solid #ff4444;'>
+                           " . nl2br(htmlspecialchars($motivo)) . "
+                           </blockquote>" : "<p>El sistema de moderación ha decidido restringir tu acceso de forma permanente debido al incumplimiento de la normativa comunitaria.</p>";
+
             $cuerpo = "<h3>Hola " . htmlspecialchars($user['email']) . ",</h3>
                        <p>Lamentamos informarte de que has sido <strong>EXPULSADO PERMANENTEMENTE</strong> de ARK Hub.</p>
-                       <p>Motivo proporcionado por moderación:</p>
-                       <blockquote style='background:#f4f4f4; padding:10px; border-left:5px solid #ff4444;'>
-                       " . nl2br(htmlspecialchars($motivo)) . "
-                       </blockquote>
-                       <p>Tu cuenta y la información asociada han sido eliminadas.</p>";
+                       $msg_motivo
+                       <p>Tu cuenta y la información asociada han sido eliminadas y tu email bloqueado.</p>";
             sendArkEmail($user['email'], "Aviso Crítico: Cuenta Expulsada - ARK Hub", $cuerpo);
 
             header("Location: ../../login.php?status=expulsado");
@@ -120,12 +122,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         include_once '../../config/mailer.php';
         $duracion_txt = $permanente ? "forma permanente" : "hasta el " . date("d/m/Y H:i", strtotime($baneado_hasta));
+        
+        $msg_motivo = !empty($motivo) ? "<p>Motivo de la sanción:</p>
+                       <blockquote style='background:#f4f4f4; padding:10px; border-left:5px solid #ffaa00;'>
+                       " . nl2br(htmlspecialchars($motivo)) . "
+                       </blockquote>" : "<p>Has sido sancionado por incumplir las normas de convivencia de la wiki oficial.</p>";
+
         $cuerpo = "<h3>Aviso de Moderación: " . htmlspecialchars($user['email']) . "</h3>
                    <p>Tu cuenta ha sido suspendida de $duracion_txt.</p>
-                   <p>Motivo de la sanción:</p>
-                   <blockquote style='background:#f4f4f4; padding:10px; border-left:5px solid #ffaa00;'>
-                   " . nl2br(htmlspecialchars($motivo)) . "
-                   </blockquote>
+                   $msg_motivo
                    <p>Si consideras que es un error, contacta con el administrador.</p>";
         sendArkEmail($user['email'], "Aviso de Sanción en ARK Hub", $cuerpo);
 
