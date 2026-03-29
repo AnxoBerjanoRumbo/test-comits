@@ -42,6 +42,9 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
                 if ($_GET['error'] == 'pass_no_coincide') echo "⚠️ Las contraseñas no coinciden.";
                 elseif ($_GET['error'] == 'pass_corta') echo "⚠️ La nueva contraseña debe tener al menos 4 caracteres.";
                 elseif ($_GET['error'] == 'upload') echo "⚠️ Error al subir la imagen. Comprueba que sea un formato válido.";
+                elseif ($_GET['error'] == 'nick_invalido') echo "⚠️ El nuevo apodo está vacío o supera los 25 caracteres.";
+                elseif ($_GET['error'] == 'nick_reservado') echo "⚠️ No puedes usar la palabra 'admin' en tu nombre por seguridad.";
+                elseif ($_GET['error'] == 'nick_en_uso') echo "⚠️ Ese apodo ya pertenece a otro superviviente.";
                 else echo "⚠️ Error al actualizar el perfil.";
                 ?>
             </div>
@@ -70,6 +73,20 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
                 <button type="button" class="boton-insertar" onclick="document.getElementById('foto_perfil').click()">Seleccionar Nueva Imagen</button>
                 <small class="texto-auxiliar">La foto se actualizará automáticamente al seleccionarla.</small>
             </div>
+        </form>
+
+        <hr class="separador">
+
+        <!-- Formulario para cambiar el Nombre -->
+        <form action="actions/procesar_cambio_nick.php" method="POST" class="form-ark">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
+            <h3>Cambiar Apodo de Superviviente</h3>
+            <div class="campo">
+                <label>Nuevo apodo (Nick):</label>
+                <input type="text" name="nuevo_nick" placeholder="Introduce tu nuevo nombre..." required maxlength="25" value="<?php echo htmlspecialchars($usuario['nick']); ?>">
+                <small class="texto-auxiliar">Se actualizará retroactivamente en todos tus comentarios en la wiki.</small>
+            </div>
+            <button type="submit" class="boton-insertar">Actualizar Apodo</button>
         </form>
 
         <hr class="separador">
