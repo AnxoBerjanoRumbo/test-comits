@@ -12,6 +12,21 @@ $stmt_mapas_lista = $conexion->prepare("SELECT * FROM mapas ORDER BY nombre_mapa
 $stmt_mapas_lista->execute();
 $todos_mapas = $stmt_mapas_lista->fetchAll(PDO::FETCH_ASSOC);
 
+// Cargar categorias para el selector
+$stmt_cats_lista = $conexion->prepare("SELECT * FROM categorias ORDER BY nombre ASC");
+$stmt_cats_lista->execute();
+$todos_cats = $stmt_cats_lista->fetchAll(PDO::FETCH_ASSOC);
+
+$cat_id = (isset($_GET['cat']) && is_numeric($_GET['cat'])) ? (int)$_GET['cat'] : 0;
+
+// Etiqueta de la categoria seleccionada
+$nombre_cat_sel = '';
+if ($cat_id > 0) {
+    foreach ($todos_cats as $c) {
+        if ($c['id'] == $cat_id) { $nombre_cat_sel = $c['nombre']; break; }
+    }
+}
+
 // Etiqueta del mapa seleccionado para el título dinámico
 $nombre_mapa_sel = '';
 if ($mapa_id > 0) {
@@ -20,18 +35,29 @@ if ($mapa_id > 0) {
     }
 }
 
-// Construir la consulta base (JOIN si hay filtro de mapa)
-if ($mapa_id > 0) {
-    $base       = "FROM dinosaurios d INNER JOIN dino_mapas dm ON d.id = dm.dino_id WHERE dm.mapa_id = :mapa_id";
-    $sql        = "SELECT DISTINCT d.* $base";
-    $sql_count  = "SELECT COUNT(DISTINCT d.id) $base";
+// Construir la consulta base (JOIN si hay filtro de mapa y/o categoria)
+if ($mapa_id > 0 && $cat_id > 0) {
+    $base      = "FROM dinosaurios d
+                  INNER JOIN dino_mapas dm       ON d.id = dm.dino_id AND dm.mapa_id = :mapa_id
+                  INNER JOIN dino_categorias dc  ON d.id = dc.dino_id AND dc.categoria_id = :cat_id
+                  WHERE 1=1";
+    $sql       = "SELECT DISTINCT d.* $base";
+    $sql_count = "SELECT COUNT(DISTINCT d.id) $base";
+} elseif ($mapa_id > 0) {
+    $base      = "FROM dinosaurios d INNER JOIN dino_mapas dm ON d.id = dm.dino_id WHERE dm.mapa_id = :mapa_id";
+    $sql       = "SELECT DISTINCT d.* $base";
+    $sql_count = "SELECT COUNT(DISTINCT d.id) $base";
+} elseif ($cat_id > 0) {
+    $base      = "FROM dinosaurios d INNER JOIN dino_categorias dc ON d.id = dc.dino_id WHERE dc.categoria_id = :cat_id";
+    $sql       = "SELECT DISTINCT d.* $base";
+    $sql_count = "SELECT COUNT(DISTINCT d.id) $base";
 } else {
-    $sql        = "SELECT * FROM dinosaurios WHERE 1=1";
-    $sql_count  = "SELECT COUNT(*) FROM dinosaurios WHERE 1=1";
+    $sql       = "SELECT * FROM dinosaurios WHERE 1=1";
+    $sql_count = "SELECT COUNT(*) FROM dinosaurios WHERE 1=1";
 }
 
 // Alias correcto dependiendo de si hay JOIN
-$alias = ($mapa_id > 0) ? 'd.' : '';
+$alias = ($mapa_id > 0 || $cat_id > 0) ? 'd.' : '';
 
 if ($busqueda != '') {
     $sql       .= " AND ({$alias}nombre LIKE :busqueda OR {$alias}especie LIKE :busqueda)";
@@ -51,6 +77,7 @@ $offset = ($pagina_actual - 1) * $por_pagina;
 // Ejecutar COUNT
 $stmt_count = $conexion->prepare($sql_count);
 if ($mapa_id > 0)    $stmt_count->bindValue(':mapa_id', $mapa_id, PDO::PARAM_INT);
+if ($cat_id  > 0)    $stmt_count->bindValue(':cat_id',  $cat_id,  PDO::PARAM_INT);
 if ($busqueda != '') { $termino = "%$busqueda%"; $stmt_count->bindParam(':busqueda', $termino); }
 if ($dieta != '')    $stmt_count->bindParam(':dieta', $dieta);
 $stmt_count->execute();
@@ -61,6 +88,7 @@ $total_paginas = (int)ceil($total_dinos / $por_pagina);
 $sql .= " LIMIT :limit OFFSET :offset";
 $stmt = $conexion->prepare($sql);
 if ($mapa_id > 0)    $stmt->bindValue(':mapa_id', $mapa_id, PDO::PARAM_INT);
+if ($cat_id  > 0)    $stmt->bindValue(':cat_id',  $cat_id,  PDO::PARAM_INT);
 if ($busqueda != '') { $termino = "%$busqueda%"; $stmt->bindParam(':busqueda', $termino); }
 if ($dieta != '')    $stmt->bindParam(':dieta', $dieta);
 $stmt->bindValue(':limit',  $por_pagina, PDO::PARAM_INT);
@@ -101,9 +129,18 @@ $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach; ?>
             </select>
 
+            <select name="cat">
+                <option value="">Todas las categorías</option>
+                <?php foreach ($todos_cats as $c): ?>
+                    <option value="<?php echo $c['id']; ?>" <?php echo ($cat_id == $c['id']) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($c['nombre']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
             <button type="submit">Filtrar</button>
             
-            <?php if ($busqueda != '' || $dieta != '' || $mapa_id > 0): ?>
+            <?php if ($busqueda != '' || $dieta != '' || $mapa_id > 0 || $cat_id > 0): ?>
                 <a href="index.php" class="boton-limpiar">Limpiar</a>
             <?php endif; ?>
         </form>

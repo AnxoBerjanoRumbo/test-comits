@@ -36,6 +36,14 @@ $stmt_dm = $conexion->prepare($sql_dino_mapas);
 $stmt_dm->execute([':id' => $id]);
 $mapas_seleccionados = $stmt_dm->fetchAll(PDO::FETCH_COLUMN);
 
+// Categorías disponibles y seleccionadas
+$stmt_cats = $conexion->query("SELECT * FROM categorias ORDER BY nombre ASC");
+$categorias = $stmt_cats->fetchAll(PDO::FETCH_ASSOC);
+
+$stmt_dc = $conexion->prepare("SELECT categoria_id FROM dino_categorias WHERE dino_id = :id");
+$stmt_dc->execute([':id' => $id]);
+$cats_seleccionadas = $stmt_dc->fetchAll(PDO::FETCH_COLUMN);
+
 ?>
 
 <!DOCTYPE html>
@@ -118,6 +126,18 @@ $mapas_seleccionados = $stmt_dm->fetchAll(PDO::FETCH_COLUMN);
                         <label class="checkbox-tag">
                             <input type="checkbox" name="mapas[]" value="<?php echo $mapa['id']; ?>" <?php echo in_array($mapa['id'], $mapas_seleccionados) ? 'checked' : ''; ?>>
                             <span><?php echo htmlspecialchars($mapa['nombre_mapa']); ?></span>
+                        </label>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <div class="campo">
+                <label>Categorías de la criatura:</label>
+                <div class="grid-checkboxes">
+                    <?php foreach ($categorias as $cat): ?>
+                        <label class="checkbox-tag">
+                            <input type="checkbox" name="categorias[]" value="<?php echo $cat['id']; ?>" <?php echo in_array($cat['id'], $cats_seleccionadas) ? 'checked' : ''; ?>>
+                            <span><?php echo htmlspecialchars($cat['nombre']); ?></span>
                         </label>
                     <?php endforeach; ?>
                 </div>

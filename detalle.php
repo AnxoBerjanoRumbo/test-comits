@@ -28,6 +28,16 @@ $stmt_mapas->bindParam(':id', $id);
 $stmt_mapas->execute();
 $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
 
+// 3b. Categorias del dinosaurio
+$sql_cats = "SELECT c.nombre FROM categorias c
+             INNER JOIN dino_categorias dc ON c.id = dc.categoria_id
+             WHERE dc.dino_id = :id
+             ORDER BY c.nombre ASC";
+$stmt_cats = $conexion->prepare($sql_cats);
+$stmt_cats->bindParam(':id', $id);
+$stmt_cats->execute();
+$cats_dino = $stmt_cats->fetchAll(PDO::FETCH_COLUMN);
+
 // 4. Paginación de Comentarios
 $comentarios_por_pagina = 10;
 $pagina_actual = isset($_GET['p']) && is_numeric($_GET['p']) ? (int)$_GET['p'] : 1;
@@ -159,6 +169,17 @@ else: ?>
 endif; ?>
             </div>
         </section>
+
+        <?php if (count($cats_dino) > 0): ?>
+        <section class="seccion-mapas">
+            <h3>Categorías</h3>
+            <div class="lista-mapas">
+                <?php foreach ($cats_dino as $cat): ?>
+                    <span class="tag-mapa"><?php echo htmlspecialchars($cat); ?></span>
+                <?php endforeach; ?>
+            </div>
+        </section>
+        <?php endif; ?>
 
         <section id="comentarios" class="seccion-comentarios" style="margin-top: 40px;">
             <h3>Comentarios y Aportes</h3>

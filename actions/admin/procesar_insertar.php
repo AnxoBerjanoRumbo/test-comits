@@ -15,6 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dieta = $_POST['dieta'];
     $descripcion = $_POST['descripcion'];
     $mapas_ids = isset($_POST['mapas']) ? $_POST['mapas'] : [];
+    $cats_ids  = isset($_POST['categorias']) ? $_POST['categorias'] : [];
     
     // Subida de imagen con validación de seguridad
     $imagen = 'default_dino.jpg'; // por si falla
@@ -52,11 +53,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $dino_id = $conexion->lastInsertId();
 
         // Insertar en la tabla intermedia 'dino_mapas' (Múltiples mapas)
+        // Insertar mapas
         if (!empty($mapas_ids)) {
             $sqlMapa = "INSERT INTO dino_mapas (dino_id, mapa_id) VALUES (:dino_id, :mapa_id)";
             $stmtMapa = $conexion->prepare($sqlMapa);
             foreach ($mapas_ids as $m_id) {
                 $stmtMapa->execute([':dino_id' => $dino_id, ':mapa_id' => $m_id]);
+            }
+        }
+
+        // Insertar categorías
+        if (!empty($cats_ids)) {
+            $sqlCat = "INSERT INTO dino_categorias (dino_id, categoria_id) VALUES (:dino_id, :cat_id)";
+            $stmtCat = $conexion->prepare($sqlCat);
+            foreach ($cats_ids as $c_id) {
+                $stmtCat->execute([':dino_id' => $dino_id, ':cat_id' => (int)$c_id]);
             }
         }
 

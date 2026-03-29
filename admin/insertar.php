@@ -8,11 +8,15 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true || ($_SESSIO
 include '../config/db.php';
 include '../config/sync_foto.php';
 
-
 $sql_mapas = "SELECT * FROM mapas ORDER BY nombre_mapa ASC";
 $stmt_mapas = $conexion->prepare($sql_mapas);
 $stmt_mapas->execute();
 $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
+
+$sql_cats = "SELECT * FROM categorias ORDER BY nombre ASC";
+$stmt_cats = $conexion->prepare($sql_cats);
+$stmt_cats->execute();
+$categorias = $stmt_cats->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -85,6 +89,18 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
                         <label class="checkbox-tag">
                             <input type="checkbox" name="mapas[]" value="<?php echo $mapa['id']; ?>">
                             <span><?php echo htmlspecialchars($mapa['nombre_mapa']); ?></span>
+                        </label>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <div class="campo">
+                <label>Categorías de la criatura:</label>
+                <div class="grid-checkboxes">
+                    <?php foreach ($categorias as $cat): ?>
+                        <label class="checkbox-tag">
+                            <input type="checkbox" name="categorias[]" value="<?php echo $cat['id']; ?>">
+                            <span><?php echo htmlspecialchars($cat['nombre']); ?></span>
                         </label>
                     <?php endforeach; ?>
                 </div>
