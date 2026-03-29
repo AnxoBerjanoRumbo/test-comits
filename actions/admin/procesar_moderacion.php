@@ -56,9 +56,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($foto && $foto !== 'default.png') {
                 if (strpos($foto, 'http') !== false) {
                     eliminarImagenDeCloudinary($foto);
-                } else {
+                }
+                else {
                     $local_path = '../../assets/img/perfil/' . $foto;
-                    if (file_exists($local_path)) unlink($local_path);
+                    if (file_exists($local_path))
+                        unlink($local_path);
                 }
             }
 
@@ -96,16 +98,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $permanente = 0;
 
         switch ($tipo) {
-            case '10m': $baneado_hasta = date('Y-m-d H:i:s', strtotime('+10 minutes')); break;
-            case '30m': $baneado_hasta = date('Y-m-d H:i:s', strtotime('+30 minutes')); break;
-            case '1d':  $baneado_hasta = date('Y-m-d H:i:s', strtotime('+1 day')); break;
-            case '4d':  $baneado_hasta = date('Y-m-d H:i:s', strtotime('+4 days')); break;
-            case '1w':  $baneado_hasta = date('Y-m-d H:i:s', strtotime('+1 week')); break;
-            case '3w':  $baneado_hasta = date('Y-m-d H:i:s', strtotime('+3 weeks')); break;
-            case '1mo': $baneado_hasta = date('Y-m-d H:i:s', strtotime('+1 month')); break;
-            case '6mo': $baneado_hasta = date('Y-m-d H:i:s', strtotime('+6 months')); break;
-            case '1y':  $baneado_hasta = date('Y-m-d H:i:s', strtotime('+1 year')); break;
-            case 'permanente': $permanente = 1; break;
+            case '10m':
+                $baneado_hasta = date('Y-m-d H:i:s', strtotime('+10 minutes'));
+                break;
+            case '30m':
+                $baneado_hasta = date('Y-m-d H:i:s', strtotime('+30 minutes'));
+                break;
+            case '1d':
+                $baneado_hasta = date('Y-m-d H:i:s', strtotime('+1 day'));
+                break;
+            case '4d':
+                $baneado_hasta = date('Y-m-d H:i:s', strtotime('+4 days'));
+                break;
+            case '1w':
+                $baneado_hasta = date('Y-m-d H:i:s', strtotime('+1 week'));
+                break;
+            case '3w':
+                $baneado_hasta = date('Y-m-d H:i:s', strtotime('+3 weeks'));
+                break;
+            case '1mo':
+                $baneado_hasta = date('Y-m-d H:i:s', strtotime('+1 month'));
+                break;
+            case '6mo':
+                $baneado_hasta = date('Y-m-d H:i:s', strtotime('+6 months'));
+                break;
+            case '1y':
+                $baneado_hasta = date('Y-m-d H:i:s', strtotime('+1 year'));
+                break;
+            case 'permanente':
+                $permanente = 1;
+                break;
             default:
                 header("Location: ../../admin/moderar_usuario.php?id=$id_moderado&error=opcion");
                 exit();
@@ -122,7 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         include_once '../../config/mailer.php';
         $duracion_txt = $permanente ? "forma permanente" : "hasta el " . date("d/m/Y H:i", strtotime($baneado_hasta));
-        
+
         $msg_motivo = !empty($motivo) ? "<p>Motivo de la sanción:</p>
                        <blockquote style='background:#f4f4f4; padding:10px; border-left:5px solid #ffaa00;'>
                        " . nl2br(htmlspecialchars($motivo)) . "
@@ -137,7 +159,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: ../../admin/moderar_usuario.php?id=$id_moderado&status=sancionado");
         exit();
 
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         error_log("Error en moderación: " . $e->getMessage());
         header("Location: ../../admin/moderar_usuario.php?id=$id_moderado&error=interno");
         exit();

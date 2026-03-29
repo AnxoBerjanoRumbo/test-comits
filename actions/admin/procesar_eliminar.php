@@ -53,14 +53,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
             }
         }
 
-        header("Location: ../index.php?status=deleted");
+        header("Location: ../../index.php?status=deleted");
         exit();
 
     }
     catch (PDOException $e) {
         $conexion->rollBack();
         error_log("Error al eliminar: " . $e->getMessage());
-        header("Location: ../index.php?error=interno");
+        header("Location: ../../index.php?error=interno");
         exit();
     }
 }

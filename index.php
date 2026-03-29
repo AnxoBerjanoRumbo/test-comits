@@ -93,7 +93,7 @@ endif; ?>
         </form>
     </section>
     <main>
-        <h2>Diccionario de Criaturas</h2>
+        <h2 class="titulo-seccion">Diccionario de Criaturas</h2>
         
         <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
             <div style="text-align: center; margin-bottom: 25px;">
@@ -124,6 +124,7 @@ endif; ?>
                         <h3>
                             <?php
                             $query_detalle = $_GET;
+                            unset($query_detalle['status'], $query_detalle['error']);
                             $query_detalle['id'] = $dino['id'];
                             $link_detalle = 'detalle.php?' . http_build_query($query_detalle);
                             ?>
@@ -147,6 +148,7 @@ endif; ?>
         <div class="paginacion" style="margin-top: 40px; text-align: center;">
             <?php
             $query_params = $_GET;
+            unset($query_params['status'], $query_params['error']);
             for ($i = 1; $i <= $total_paginas; $i++):
                 $query_params['p'] = $i;
                 $link = 'index.php?' . http_build_query($query_params);
