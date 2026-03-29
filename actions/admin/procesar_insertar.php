@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $especie = $_POST['especie'];
     $dieta = $_POST['dieta'];
     $descripcion = $_POST['descripcion'];
-    $mapa_id = $_POST['mapa_id'];
+    $mapas_ids = isset($_POST['mapas']) ? $_POST['mapas'] : [];
     
     // Subida de imagen con validación de seguridad
     $imagen = 'default_dino.jpg'; // por si falla
@@ -51,10 +51,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Obtener el ID del dinosaurio que acabamos de crear
         $dino_id = $conexion->lastInsertId();
 
-        // Insertar en la tabla intermedia 'dino_mapas' (según tu detalle.php)
-        $sqlMapa = "INSERT INTO dino_mapas (dino_id, mapa_id) VALUES (:dino_id, :mapa_id)";
-        $stmtMapa = $conexion->prepare($sqlMapa);
-        $stmtMapa->execute([':dino_id' => $dino_id, ':mapa_id' => $mapa_id]);
+        // Insertar en la tabla intermedia 'dino_mapas' (Múltiples mapas)
+        if (!empty($mapas_ids)) {
+            $sqlMapa = "INSERT INTO dino_mapas (dino_id, mapa_id) VALUES (:dino_id, :mapa_id)";
+            $stmtMapa = $conexion->prepare($sqlMapa);
+            foreach ($mapas_ids as $m_id) {
+                $stmtMapa->execute([':dino_id' => $dino_id, ':mapa_id' => $m_id]);
+            }
+        }
 
         $conexion->commit();
         header("Location: ../../index.php?status=success");

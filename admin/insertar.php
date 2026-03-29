@@ -79,16 +79,15 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <div class="campo">
-                <label>Mapa de avistamiento inicial:</label>
-                <select name="mapa_id" required>
-                    <option value="">Selecciona un mapa...</option>
+                <label>Mapas de avistamiento:</label>
+                <div class="grid-checkboxes">
                     <?php foreach ($mapas as $mapa): ?>
-                        <option value="<?php echo $mapa['id']; ?>">
-                            <?php echo $mapa['nombre_mapa']; ?>
-                        </option>
-                    <?php
-endforeach; ?>
-                </select>
+                        <label class="checkbox-tag">
+                            <input type="checkbox" name="mapas[]" value="<?php echo $mapa['id']; ?>">
+                            <span><?php echo htmlspecialchars($mapa['nombre_mapa']); ?></span>
+                        </label>
+                    <?php endforeach; ?>
+                </div>
             </div>
 
             <button type="submit" class="boton-insertar">Añadir a la base de datos</button>

@@ -112,15 +112,15 @@ $mapas_seleccionados = $stmt_dm->fetchAll(PDO::FETCH_COLUMN);
             </div>
 
             <div class="campo">
-                <label>Mapa principal de avistamiento:</label>
-                <select name="mapa_id" required>
-                    <option value="">Selecciona un mapa...</option>
+                <label>Mapas de avistamiento:</label>
+                <div class="grid-checkboxes">
                     <?php foreach ($mapas as $mapa): ?>
-                        <option value="<?php echo $mapa['id']; ?>" <?php echo in_array($mapa['id'], $mapas_seleccionados) ? 'selected' : ''; ?>>
-                            <?php echo $mapa['nombre_mapa']; ?>
-                        </option>
+                        <label class="checkbox-tag">
+                            <input type="checkbox" name="mapas[]" value="<?php echo $mapa['id']; ?>" <?php echo in_array($mapa['id'], $mapas_seleccionados) ? 'checked' : ''; ?>>
+                            <span><?php echo htmlspecialchars($mapa['nombre_mapa']); ?></span>
+                        </label>
                     <?php endforeach; ?>
-                </select>
+                </div>
             </div>
 
             <button type="submit" class="boton-insertar">Guardar Cambios</button>

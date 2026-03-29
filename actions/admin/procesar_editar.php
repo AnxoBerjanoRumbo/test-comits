@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $especie = $_POST['especie'];
     $dieta = $_POST['dieta'];
     $descripcion = $_POST['descripcion'];
-    $mapa_id = $_POST['mapa_id'];
+    $mapas_ids = isset($_POST['mapas']) ? $_POST['mapas'] : [];
 
     // Obtener imagen actual por si no suben una nueva
     $sql_actual = "SELECT imagen FROM dinosaurios WHERE id = :id";
@@ -61,9 +61,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmtDelMap = $conexion->prepare("DELETE FROM dino_mapas WHERE dino_id = :id");
         $stmtDelMap->execute([':id' => $id]);
 
-        $sqlMapa = "INSERT INTO dino_mapas (dino_id, mapa_id) VALUES (:dino_id, :mapa_id)";
-        $stmtMapa = $conexion->prepare($sqlMapa);
-        $stmtMapa->execute([':dino_id' => $id, ':mapa_id' => $mapa_id]);
+        if (!empty($mapas_ids)) {
+            $sqlMapa = "INSERT INTO dino_mapas (dino_id, mapa_id) VALUES (:dino_id, :mapa_id)";
+            $stmtMapa = $conexion->prepare($sqlMapa);
+            foreach ($mapas_ids as $m_id) {
+                $stmtMapa->execute([':dino_id' => $id, ':mapa_id' => $m_id]);
+            }
+        }
 
         $conexion->commit();
         header("Location: ../../detalle.php?id=" . $id . "&status=edit_success");
