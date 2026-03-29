@@ -4,59 +4,67 @@ include 'config/db.php';
 include 'config/sync_foto.php';
 
 $busqueda = isset($_GET['buscar']) ? $_GET['buscar'] : '';
-$dieta = isset($_GET['dieta']) ? $_GET['dieta'] : '';
+$dieta    = isset($_GET['dieta'])  ? $_GET['dieta']  : '';
+$mapa_id  = (isset($_GET['mapa']) && is_numeric($_GET['mapa'])) ? (int)$_GET['mapa'] : 0;
 
-$sql = "SELECT * FROM dinosaurios WHERE 1=1";
-$sql_count = "SELECT COUNT(*) FROM dinosaurios WHERE 1=1";
+// Cargar todos los mapas para el selector del formulario
+$stmt_mapas_lista = $conexion->prepare("SELECT * FROM mapas ORDER BY nombre_mapa ASC");
+$stmt_mapas_lista->execute();
+$todos_mapas = $stmt_mapas_lista->fetchAll(PDO::FETCH_ASSOC);
 
-// Si hay búsqueda por texto, añadimos la condición
-if ($busqueda != '') {
-    $sql .= " AND (nombre LIKE :busqueda OR especie LIKE :busqueda)";
-    $sql_count .= " AND (nombre LIKE :busqueda OR especie LIKE :busqueda)";
+// Etiqueta del mapa seleccionado para el título dinámico
+$nombre_mapa_sel = '';
+if ($mapa_id > 0) {
+    foreach ($todos_mapas as $m) {
+        if ($m['id'] == $mapa_id) { $nombre_mapa_sel = $m['nombre_mapa']; break; }
+    }
 }
 
-// Si hay filtro por dieta, añadimos la condición
+// Construir la consulta base (JOIN si hay filtro de mapa)
+if ($mapa_id > 0) {
+    $base       = "FROM dinosaurios d INNER JOIN dino_mapas dm ON d.id = dm.dino_id WHERE dm.mapa_id = :mapa_id";
+    $sql        = "SELECT DISTINCT d.* $base";
+    $sql_count  = "SELECT COUNT(DISTINCT d.id) $base";
+} else {
+    $sql        = "SELECT * FROM dinosaurios WHERE 1=1";
+    $sql_count  = "SELECT COUNT(*) FROM dinosaurios WHERE 1=1";
+}
+
+// Alias correcto dependiendo de si hay JOIN
+$alias = ($mapa_id > 0) ? 'd.' : '';
+
+if ($busqueda != '') {
+    $sql       .= " AND ({$alias}nombre LIKE :busqueda OR {$alias}especie LIKE :busqueda)";
+    $sql_count .= " AND ({$alias}nombre LIKE :busqueda OR {$alias}especie LIKE :busqueda)";
+}
 if ($dieta != '') {
-    $sql .= " AND dieta = :dieta";
-    $sql_count .= " AND dieta = :dieta";
+    $sql       .= " AND {$alias}dieta = :dieta";
+    $sql_count .= " AND {$alias}dieta = :dieta";
 }
 
 // Paginación
-$por_pagina = 9;
-$pagina_actual = isset($_GET['p']) && is_numeric($_GET['p']) ? (int)$_GET['p'] : 1;
+$por_pagina    = 9;
+$pagina_actual = (isset($_GET['p']) && is_numeric($_GET['p'])) ? (int)$_GET['p'] : 1;
 if ($pagina_actual < 1) $pagina_actual = 1;
 $offset = ($pagina_actual - 1) * $por_pagina;
 
-// Ejecutar count
+// Ejecutar COUNT
 $stmt_count = $conexion->prepare($sql_count);
-if ($busqueda != '') {
-    $termino = "%$busqueda%";
-    $stmt_count->bindParam(':busqueda', $termino);
-}
-if ($dieta != '') {
-    $stmt_count->bindParam(':dieta', $dieta);
-}
+if ($mapa_id > 0)    $stmt_count->bindValue(':mapa_id', $mapa_id, PDO::PARAM_INT);
+if ($busqueda != '') { $termino = "%$busqueda%"; $stmt_count->bindParam(':busqueda', $termino); }
+if ($dieta != '')    $stmt_count->bindParam(':dieta', $dieta);
 $stmt_count->execute();
-$total_dinos = $stmt_count->fetchColumn();
-$total_paginas = ceil($total_dinos / $por_pagina);
+$total_dinos   = $stmt_count->fetchColumn();
+$total_paginas = (int)ceil($total_dinos / $por_pagina);
 
-// Añadir limits
+// Ejecutar SELECT con LIMIT
 $sql .= " LIMIT :limit OFFSET :offset";
-
 $stmt = $conexion->prepare($sql);
-
-// Pasamos los parámetros solo si existen
-if ($busqueda != '') {
-    $termino = "%$busqueda%";
-    $stmt->bindParam(':busqueda', $termino);
-}
-if ($dieta != '') {
-    $stmt->bindParam(':dieta', $dieta);
-}
-// PDO requiere bind explícito para INTs en LIMIT/OFFSET cuando emulation_prepare está ON
-$stmt->bindValue(':limit', $por_pagina, PDO::PARAM_INT);
-$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-
+if ($mapa_id > 0)    $stmt->bindValue(':mapa_id', $mapa_id, PDO::PARAM_INT);
+if ($busqueda != '') { $termino = "%$busqueda%"; $stmt->bindParam(':busqueda', $termino); }
+if ($dieta != '')    $stmt->bindParam(':dieta', $dieta);
+$stmt->bindValue(':limit',  $por_pagina, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset,     PDO::PARAM_INT);
 $stmt->execute();
 $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -84,16 +92,30 @@ $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <option value="Omnívoro" <?php echo(isset($_GET['dieta']) && $_GET['dieta'] == 'Omnívoro') ? 'selected' : ''; ?>>Omnívoro</option>
             </select>
 
+            <select name="mapa">
+                <option value="">Todos los mapas</option>
+                <?php foreach ($todos_mapas as $m): ?>
+                    <option value="<?php echo $m['id']; ?>" <?php echo ($mapa_id == $m['id']) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($m['nombre_mapa']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+
             <button type="submit">Filtrar</button>
             
-            <?php if (isset($_GET['buscar']) || isset($_GET['dieta'])): ?>
+            <?php if ($busqueda != '' || $dieta != '' || $mapa_id > 0): ?>
                 <a href="index.php" class="boton-limpiar">Limpiar</a>
-            <?php
-endif; ?>
+            <?php endif; ?>
         </form>
     </section>
     <main>
-        <h2 class="titulo-seccion">Diccionario de Criaturas</h2>
+        <h2 class="titulo-seccion">
+            <?php if ($nombre_mapa_sel): ?>
+                Criaturas en <span class="accent-text"><?php echo htmlspecialchars($nombre_mapa_sel); ?></span>
+            <?php else: ?>
+                Diccionario de Criaturas
+            <?php endif; ?>
+        </h2>
         
         <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
             <div style="text-align: center; margin-bottom: 25px;">
@@ -135,13 +157,15 @@ endif; ?>
                     </div>
                 <?php
     endforeach; ?>
-            <?php
-else: ?>
+            <?php else: ?>
                 <p style="grid-column: 1/-1; text-align: center; color: #888;">
-                No se han encontrado criaturas que coincidan con "<strong><?php echo htmlspecialchars($busqueda); ?></strong>".
+                    <?php if ($nombre_mapa_sel): ?>
+                        No hay criaturas registradas en <strong><?php echo htmlspecialchars($nombre_mapa_sel); ?></strong> todavía.
+                    <?php else: ?>
+                        No se han encontrado criaturas que coincidan con "<strong><?php echo htmlspecialchars($busqueda); ?></strong>".
+                    <?php endif; ?>
                 </p>
-            <?php
-endif; ?>
+            <?php endif; ?>
         </div>
 
         <?php if ($total_paginas > 1): ?>
