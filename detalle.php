@@ -32,7 +32,7 @@ $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
 $sql_cats = "SELECT c.nombre FROM categorias c
              INNER JOIN dino_categorias dc ON c.id = dc.categoria_id
              WHERE dc.dino_id = :id
-             ORDER BY c.nombre ASC";
+             ORDER BY c.orden ASC";
 $stmt_cats = $conexion->prepare($sql_cats);
 $stmt_cats->bindParam(':id', $id);
 $stmt_cats->execute();

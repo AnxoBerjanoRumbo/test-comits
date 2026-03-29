@@ -37,7 +37,7 @@ $stmt_dm->execute([':id' => $id]);
 $mapas_seleccionados = $stmt_dm->fetchAll(PDO::FETCH_COLUMN);
 
 // Categorías disponibles y seleccionadas
-$stmt_cats = $conexion->query("SELECT * FROM categorias ORDER BY nombre ASC");
+$stmt_cats = $conexion->query("SELECT * FROM categorias ORDER BY orden ASC");
 $categorias = $stmt_cats->fetchAll(PDO::FETCH_ASSOC);
 
 $stmt_dc = $conexion->prepare("SELECT categoria_id FROM dino_categorias WHERE dino_id = :id");

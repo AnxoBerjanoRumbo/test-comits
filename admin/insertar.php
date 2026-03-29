@@ -13,7 +13,7 @@ $stmt_mapas = $conexion->prepare($sql_mapas);
 $stmt_mapas->execute();
 $mapas = $stmt_mapas->fetchAll(PDO::FETCH_ASSOC);
 
-$sql_cats = "SELECT * FROM categorias ORDER BY nombre ASC";
+$sql_cats = "SELECT * FROM categorias ORDER BY orden ASC";
 $stmt_cats = $conexion->prepare($sql_cats);
 $stmt_cats->execute();
 $categorias = $stmt_cats->fetchAll(PDO::FETCH_ASSOC);

@@ -13,7 +13,7 @@ $stmt_mapas_lista->execute();
 $todos_mapas = $stmt_mapas_lista->fetchAll(PDO::FETCH_ASSOC);
 
 // Cargar categorias para el selector
-$stmt_cats_lista = $conexion->prepare("SELECT * FROM categorias ORDER BY nombre ASC");
+$stmt_cats_lista = $conexion->prepare("SELECT * FROM categorias ORDER BY orden ASC");
 $stmt_cats_lista->execute();
 $todos_cats = $stmt_cats_lista->fetchAll(PDO::FETCH_ASSOC);
 
