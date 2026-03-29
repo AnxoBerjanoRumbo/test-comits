@@ -76,13 +76,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     header("Location: ../registro.php?error=nick_admin_activo");
                     exit();
                 }
-                // El nick existe como usuario normal (slot de admin previamente revocado):
-                // reciclamos el registro en lugar de insertar uno nuevo.
-                $sqlUpdate = "UPDATE usuarios SET email = :email, password = '', rol = 'admin',
-                              permiso_insertar_dino = 0, permiso_eliminar_comentario = 0,
-                              recuperar_token = NULL, recuperar_expira = NULL WHERE id = :id";
-                $stmtU = $conexion->prepare($sqlUpdate);
-                $stmtU->execute([':email' => $email, ':id' => $existente['id']]);
+                // Previene que se secuestren cuentas de usuarios normales
+                header("Location: ../registro.php?error=datos_en_uso");
+                exit();
             }
             else {
                 // Nick libre: inserción normal
@@ -121,7 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             include_once '../config/mailer.php';
             $cuerpo = "<h3>Bienvenido a ARK Hub, " . htmlspecialchars($nick) . "!</h3>
                        <p>Para activar tu cuenta, introduce el siguiente código de verificación en la web de guardado:</p>
-                       <h2 style='color:#00ffcc;'>$codigo</h2>
+                       <h2 style='color: var(--accent);'>$codigo</h2>
                        <p>Si no fuiste tú, ignora este mensaje.</p>";
             sendArkEmail($email, "Verifica tu cuenta - ARK Hub", $cuerpo);
 

@@ -90,9 +90,7 @@ if (count($comentarios) > 0) {
     <?php 
     // Recuperar todos los parámetros GET menos el ID para mantener el contexto de búsqueda/filtros
     $params_volver = $_GET;
-    unset($params_volver['id']);
-    // Quitamos 'p' (página de comentarios) si existe para no confundirlo con la página del listado
-    unset($params_volver['p']);
+    unset($params_volver['id'], $params_volver['p'], $params_volver['status'], $params_volver['error']);
     
     $header_titulo = "Ficha de Criatura";
     $header_volver_link = "index.php" . (!empty($params_volver) ? '?' . http_build_query($params_volver) : '');
@@ -141,7 +139,7 @@ if (count($comentarios) > 0) {
             
             <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_insertar'] ?? 0) == 1): ?>
                 <div style="margin-top: 20px; text-align: center;">
-                    <a href="admin/editar.php?id=<?php echo $dino['id']; ?>" class="btn-nav btn-registro" style="background-color: #007bff; border-color: #007bff; color: white;">Editar Criatura</a>
+                    <a href="admin/editar.php?id=<?php echo $dino['id']; ?>" class="btn-nav btn-registro">Editar Criatura</a>
                 </div>
             <?php endif; ?>
         </section>
@@ -177,7 +175,7 @@ endif; ?>
                         <input type="text" name="website_url" value="">
                     </div>
                     
-                    <div id="indicador-respuesta" style="display: none; background: rgba(0, 255, 204, 0.1); padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px dashed var(--accent);">
+                    <div id="indicador-respuesta" style="display: none; background: rgba(var(--accent-rgb), 0.1); padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px dashed var(--accent);">
                         <span class="f-09">Respondiendo a <strong id="nick-respuesta">@usuario</strong></span>
                         <button type="button" onclick="cancelarRespuesta()" style="background: none; border: none; color: #ff5555; cursor: pointer; float: right; font-weight: bold;">[X] Cancelar</button>
                     </div>
@@ -189,7 +187,7 @@ endif; ?>
                         <img src="<?php echo htmlspecialchars($src_mismo); ?>" 
                              alt="Mi Perfil" 
                              class="avatar-comentario"
-                             style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--success-color); flex-shrink: 0;"
+                             style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); flex-shrink: 0;"
                              onerror="this.src='assets/img/perfil/default.png'">
                         <textarea name="texto" required placeholder="Añade tu comentario o estrategia (máx 10.000 palabras)..." rows="4" style="width: 100%; border-radius: var(--radius);"></textarea>
                     </div>
@@ -232,7 +230,7 @@ endif; ?>
                                 
                                 <div class="d-flex align-center gap-10">
                                     <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
-                                        <button type="button" class="btn-nav f-08" style="padding: 4px 10px; border-color: var(--accent); color: var(--accent);" onclick="prepararRespuesta(<?php echo $c['id']; ?>, '<?php echo addslashes($c['nick']); ?>')">Contestar</button>
+                                        <button type="button" class="btn-nav f-08" style="padding: 4px 10px; border-color: var(--accent); color: var(--accent);" onclick="prepararRespuesta(<?php echo $c['id']; ?>, '<?php echo htmlspecialchars(addslashes($c['nick'])); ?>')">Contestar</button>
                                     <?php endif; ?>
                                     <?php if(isset($_SESSION['usuario_id']) && (($_SESSION['is_admin'] ?? false) === true || $_SESSION['usuario_id'] == $c['usuario_id'])): ?>
                                         <form action="actions/borrar_comentario.php" method="POST" style="display: inline;">
