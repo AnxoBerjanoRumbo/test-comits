@@ -6,7 +6,6 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true || ($_SESSIO
 }
 
 include '../config/db.php';
-include '../config/sync_foto.php';
 
 $sql_mapas = "SELECT * FROM mapas ORDER BY nombre_mapa ASC";
 $stmt_mapas = $conexion->prepare($sql_mapas);

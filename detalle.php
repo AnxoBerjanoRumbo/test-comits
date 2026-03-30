@@ -1,7 +1,6 @@
 <?php
 session_start();
 include 'config/db.php';
-include 'config/sync_foto.php';
 
 // 1. Recogemos el ID del dinosaurio desde la URL (con validación básica)
 $id = isset($_GET['id']) ? $_GET['id'] : 1;
@@ -110,7 +109,7 @@ if (count($comentarios) > 0) {
 
     <main class="contenedor-detalle">
         <?php if (isset($_GET['status']) && $_GET['status'] == 'edit_success'): ?>
-            <div class="alerta-exito mb-20" style="text-align: center;">🦖 ¡Información de la criatura actualizada correctamente!</div>
+            <div class="alerta-exito mb-20" style="text-align: center;">Información de la criatura actualizada correctamente.</div>
         <?php endif; ?>
         <section class="ficha-principal">
             <h2 class="nombre-dino"><?php echo htmlspecialchars($dino['nombre']); ?></h2>
@@ -241,7 +240,7 @@ endif; ?>
                                          class="avatar-comentario"
                                          onerror="this.src='assets/img/perfil/default.png'">
                                     <strong class="comentario-nick <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? 'nick-admin' : ''; ?>">
-                                        <?php echo htmlspecialchars($c['nick']); ?> <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '🛡️' : ''; ?>
+                                        <?php echo htmlspecialchars($c['nick']); ?> <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '(Admin)' : ''; ?>
                                     </strong>
 
                                     <?php if ($can_moderate): ?>
@@ -277,7 +276,7 @@ endif; ?>
                                             ?>
                                             <img src="<?php echo htmlspecialchars($src_r); ?>" alt="Avatar" class="avatar-comentario" onerror="this.src='assets/img/perfil/default.png'">
                                             <strong class="comentario-nick nick-admin">
-                                                <?php echo htmlspecialchars($r['nick']); ?> 🛡️
+                                                <?php echo htmlspecialchars($r['nick']); ?> (Admin)
                                             </strong>
                                             <span class="f-08 text-muted">ha respondido</span>
                                         </div>

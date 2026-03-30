@@ -6,7 +6,6 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true || ($_SESSIO
 }
 
 include '../config/db.php';
-include '../config/sync_foto.php';
 
 $id = isset($_GET['id']) ? $_GET['id'] : 0;
 

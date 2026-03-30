@@ -5,7 +5,6 @@ if (!isset($_SESSION['usuario_id'])) {
     exit();
 }
 include 'config/db.php';
-include 'config/sync_foto.php';
 
 $usuario_id = $_SESSION['usuario_id'];
 $sql = "SELECT * FROM usuarios WHERE id = :id";
@@ -34,18 +33,18 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
         
         <?php if (isset($_GET['status']) && $_GET['status'] == 'success'): ?>
             <div class="alerta-exito">
-                ✅ Perfil actualizado correctamente.
+                Perfil actualizado correctamente.
             </div>
         <?php elseif (isset($_GET['error'])): ?>
             <div class="alerta-error">
                 <?php 
-                if ($_GET['error'] == 'pass_no_coincide') echo "⚠️ Las contraseñas no coinciden.";
-                elseif ($_GET['error'] == 'pass_corta') echo "⚠️ La nueva contraseña debe tener al menos 4 caracteres.";
-                elseif ($_GET['error'] == 'upload') echo "⚠️ Error al subir la imagen. Comprueba que sea un formato válido.";
-                elseif ($_GET['error'] == 'nick_invalido') echo "⚠️ El nuevo apodo está vacío o supera los 25 caracteres.";
-                elseif ($_GET['error'] == 'nick_reservado') echo "⚠️ No puedes usar la palabra 'admin' en tu nombre por seguridad.";
-                elseif ($_GET['error'] == 'nick_en_uso') echo "⚠️ Ese apodo ya pertenece a otro superviviente.";
-                else echo "⚠️ Error al actualizar el perfil.";
+                if ($_GET['error'] == 'pass_no_coincide') echo "Las contraseñas no coinciden.";
+                elseif ($_GET['error'] == 'pass_corta') echo "La nueva contraseña debe tener al menos 4 caracteres.";
+                elseif ($_GET['error'] == 'upload') echo "Error al subir la imagen. Comprueba que sea un formato válido.";
+                elseif ($_GET['error'] == 'nick_invalido') echo "El nuevo apodo está vacío o supera los 25 caracteres.";
+                elseif ($_GET['error'] == 'nick_reservado') echo "No puedes usar la palabra 'admin' en tu nombre por seguridad.";
+                elseif ($_GET['error'] == 'nick_en_uso') echo "Ese apodo ya pertenece a otro superviviente.";
+                else echo "Error al actualizar el perfil.";
                 ?>
             </div>
         <?php endif; ?>
@@ -107,6 +106,53 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
             <button type="submit" class="boton-insertar">Confirmar Cambio de Contraseña</button>
         </form>
+
+        <?php if ($usuario['rol'] === 'admin' || $usuario['rol'] === 'superadmin'): ?>
+            <hr class="separador">
+            <?php
+            $sql_mis_logs = "SELECT * FROM admin_logs WHERE id_usuario = :id ORDER BY fecha DESC LIMIT 30";
+            $stmt_mis_logs = $conexion->prepare($sql_mis_logs);
+            $stmt_mis_logs->execute([':id' => $usuario_id]);
+            $mis_logs = $stmt_mis_logs->fetchAll(PDO::FETCH_ASSOC);
+            ?>
+            <div style="border:1px solid var(--border-color); border-left:4px solid #ff9800; border-radius:var(--radius); overflow:hidden; margin-top:10px;">
+                <div style="padding:16px 22px; background:rgba(255,152,0,0.08); display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border-color);">
+                    <span class="material-symbols-outlined" style="color:#ff9800;">history</span>
+                    <h3 style="margin:0; color:#ff9800; font-size:1rem;">Mi Registro de Actividad</h3>
+                    <span class="f-08 text-muted" style="margin-left:auto;"><?php echo count($mis_logs); ?> acciones</span>
+                </div>
+                <?php if (count($mis_logs) > 0): ?>
+                <div style="max-height:400px; overflow-y:auto;">
+                    <?php foreach ($mis_logs as $log):
+                        $accion_lower = strtolower($log['accion']);
+                        $log_color = '#ff9800'; $log_icon = 'edit';
+                        if (str_contains($accion_lower, 'eliminar') || str_contains($accion_lower, 'borrar') || str_contains($accion_lower, 'expulsi')) {
+                            $log_color = 'var(--error-color)'; $log_icon = 'delete';
+                        } elseif (str_contains($accion_lower, 'añadir')) {
+                            $log_color = 'var(--accent)'; $log_icon = 'add_circle';
+                        } elseif (str_contains($accion_lower, 'levantar') || str_contains($accion_lower, 'mensaje')) {
+                            $log_color = '#4caf50'; $log_icon = 'check_circle';
+                        } elseif (str_contains($accion_lower, 'sancionar') || str_contains($accion_lower, 'ban')) {
+                            $log_color = '#e91e63'; $log_icon = 'gavel';
+                        }
+                    ?>
+                        <div style="display:flex; align-items:flex-start; gap:14px; padding:13px 20px; border-bottom:1px solid rgba(255,255,255,0.04);">
+                            <span class="material-symbols-outlined" style="color:<?php echo $log_color; ?>; font-size:1.1rem; margin-top:2px; flex-shrink:0;"><?php echo $log_icon; ?></span>
+                            <div style="flex:1; min-width:0;">
+                                <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px; flex-wrap:wrap; margin-bottom:2px;">
+                                    <strong style="color:<?php echo $log_color; ?>; font-size:0.88rem;"><?php echo htmlspecialchars($log['accion']); ?></strong>
+                                    <span style="font-size:0.78rem; color:var(--text-muted); white-space:nowrap;"><?php echo date('d/m/Y H:i', strtotime($log['fecha'])); ?></span>
+                                </div>
+                                <p style="margin:0; font-size:0.83rem; color:var(--text-muted); line-height:1.5;"><?php echo nl2br(htmlspecialchars($log['detalle'] ?? '')); ?></p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <?php else: ?>
+                    <p class="text-muted f-09 p-15 text-center" style="margin:0;">Aún no tienes acciones registradas.</p>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
 
         <script src="assets/js/perfil.js"></script>
     <?php include 'includes/footer.php'; ?>
