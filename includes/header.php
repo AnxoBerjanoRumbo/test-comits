@@ -1,5 +1,14 @@
 <?php
 // includes/header.php
+?>
+<script>
+    // Aplicar tema instantáneamente antes de que cargue el resto del contenido para evitar parpadeo
+    (function() {
+        const theme = localStorage.getItem('ark_hub_theme') || 'ragnarok';
+        document.body.classList.add('theme-' + theme);
+    })();
+</script>
+<?php
 // Detectar la profundidad para las rutas de los assets
 $path_prefix = isset($is_admin_panel) && $is_admin_panel ? '../' : '';
 
