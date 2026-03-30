@@ -29,8 +29,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         }
     }
-
-
     try {
 
         // Validación de duplicados
@@ -70,6 +68,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmtCat->execute([':dino_id' => $dino_id, ':cat_id' => (int)$c_id]);
             }
         }
+
+        // Sistema de Notificaciones
+        include_once '../../config/notificaciones.php';
+        $nick_admin = htmlspecialchars($_SESSION['nick'] ?? 'Un administrador');
+        $mensaje_notif = "Nuevo dinosaurio añadido: " . htmlspecialchars($nombre);
+        $enlace_notif = "detalle.php?id=" . $dino_id;
+        // Solo notificar a usuarios normales
+        notificarPorRol($conexion, ['usuario'], $mensaje_notif, $enlace_notif, $_SESSION['usuario_id']);
+
+        // Notificar a admins peers (no al autor) sobre la nueva incorporación
+        $msg_admins = "{$nick_admin} ha añadido el dinosaurio: " . htmlspecialchars($nombre);
+        notificarPorRol($conexion, ['admin'], $msg_admins, $enlace_notif, $_SESSION['usuario_id']);
+
+        // Log admin
+        include_once '../../config/admin_logger.php';
+        registrarAccionAdmin($conexion, $_SESSION['usuario_id'], 'Añadir Dino', "Dinosaurio añadido: " . htmlspecialchars($nombre));
 
         $conexion->commit();
         header("Location: ../../index.php?status=success");

@@ -16,10 +16,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
     $id = $_POST['id'];
 
     try {
-        // 0. Obtener el nombre de la imagen antes de borrar para limpiar el disco
-        $stmtImg = $conexion->prepare("SELECT imagen FROM dinosaurios WHERE id = :id");
+        // 0. Obtener el nombre de la imagen y el nombre del dino antes de borrar
+        $stmtImg = $conexion->prepare("SELECT nombre, imagen FROM dinosaurios WHERE id = :id");
         $stmtImg->execute([':id' => $id]);
-        $img_file = $stmtImg->fetchColumn();
+        $row = $stmtImg->fetch(PDO::FETCH_ASSOC);
+        $img_file = $row['imagen'] ?? null;
+        $dino_nombre = $row['nombre'] ?? 'Desconocido';
 
         $conexion->beginTransaction();
 
@@ -52,6 +54,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
                     unlink($file_path);
             }
         }
+
+        // Registrar accion de admin
+        include_once '../../config/admin_logger.php';
+        registrarAccionAdmin($conexion, $_SESSION['usuario_id'], 'Eliminar Dino', "Dinosaurio eliminado: " . htmlspecialchars($dino_nombre));
 
         header("Location: ../../index.php?status=deleted");
         exit();

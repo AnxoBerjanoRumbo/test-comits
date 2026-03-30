@@ -82,6 +82,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
 
+        // Sistema de Notificaciones
+        include_once '../../config/notificaciones.php';
+        $nick_admin = htmlspecialchars($_SESSION['nick'] ?? 'Un administrador');
+        $mensaje_notif = "Información actualizada: " . htmlspecialchars($nombre);
+        $enlace_notif = "detalle.php?id=" . $id;
+        // Solo notificar a usuarios normales
+        notificarPorRol($conexion, ['usuario'], $mensaje_notif, $enlace_notif, $_SESSION['usuario_id']);
+
+        // Notificar a admins compañeros (no al autor)
+        $msg_admins = "{$nick_admin} ha editado el dinosaurio: " . htmlspecialchars($nombre);
+        notificarPorRol($conexion, ['admin'], $msg_admins, $enlace_notif, $_SESSION['usuario_id']);
+
+        // Log admin
+        include_once '../../config/admin_logger.php';
+        registrarAccionAdmin($conexion, $_SESSION['usuario_id'], 'Editar Dino', "Dinosaurio editado: " . htmlspecialchars($nombre));
+
         $conexion->commit();
         header("Location: ../../detalle.php?id=" . $id . "&status=edit_success");
         exit();

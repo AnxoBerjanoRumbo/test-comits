@@ -39,6 +39,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                        <p>Ya puedes volver a participar en la comunidad.</p>";
             sendArkEmail($user['email'], "Sanción levantada - ARK Hub", $cuerpo);
 
+            include_once '../../config/notificaciones.php';
+            añadirNotificacion($conexion, $id_moderado, "Tus restricciones han sido levantadas. ¡Bienvenido de nuevo!");
+
+            include_once '../../config/admin_logger.php';
+            registrarAccionAdmin($conexion, $_SESSION['usuario_id'], 'Levantar Sanción', "Se levantó la sanción al usuario ID {$id_moderado} ({$user['email']})");
+
             header("Location: ../../admin/moderar_usuario.php?id=$id_moderado&status=quitado");
             exit();
         }
@@ -88,7 +94,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                        <p>Tu cuenta y la información asociada han sido eliminadas y tu email bloqueado.</p>";
             sendArkEmail($user['email'], "Aviso Crítico: Cuenta Expulsada - ARK Hub", $cuerpo);
 
-            header("Location: ../../login.php?status=expulsado");
+            include_once '../../config/admin_logger.php';
+            registrarAccionAdmin($conexion, $_SESSION['usuario_id'], 'Expulsión Total', "Usuario ID {$id_moderado} ({$user['email']}) expulsado y bloqueado su email. Motivo: {$motivo}");
+
+            header("Location: ../../panel_superadmin.php?status=usuario_borrado");
             exit();
         }
 
@@ -155,6 +164,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                    $msg_motivo
                    <p>Si consideras que es un error, contacta con el administrador.</p>";
         sendArkEmail($user['email'], "Aviso de Sanción en ARK Hub", $cuerpo);
+
+        include_once '../../config/admin_logger.php';
+        registrarAccionAdmin($conexion, $_SESSION['usuario_id'], 'Sancionar', "Baneado {$duracion_txt} al usuario ID {$id_moderado} ({$user['email']}). Motivo: {$motivo}");
 
         header("Location: ../../admin/moderar_usuario.php?id=$id_moderado&status=sancionado");
         exit();
