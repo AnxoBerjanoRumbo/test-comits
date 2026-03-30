@@ -10,13 +10,12 @@ document.addEventListener('DOMContentLoaded', function () {
             accMenu.classList.toggle('active');
         });
 
-        // Cerrar menú al hacer click fuera
         document.addEventListener('click', function () {
             accMenu.classList.remove('active');
         });
 
         accMenu.addEventListener('click', function (e) {
-            e.stopPropagation(); // No cerrar si clicamos dentro del menú
+            e.stopPropagation();
         });
     }
 
@@ -44,34 +43,25 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Sistema de Temas Dinámicos (Global)
-    window.setTheme = function(themeName) {
-        // Eliminar temas anteriores
+    window.setTheme = function (themeName) {
         document.body.classList.remove('theme-ragnarok', 'theme-aberration', 'theme-extinction', 'theme-scorched', 'theme-daltonico');
-        
-        // Aplicar nuevo tema
         document.body.classList.add('theme-' + themeName);
-        
-        // Guardar preferencia
         localStorage.setItem('ark_hub_theme', themeName);
-    }
+    };
 
-    // Cargar tema guardado al iniciar
     const savedTheme = localStorage.getItem('ark_hub_theme');
     if (savedTheme) {
         setTheme(savedTheme);
     } else {
-        setTheme('ragnarok'); // Tema por defecto
+        setTheme('ragnarok');
     }
 
-    // 2. Contador de caracteres para los campos textarea (Comentarios y descripciones)
+    // 3. Contador de caracteres para textareas
     const textareas = document.querySelectorAll('textarea');
     textareas.forEach(textarea => {
         const span = document.createElement('div');
         span.className = 'contador-caracteres';
-
-        // Estimar unas 10.000 palabras = 60.000 caracteres
         const maxLength = 10000;
-
         span.textContent = `0 / ${maxLength} caracteres`;
         textarea.parentNode.insertBefore(span, textarea.nextSibling);
 
@@ -88,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (currentLength >= maxLength) {
                 span.classList.add('limite-excedido');
-                this.value = this.value.substring(0, maxLength); // Trim text
+                this.value = this.value.substring(0, maxLength);
                 span.textContent = `${maxLength} / ${maxLength} caracteres`;
             } else {
                 span.classList.remove('limite-excedido');
@@ -96,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // 3. Previsualizar la imagen antes de subirla
+    // 4. Previsualizar imagen antes de subirla
     const imageInputs = document.querySelectorAll('input[type="file"][accept="image/*"]');
     imageInputs.forEach(input => {
         input.addEventListener('change', function (e) {
@@ -104,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    // Ver si ya existe una preview
                     let preview = input.parentNode.querySelector('.img-preview-container img');
                     let container = input.parentNode.querySelector('.img-preview-container');
 
@@ -112,12 +101,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         container = document.createElement('div');
                         container.className = 'img-preview-container';
                         input.parentNode.appendChild(container);
-
                         preview = document.createElement('img');
                         container.appendChild(preview);
                     }
 
-                    // Decidir qué clase aplicar según el input
                     const isProfile = input.name.includes('perfil') || input.id.includes('perfil');
                     preview.className = isProfile ? 'foto-perfil-preview' : 'img-preview';
 
@@ -136,24 +123,19 @@ document.addEventListener('DOMContentLoaded', function () {
                     preview.style.display = 'block';
                     preview.style.margin = '15px auto';
                     preview.style.border = '2px solid var(--accent)';
-                }
+                };
                 reader.readAsDataURL(file);
             }
         });
     });
 
-    // 4. Confirmaciones con animaciones suaves antes de borrar contenido
+    // 5. Confirmaciones antes de borrar
     const confirmButtons = document.querySelectorAll('form[action="actions/borrar_comentario.php"] button, .boton-eliminar');
     confirmButtons.forEach(btn => {
-        // Remove native inline onclick attributes to override them
         if (btn.hasAttribute('onclick')) {
-            const originalConfirm = btn.getAttribute('onclick');
             btn.removeAttribute('onclick');
-
             btn.addEventListener('click', function (e) {
                 e.preventDefault();
-                // Custom confirm dialog logic could go here, 
-                // for now fallback to browser confirm but without the string being hardcoded in html
                 if (confirm('¿Estás seguro de que deseas realizar esta acción irreversible?')) {
                     if (btn.tagName.toLowerCase() === 'button') {
                         btn.closest('form').submit();
@@ -164,4 +146,128 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     });
+
+    // 6. Sistema de Notificaciones dinámico
+    const btnNotif = document.getElementById('btn-notif');
+    const dropdownNotif = document.getElementById('dropdown-notif');
+    const listaNotif = document.getElementById('lista-notif');
+
+    if (btnNotif && dropdownNotif && listaNotif) {
+        const basePath = window.location.pathname.includes('/admin/') ? '../' : './';
+
+        btnNotif.addEventListener('click', function (e) {
+            e.stopPropagation();
+            dropdownNotif.classList.toggle('active');
+
+            if (dropdownNotif.classList.contains('active')) {
+                cargarNotificaciones();
+                // Quitar badge inmediatamente al abrir
+                const badge = btnNotif.querySelector('.badge-notif');
+                if (badge) badge.remove();
+                // Marcar todas como leídas en el servidor
+                fetch(basePath + 'actions/marcar_todas_leidas.php', { method: 'POST' });
+            }
+        });
+
+        document.addEventListener('click', function () {
+            dropdownNotif.classList.remove('active');
+        });
+
+        dropdownNotif.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+
+        function cargarNotificaciones() {
+            listaNotif.innerHTML = '<div class="cargando-notif">Cargando...</div>';
+
+            fetch(basePath + 'actions/obtener_notificaciones.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        listaNotif.innerHTML = '<div class="sin-notificaciones">' + data.error + '</div>';
+                        return;
+                    }
+
+                    if (data.length === 0) {
+                        listaNotif.innerHTML = '<div class="sin-notificaciones">No tienes notificaciones.</div>';
+                        return;
+                    }
+
+                    listaNotif.innerHTML = '';
+                    data.forEach(notif => {
+                        const item = document.createElement('a');
+
+                        // Fix relative links: prefix with basePath so they work from /admin/ pages too
+                        let linkHref = notif.enlace || '#';
+                        if (linkHref !== '#' && !linkHref.startsWith('http') && !linkHref.startsWith('/')) {
+                            linkHref = basePath + linkHref;
+                        }
+                        item.href = linkHref;
+                        item.className = 'notificacion-item' + (notif.leida == 0 ? ' no-leida' : '');
+                        item.dataset.id = notif.id;
+
+                        const msgLower = notif.mensaje.toLowerCase();
+                        let icon = 'notifications';
+                        if (notif.mensaje.startsWith('[Mensaje]'))     icon = 'mail';
+                        else if (msgLower.includes('dino') || msgLower.includes('criatura')) icon = 'cruelty_free';
+                        else if (msgLower.includes('comentario') || msgLower.includes('respondid')) icon = 'chat';
+                        else if (msgLower.includes('restriccion') || msgLower.includes('levantad')) icon = 'lock_open';
+                        else if (msgLower.includes('sanci') || msgLower.includes('baned') || msgLower.includes('suspendid')) icon = 'gavel';
+
+                        // Acortar mensaje largo para el dropdown (el completo se ve al clicar)
+                        const msgMostrar = notif.mensaje.startsWith('[Mensaje]')
+                            ? notif.mensaje.replace('[Mensaje] ', '').split('\n')[0]
+                            : notif.mensaje;
+
+                        item.innerHTML = `
+                            <div class="notificacion-mensaje">
+                                <span class="material-symbols-outlined f-09" style="vertical-align:middle;margin-right:5px;color:var(--accent);">${icon}</span>
+                                ${msgMostrar}
+                            </div>
+                            <div class="notificacion-fecha">${formatearFecha(notif.fecha)}</div>
+                        `;
+
+                        listaNotif.appendChild(item);
+                    });
+                })
+                .catch(() => {
+                    listaNotif.innerHTML = '<div class="sin-notificaciones">Error al cargar notificaciones.</div>';
+                });
+        }
+
+        function formatearFecha(fechaStr) {
+            const fecha = new Date(fechaStr);
+            const ahora = new Date();
+            const diffSec = Math.floor((ahora - fecha) / 1000);
+
+            if (diffSec < 60) return 'Hace un momento';
+            if (diffSec < 3600) return 'Hace ' + Math.floor(diffSec / 60) + ' min';
+            if (diffSec < 86400) return 'Hace ' + Math.floor(diffSec / 3600) + ' h';
+            return fecha.toLocaleDateString();
+        }
+
+        // Polling cada 15s para actualizar el badge
+        setInterval(function () {
+            fetch(basePath + 'actions/contar_notificaciones_no_leidas.php')
+                .then(res => res.json())
+                .then(data => {
+                    const count = data.count;
+                    const oldBadge = btnNotif.querySelector('.badge-notif');
+
+                    if (count > 0) {
+                        if (oldBadge) {
+                            oldBadge.textContent = count;
+                        } else {
+                            const newBadge = document.createElement('span');
+                            newBadge.className = 'badge-notif';
+                            newBadge.textContent = count;
+                            btnNotif.appendChild(newBadge);
+                        }
+                    } else if (oldBadge) {
+                        oldBadge.remove();
+                    }
+                })
+                .catch(err => console.error('Polling error:', err));
+        }, 15000);
+    }
 });

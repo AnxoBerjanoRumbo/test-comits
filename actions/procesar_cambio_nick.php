@@ -16,7 +16,7 @@ $nuevo_nick = trim($_POST['nuevo_nick']);
 $usuario_id = $_SESSION['usuario_id'];
 $rol = $_SESSION['rol'];
 
-if (mb_strlen($nuevo_nick) > 25 || empty($nuevo_nick)) {
+if (mb_strlen($nuevo_nick) > 15 || empty($nuevo_nick)) {
     header("Location: ../perfil.php?error=nick_invalido");
     exit();
 }

@@ -45,6 +45,25 @@ if (!empty($texto) && !empty($dino_id)) {
 
         $stmt = $conexion->prepare("INSERT INTO comentarios (texto, usuario_id, dino_id, respuesta_a) VALUES (:texto, :u_id, :d_id, :resp_a)");
         $stmt->execute([':texto' => $texto, ':u_id' => $usuario_id, ':d_id' => $dino_id, ':resp_a' => $respuesta_a]);
+
+        // Sistema de Notificaciones (si es una respuesta)
+        if ($respuesta_a !== null) {
+            $stmt_autor = $conexion->prepare("SELECT usuario_id FROM comentarios WHERE id = :id");
+            $stmt_autor->execute([':id' => $respuesta_a]);
+            $autor_original_id = $stmt_autor->fetchColumn();
+
+            if ($autor_original_id && $autor_original_id != $usuario_id) {
+                include_once '../config/notificaciones.php';
+                $nick_resp = htmlspecialchars($_SESSION['nick']);
+                $mensaje = "El admin " . $nick_resp . " ha respondido a tu comentario.";
+                $enlace = "detalle.php?id=" . $dino_id . "#comentarios";
+                añadirNotificacion($conexion, $autor_original_id, $mensaje, $enlace);
+            }
+
+            // Log admin: registro de comentario/respuesta
+            include_once '../config/admin_logger.php';
+            registrarAccionAdmin($conexion, $usuario_id, 'Responder Comentario', "Respuesta en dino ID {$dino_id} al comentario ID {$respuesta_a}");
+        }
     }
     catch (PDOException $e) {
         error_log("Error al insertar comentario: " . $e->getMessage());
