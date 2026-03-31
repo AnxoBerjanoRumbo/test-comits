@@ -1159,18 +1159,6 @@ if (count($comentarios) > 0) {
 
         </div><!-- /tab-comentarios -->
 
-        <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_insertar'] ?? 0) == 1): ?>
-            <div style="margin-top:40px; text-align:center; border-top:1px solid #333; padding-top:25px;">
-                <form action="actions/admin/procesar_eliminar.php" method="POST" style="display:inline;"
-                    onsubmit="return confirm('¿Extinguir a <?php echo htmlspecialchars($dino['nombre']); ?>? Esta acción es irreversible.');">
-                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                    <input type="hidden" name="id" value="<?php echo $dino['id']; ?>">
-                    <button type="submit" class="boton-eliminar" style="border:none; cursor:pointer;">Eliminar
-                        Criatura</button>
-                </form>
-            </div>
-        <?php endif; ?>
-
         <?php if ($tiene_stats): ?>
         <!-- ══════════════════════════════════════════
              TAB: COMPARADOR
@@ -1261,6 +1249,17 @@ if (count($comentarios) > 0) {
                 </div>
             </div>
         </div><!-- /tab-comparar -->
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_insertar'] ?? 0) == 1): ?>
+            <div style="margin-top:40px; text-align:center; border-top:1px solid #333; padding-top:25px;">
+                <form action="actions/admin/procesar_eliminar.php" method="POST" style="display:inline;"
+                    onsubmit="return confirm('¿Extinguir a <?php echo htmlspecialchars($dino['nombre']); ?>? Esta acción es irreversible.');">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                    <input type="hidden" name="id" value="<?php echo $dino['id']; ?>">
+                    <button type="submit" class="boton-eliminar" style="border:none; cursor:pointer;">Eliminar Criatura</button>
+                </form>
+            </div>
         <?php endif; ?>
 
     </main>
