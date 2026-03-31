@@ -1508,7 +1508,7 @@ body {
     user-select: none;
 }
 
-.checkbox-tag input:checked + span {
+.checkbox-tag input:checked+span {
     background: rgba(var(--accent-rgb), 0.1);
     border-color: var(--accent);
     color: var(--accent);
@@ -1614,20 +1614,20 @@ body {
 /* Definición de Temas Atmosféricos Completos */
 
 /* TEMA DEFAULT: RAGNAROK (Verde/Cian) */
-body.theme-ragnarok { 
+body.theme-ragnarok {
     --bg-main: #121212;
     --bg-card: #1e1e1e;
-    --accent: #00ffcc; 
-    --accent-hover: #00ccaa; 
+    --accent: #00ffcc;
+    --accent-hover: #00ccaa;
     --accent-rgb: 0, 255, 204;
     --hover-shadow: 0 12px 25px rgba(0, 255, 204, 0.2);
 }
 
 /* TEMA ABERRATION (Púrpura/Azul) */
-body.theme-aberration { 
+body.theme-aberration {
     --bg-main: #0a0510;
     --bg-card: #140a1c;
-    --accent: #b300ff; 
+    --accent: #b300ff;
     --accent-hover: #cc33ff;
     --accent-rgb: 179, 0, 255;
     --border-color: #2b153b;
@@ -1636,10 +1636,10 @@ body.theme-aberration {
 }
 
 /* TEMA EXTINCTION (Azufre/Ceniza) */
-body.theme-extinction { 
+body.theme-extinction {
     --bg-main: #141411;
     --bg-card: #21211b;
-    --accent: #ffcc00; 
+    --accent: #ffcc00;
     --accent-hover: #ffd900;
     --accent-rgb: 255, 204, 0;
     --border-color: #38382c;
@@ -1647,10 +1647,10 @@ body.theme-extinction {
 }
 
 /* TEMA SCORCHED EARTH (Arena/Fuego) */
-body.theme-scorched { 
+body.theme-scorched {
     --bg-main: #1a120b;
     --bg-card: #2d1e12;
-    --accent: #ff6600; 
+    --accent: #ff6600;
     --accent-hover: #ff8533;
     --accent-rgb: 255, 102, 0;
     --border-color: #4a321e;
@@ -1661,13 +1661,13 @@ body.theme-scorched {
 
 
 /* Ajuste Modo Accesible (Daltónico) */
-body.theme-daltonico { 
+body.theme-daltonico {
     --bg-main: #0a0a0a;
     --bg-card: #161616;
     --bg-header: #000000;
     --text-main: #ffffff;
     --text-muted: #ffffff;
-    --accent: #ffff00; 
+    --accent: #ffff00;
     --accent-hover: #e6e600;
     --accent-rgb: 255, 255, 0;
     --border-color: #ffffff;
@@ -1728,7 +1728,7 @@ body.theme-daltonico {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 10;
 }
@@ -1746,8 +1746,9 @@ body.theme-daltonico {
     border-radius: 16px;
     padding: 12px;
     min-width: 190px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-    display: none; /* Controlado por JS con clase .active */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    display: none;
+    /* Controlado por JS con clase .active */
     flex-direction: column;
     gap: 5px;
     transform: translateY(10px);
@@ -1781,7 +1782,8 @@ body.theme-daltonico {
 .theme-opt .dot {
     width: 14px;
     height: 14px;
-    border-radius: 4px; /* Cuadraditos modernos */
+    border-radius: 4px;
+    /* Cuadraditos modernos */
 }
 
 /* Material Icons Integration */
@@ -1807,7 +1809,8 @@ body.theme-daltonico {
     backdrop-filter: blur(5px);
     border: 2px solid var(--accent);
     color: var(--accent);
-    border-radius: 12px; /* Cuadrado redondeado para diferenciar */
+    border-radius: 12px;
+    /* Cuadrado redondeado para diferenciar */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1821,7 +1824,7 @@ body.theme-daltonico {
 }
 
 /* ==========================================================================
-   10. SISTEMA DE NOTIFICACIONES
+   12. SISTEMA DE NOTIFICACIONES
    ========================================================================== */
 .contenedor-notificaciones {
     position: relative;
@@ -1898,22 +1901,49 @@ body.theme-daltonico {
     overflow-y: auto;
 }
 
-.notificacion-item {
-    padding: 15px;
-    border-bottom: 1px solid var(--border-color);
-    text-decoration: none;
-    display: block;
+.notificacion-container {
     transition: background 0.2s;
-    color: var(--text-main);
 }
-
-.notificacion-item:hover {
+.notificacion-container:hover {
     background: rgba(255, 255, 255, 0.05);
 }
 
-.notificacion-item.no-leida {
+.notificacion-container.no-leida {
     background: rgba(var(--accent-rgb), 0.03);
     border-left: 3px solid var(--accent);
+}
+
+.notificacion-item {
+    padding: 15px 35px 15px 15px;
+    border-bottom: 1px solid var(--border-color);
+    text-decoration: none;
+    display: block;
+    color: var(--text-main);
+}
+
+.btn-borrar-notif {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    transition: all 0.2s ease;
+}
+
+.btn-borrar-notif:hover {
+    color: var(--error-color);
+    background: rgba(255, 68, 68, 0.1);
+}
+
+.btn-clear-all-notif:hover {
+    color: var(--error-color) !important;
 }
 
 .notificacion-mensaje {
@@ -1940,6 +1970,13 @@ body.theme-daltonico {
 }
 
 @keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

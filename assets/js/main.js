@@ -164,13 +164,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Quitar badge inmediatamente al abrir
                 const badge = btnNotif.querySelector('.badge-notif');
                 if (badge) badge.remove();
-                // Marcar todas como leídas en el servidor
-                fetch(basePath + 'actions/marcar_todas_leidas.php', { method: 'POST' });
             }
         });
 
         document.addEventListener('click', function () {
-            dropdownNotif.classList.remove('active');
+            if (dropdownNotif.classList.contains('active')) {
+                dropdownNotif.classList.remove('active');
+                // Marcar todas como leídas en el servidor al cerrar el modal
+                fetch(basePath + 'actions/marcar_todas_leidas.php', { method: 'POST' });
+            }
         });
 
         dropdownNotif.addEventListener('click', function (e) {
@@ -195,6 +197,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     listaNotif.innerHTML = '';
                     data.forEach(notif => {
+                        const itemContainer = document.createElement('div');
+                        itemContainer.className = 'notificacion-container' + (notif.leida == 0 ? ' no-leida' : '');
+                        itemContainer.style.position = 'relative';
+
                         const item = document.createElement('a');
 
                         // Fix relative links: prefix with basePath so they work from /admin/ pages too
@@ -203,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             linkHref = basePath + linkHref;
                         }
                         item.href = linkHref;
-                        item.className = 'notificacion-item' + (notif.leida == 0 ? ' no-leida' : '');
+                        item.className = 'notificacion-item';
                         item.dataset.id = notif.id;
 
                         const msgLower = notif.mensaje.toLowerCase();
@@ -227,12 +233,89 @@ document.addEventListener('DOMContentLoaded', function () {
                             <div class="notificacion-fecha">${formatearFecha(notif.fecha)}</div>
                         `;
 
-                        listaNotif.appendChild(item);
+                        item.addEventListener('click', function(e) {
+                            // Marcar como leidas si hay alguna cuando hace click en un item
+                            fetch(basePath + 'actions/marcar_todas_leidas.php', { method: 'POST' });
+                        });
+
+                        const btnBorrar = document.createElement('button');
+                        btnBorrar.className = 'btn-borrar-notif';
+                        btnBorrar.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">close</span>';
+                        btnBorrar.title = 'Borrar notificación';
+                        btnBorrar.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            
+                            const formData = new URLSearchParams();
+                            formData.append('id', notif.id);
+
+                            fetch(basePath + 'actions/borrar_notificaciones.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: formData
+                            })
+                            .then(response => response.json())
+                            .then(res => {
+                                if (res.status === 'success') {
+                                    itemContainer.remove();
+                                    if (listaNotif.children.length === 0) {
+                                        listaNotif.innerHTML = '<div class="sin-notificaciones">No tienes notificaciones.</div>';
+                                    }
+                                }
+                            });
+                        });
+
+                        itemContainer.appendChild(item);
+                        itemContainer.appendChild(btnBorrar);
+                        listaNotif.appendChild(itemContainer);
                     });
                 })
                 .catch(() => {
                     listaNotif.innerHTML = '<div class="sin-notificaciones">Error al cargar notificaciones.</div>';
                 });
+
+            // Make sure "Clear all" button exists
+            let headerDiv = document.querySelector('.header-dropdown');
+            if (headerDiv && !headerDiv.querySelector('.btn-clear-all-notif')) {
+                const btnClearAll = document.createElement('button');
+                btnClearAll.className = 'btn-clear-all-notif';
+                btnClearAll.textContent = 'Limpiar todas';
+                btnClearAll.style.float = 'right';
+                btnClearAll.style.background = 'none';
+                btnClearAll.style.border = 'none';
+                btnClearAll.style.color = 'var(--text-muted)';
+                btnClearAll.style.cursor = 'pointer';
+                btnClearAll.style.fontSize = '0.8rem';
+                btnClearAll.style.textDecoration = 'underline';
+                
+                btnClearAll.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    fetch(basePath + 'actions/borrar_notificaciones.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'id=all'
+                    })
+                    .then(response => response.json())
+                    .then(res => {
+                        if (res.status === 'success') {
+                            listaNotif.innerHTML = '<div class="sin-notificaciones">No tienes notificaciones.</div>';
+                            const badge = btnNotif.querySelector('.badge-notif');
+                            if (badge) badge.remove();
+                        }
+                    });
+                });
+                
+                headerDiv.appendChild(btnClearAll);
+                
+                // Clear floats
+                const clearFix = document.createElement('div');
+                clearFix.style.clear = 'both';
+                headerDiv.appendChild(clearFix);
+            }
         }
 
         function formatearFecha(fechaStr) {
