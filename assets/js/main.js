@@ -234,8 +234,15 @@ document.addEventListener('DOMContentLoaded', function () {
                         `;
 
                         item.addEventListener('click', function(e) {
+                            if (linkHref !== '#') {
+                                e.preventDefault();
+                            }
                             // Marcar como leidas si hay alguna cuando hace click en un item
-                            fetch(basePath + 'actions/marcar_todas_leidas.php', { method: 'POST' });
+                            fetch(basePath + 'actions/marcar_todas_leidas.php', { method: 'POST' }).then(() => {
+                                if (linkHref !== '#') {
+                                    window.location.href = linkHref;
+                                }
+                            });
                         });
 
                         const btnBorrar = document.createElement('button');
