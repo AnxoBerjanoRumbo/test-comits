@@ -1663,65 +1663,49 @@ if (count($comentarios) > 0) {
             const sug = document.getElementById('comparar-sugerencias');
             if (q.length < 2) { sug.style.display = 'none'; return; }
             comparTimer = setTimeout(() => {
-                fetch(`index.php?buscar=${encodeURIComponent(q)}&_ajax=1`)
-                    .then(r => r.text())
-                    .then(html => {
-                        // Extraer nombres y IDs del HTML de index.php
-                        const parser = new DOMParser();
-                        const doc = parser.parseFromString(html, 'text/html');
-                        const links = [...doc.querySelectorAll('a.enlace-dino')];
+                fetch(`actions/buscar_dinos.php?q=${encodeURIComponent(q)}`)
+                    .then(r => r.json())
+                    .then(dinos => {
                         sug.innerHTML = '';
-                        if (!links.length) {
+                        if (!dinos.length) {
                             sug.innerHTML = '<div style="padding:12px 16px;color:var(--text-muted);font-size:0.85rem;">Sin resultados</div>';
                         } else {
-                            links.slice(0, 8).forEach(a => {
-                                const href = a.getAttribute('href') || '';
-                                const idMatch = href.match(/id=(\d+)/);
-                                if (!idMatch) return;
-                                const dinoId = idMatch[1];
-                                const nombre = a.textContent.trim();
+                            dinos.forEach(d => {
+                                // No mostrar el dino actual
+                                if (d.id == <?php echo (int)$dino['id']; ?>) return;
                                 const item = document.createElement('div');
-                                item.style.cssText = 'padding:10px 16px;cursor:pointer;font-size:0.88rem;color:var(--text-main);transition:background 0.15s;border-bottom:1px solid var(--border-color);';
-                                item.textContent = nombre;
+                                item.style.cssText = 'padding:10px 16px;cursor:pointer;font-size:0.88rem;color:var(--text-main);transition:background 0.15s;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;gap:10px;';
+                                item.innerHTML = `<span style="font-weight:700;">${d.nombre}</span><span style="font-size:0.75rem;color:var(--text-muted);">${d.dieta || ''}</span>`;
                                 item.onmouseover = () => item.style.background = 'rgba(var(--accent-rgb),0.08)';
                                 item.onmouseout  = () => item.style.background = '';
-                                item.onclick = () => cargarComparador(dinoId, nombre);
+                                item.onclick = () => {
+                                    // Usar los stats directamente del JSON, sin fetch adicional
+                                    const statsB = {
+                                        health:   parseFloat(d.stat_health)    || 0,
+                                        stamina:  parseFloat(d.stat_stamina)   || 0,
+                                        oxygen:   parseFloat(d.stat_oxygen)    || 0,
+                                        food:     parseFloat(d.stat_food)      || 0,
+                                        weight:   parseFloat(d.stat_weight)    || 0,
+                                        melee:    parseFloat(d.stat_melee)     || 0,
+                                        torpidity:parseFloat(d.stat_torpidity) || 0,
+                                    };
+                                    document.getElementById('comparar-buscar').value = d.nombre;
+                                    sug.style.display = 'none';
+                                    const sel = document.getElementById('comparar-seleccionado');
+                                    document.getElementById('comparar-nombre-sel').textContent = d.nombre;
+                                    sel.style.display = 'flex';
+                                    actualizarComparador(statsB, d.nombre);
+                                };
                                 sug.appendChild(item);
                             });
+                            if (!sug.children.length) {
+                                sug.innerHTML = '<div style="padding:12px 16px;color:var(--text-muted);font-size:0.85rem;">Sin resultados</div>';
+                            }
                         }
                         sug.style.display = 'block';
-                    });
-            }, 300);
-        }
-
-        function cargarComparador(id, nombre) {
-            document.getElementById('comparar-sugerencias').style.display = 'none';
-            document.getElementById('comparar-buscar').value = nombre;
-            const sel = document.getElementById('comparar-seleccionado');
-            document.getElementById('comparar-nombre-sel').textContent = nombre;
-            sel.style.display = 'flex';
-
-            fetch(`detalle.php?id=${id}&_stats=1`)
-                .then(r => r.text())
-                .then(html => {
-                    // Extraer stats del HTML de detalle.php
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    // Buscar los valores en los elementos val-*
-                    const statsB = {};
-                    STAT_KEYS_C.forEach(k => {
-                        const el = doc.getElementById('val-' + k);
-                        if (el) {
-                            const num = parseFloat(el.textContent.replace(/\./g,'').replace(',','.')) || 0;
-                            statsB[k] = num;
-                        } else {
-                            // Fallback: buscar data-base en el slider
-                            const sl = doc.querySelector(`#slider-${k}`);
-                            statsB[k] = sl ? parseFloat(sl.dataset.base) || 0 : 0;
-                        }
-                    });
-                    actualizarComparador(statsB, nombre);
-                });
+                    })
+                    .catch(() => { sug.style.display = 'none'; });
+            }, 250);
         }
 
         function actualizarComparador(statsB, nombre) {
