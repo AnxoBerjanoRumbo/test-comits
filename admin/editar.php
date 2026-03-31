@@ -52,6 +52,7 @@ $cats_seleccionadas = $stmt_dc->fetchAll(PDO::FETCH_COLUMN);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Criatura</title>
     <link rel="stylesheet" href="../assets/css/estilos.css?v=1.3">
+    <script src="../assets/js/stats_reference.js" defer></script>
 </head>
 <body class="admin-body">
     <?php 
@@ -148,20 +149,20 @@ $cats_seleccionadas = $stmt_dc->fetchAll(PDO::FETCH_COLUMN);
                     <span class="material-symbols-outlined" style="vertical-align:middle; font-size:1.2rem;">radar</span>
                     Stats Base (Nivel 1 Salvaje)
                 </label>
-                <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:20px;">Introduce el valor base de cada stat a nivel 1 (consulta ARK Wiki).</p>
+                <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:20px;">Introduce el valor base y el multiplicador Iw de cada stat (consulta ARK Wiki o ARKBreedingStats). El Iw es el % de incremento por nivel salvaje.</p>
                 <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:18px;">
                     <?php
                     $stats = [
-                        'stat_health'   => ['Vida (Health)',          'favorite',   '#e74c3c'],
-                        'stat_stamina'  => ['Energía (Stamina)',       'bolt',       '#f39c12'],
-                        'stat_oxygen'   => ['Oxígeno (Oxygen)',        'water_drop', '#3498db'],
-                        'stat_food'     => ['Comida (Food)',           'restaurant', '#2ecc71'],
-                        'stat_weight'   => ['Peso (Weight)',           'weight',     '#9b59b6'],
-                        'stat_melee'    => ['Daño Cuerpo a Cuerpo',    'swords',     '#e67e22'],
-                        'stat_speed'    => ['Velocidad (%)',           'speed',      '#1abc9c'],
-                        'stat_torpidity'=> ['Torpor (Inconsciencia)',  'bedtime',    '#95a5a6'],
+                        'stat_health'    => ['Vida (Health)',         'favorite',   '#e74c3c', 'iw_health',    0.2],
+                        'stat_stamina'   => ['Energía (Stamina)',      'bolt',       '#f39c12', 'iw_stamina',   0.1],
+                        'stat_oxygen'    => ['Oxígeno (Oxygen)',       'water_drop', '#3498db', 'iw_oxygen',    0.1],
+                        'stat_food'      => ['Comida (Food)',          'restaurant', '#2ecc71', 'iw_food',      0.15],
+                        'stat_weight'    => ['Peso (Weight)',          'weight',     '#9b59b6', 'iw_weight',    0.02],
+                        'stat_melee'     => ['Daño Cuerpo a Cuerpo',   'swords',     '#e67e22', 'iw_melee',     0.05],
+                        'stat_speed'     => ['Velocidad (%)',          'speed',      '#1abc9c', 'iw_speed',     0.0],
+                        'stat_torpidity' => ['Torpor (Inconsciencia)', 'bedtime',    '#95a5a6', 'iw_torpidity', 0.06],
                     ];
-                    foreach ($stats as $key => [$label, $icon, $color]): ?>
+                    foreach ($stats as $key => [$label, $icon, $color, $iw_key, $iw_default]): ?>
                     <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:10px; padding:15px;">
                         <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight:600; color:<?php echo $color; ?>; margin-bottom:10px;">
                             <span class="material-symbols-outlined" style="font-size:1.1rem;"><?php echo $icon; ?></span>
@@ -170,8 +171,197 @@ $cats_seleccionadas = $stmt_dc->fetchAll(PDO::FETCH_COLUMN);
                         <input type="number" name="<?php echo $key; ?>" min="0" max="99999"
                                value="<?php echo (int)($dino[$key] ?? 0); ?>"
                                style="font-size:1.1rem; font-weight:700; color:<?php echo $color; ?>; border-color:<?php echo $color; ?>33;">
+                        <label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-top:8px; margin-bottom:4px;">Iw (multiplicador por nivel wild)</label>
+                        <input type="number" name="<?php echo $iw_key; ?>" min="0" max="2" step="0.001"
+                               value="<?php echo (float)($dino[$iw_key] ?? $iw_default); ?>"
+                               style="font-size:0.9rem; color:var(--text-muted); border-color:rgba(255,255,255,0.1);">
                     </div>
                     <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- Roles y Utilidad -->
+            <div class="campo">
+                <label style="font-size:1rem; font-weight:bold; color:var(--accent); margin-bottom:15px; display:block;">
+                    <span class="material-symbols-outlined" style="vertical-align:middle; font-size:1.2rem;">stars</span>
+                    Roles y Utilidad
+                </label>
+                <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:12px;">
+                    <label class="checkbox-tag">
+                        <input type="checkbox" name="es_tanque" value="1" <?php echo ($dino['es_tanque'] ?? 0) ? 'checked' : ''; ?>>
+                        <span>🛡️ Tanque</span>
+                    </label>
+                    <label class="checkbox-tag">
+                        <input type="checkbox" name="es_buff" value="1" <?php echo ($dino['es_buff'] ?? 0) ? 'checked' : ''; ?>>
+                        <span>📈 Buff/Boost</span>
+                    </label>
+                    <label class="checkbox-tag">
+                        <input type="checkbox" name="es_recolector" value="1" <?php echo ($dino['es_recolector'] ?? 0) ? 'checked' : ''; ?>>
+                        <span>📦 Recolector</span>
+                    </label>
+                    <label class="checkbox-tag">
+                        <input type="checkbox" name="es_montura" value="1" <?php echo ($dino['es_montura'] ?? 0) ? 'checked' : ''; ?>>
+                        <span>🐴 Montura</span>
+                    </label>
+                    <label class="checkbox-tag">
+                        <input type="checkbox" name="es_volador" value="1" <?php echo ($dino['es_volador'] ?? 0) ? 'checked' : ''; ?>>
+                        <span>🦅 Volador</span>
+                    </label>
+                    <label class="checkbox-tag">
+                        <input type="checkbox" name="es_acuatico" value="1" <?php echo ($dino['es_acuatico'] ?? 0) ? 'checked' : ''; ?>>
+                        <span>🐳 Acuático</span>
+                    </label>
+                    <label class="checkbox-tag">
+                        <input type="checkbox" name="es_subterraneo" value="1" <?php echo ($dino['es_subterraneo'] ?? 0) ? 'checked' : ''; ?>>
+                        <span>🦇 Subterráneo</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Buffs y Habilidades Especiales -->
+            <div class="campo">
+                <label style="font-size:1rem; font-weight:bold; color:var(--accent); margin-bottom:15px; display:block;">
+                    <span class="material-symbols-outlined" style="vertical-align:middle; font-size:1.2rem;">bolt</span>
+                    Buffs y Habilidades (Yutyrannus, etc.)
+                </label>
+                <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:18px;">
+                    <div>
+                        <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:8px;">Descripción del buff</label>
+                        <textarea name="buff_descripcion" rows="3" placeholder="Ej: Su rugido aumenta el daño aliado un 25%..."><?php echo htmlspecialchars($dino['buff_descripcion'] ?? ''); ?></textarea>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
+                        <div>
+                            <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:8px;">% Daño</label>
+                            <input type="number" name="buff_damage" min="0" max="100" value="<?php echo (int)($dino['buff_damage'] ?? 0); ?>" placeholder="25">
+                        </div>
+                        <div>
+                            <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:8px;">% Armadura</label>
+                            <input type="number" name="buff_armor" min="0" max="100" value="<?php echo (int)($dino['buff_armor'] ?? 0); ?>" placeholder="20">
+                        </div>
+                        <div>
+                            <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:8px;">% Velocidad</label>
+                            <input type="number" name="buff_speed" min="0" max="100" value="<?php echo (int)($dino['buff_speed'] ?? 0); ?>" placeholder="10">
+                        </div>
+                    </div>
+                    <div>
+                        <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:8px;">Otro bonus</label>
+                        <input type="text" name="buff_otro" value="<?php echo htmlspecialchars($dino['buff_otro'] ?? ''); ?>" placeholder="Ej: +50% resistencia al frío">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formas Especiales (Stego) -->
+            <div class="campo">
+                <label style="font-size:1rem; font-weight:bold; color:var(--accent); margin-bottom:15px; display:block;">
+                    <span class="material-symbols-outlined" style="vertical-align:middle; font-size:1.2rem;">transform</span>
+                    Formas Especiales (Stegosaurus, etc.)
+                </label>
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:15px;">
+                    <input type="checkbox" name="tiene_formas" id="tiene_formas" value="1" <?php echo ($dino['tiene_formas'] ?? 0) ? 'checked' : ''; ?> style="width:20px; height:20px;">
+                    <label for="tiene_formas" style="font-size:0.95rem; color:var(--text-main);">¿Tiene diferentes formas/posiciones?</label>
+                </div>
+                <div>
+                    <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:8px;">Descripción de las formas</label>
+                    <textarea name="formas_descripcion" rows="4" placeholder="Ej: Placas Pesadas (mitigación), Placas Afiladas (slow), Placas Buff (recolección)..."><?php echo htmlspecialchars($dino['formas_descripcion'] ?? ''); ?></textarea>
+                </div>
+            </div>
+
+            <!-- Recolección -->
+            <div class="campo">
+                <label style="font-size:1rem; font-weight:bold; color:var(--accent); margin-bottom:15px; display:block;">
+                    <span class="material-symbols-outlined" style="vertical-align:middle; font-size:1.2rem;">inventory_2</span>
+                    Recursos que puede Recolectar
+                </label>
+                <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:12px;">
+                    <label class="checkbox-tag">
+                        <input type="checkbox" name="recolecta_carne" value="1" <?php echo ($dino['recolecta_carne'] ?? 0) ? 'checked' : ''; ?>>
+                        <span>🥩 Carne</span>
+                    </label>
+                    <label class="checkbox-tag">
+                        <input type="checkbox" name="recolecta_pescado" value="1" <?php echo ($dino['recolecta_pescado'] ?? 0) ? 'checked' : ''; ?>>
+                        <span>🐟 Pescado</span>
+                    </label>
+                    <label class="checkbox-tag">
+                        <input type="checkbox" name="recolecta_madera" value="1" <?php echo ($dino['recolecta_madera'] ?? 0) ? 'checked' : ''; ?>>
+                        <span>🪵 Madera</span>
+                    </label>
+                    <label class="checkbox-tag">
+                        <input type="checkbox" name="recolecta_piedra" value="1" <?php echo ($dino['recolecta_piedra'] ?? 0) ? 'checked' : ''; ?>>
+                        <span>🪨 Piedra</span>
+                    </label>
+                    <label class="checkbox-tag">
+                        <input type="checkbox" name="recolecta_metal" value="1" <?php echo ($dino['recolecta_metal'] ?? 0) ? 'checked' : ''; ?>>
+                        <span>⛏️ Metal</span>
+                    </label>
+                    <label class="checkbox-tag">
+                        <input type="checkbox" name="recolecta_bayas" value="1" <?php echo ($dino['recolecta_bayas'] ?? 0) ? 'checked' : ''; ?>>
+                        <span>🫐 Bayas</span>
+                    </label>
+                    <label class="checkbox-tag">
+                        <input type="checkbox" name="recolecta_paja" value="1" <?php echo ($dino['recolecta_paja'] ?? 0) ? 'checked' : ''; ?>>
+                        <span>🌾 Paja</span>
+                    </label>
+                    <label class="checkbox-tag">
+                        <input type="checkbox" name="recolecta_fibra" value="1" <?php echo ($dino['recolecta_fibra'] ?? 0) ? 'checked' : ''; ?>>
+                        <span>🌿 Fibra</span>
+                    </label>
+                    <label class="checkbox-tag">
+                        <input type="checkbox" name="recolecta_texugo" value="1" <?php echo ($dino['recolecta_texugo'] ?? 0) ? 'checked' : ''; ?>>
+                        <span>🐾 Texugo</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Domesticación y Cría -->
+            <div class="campo">
+                <label style="font-size:1rem; font-weight:bold; color:var(--accent); margin-bottom:15px; display:block;">
+                    <span class="material-symbols-outlined" style="vertical-align:middle; font-size:1.2rem;">pets</span>
+                    Domesticación y Cría
+                </label>
+                <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:18px;">
+                    <div>
+                        <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:8px;">¿Domable?</label>
+                        <select name="domable" style="width:100%;">
+                            <option value="1" <?php echo ($dino['domable'] ?? 1) ? 'selected' : ''; ?>>Sí</option>
+                            <option value="0" <?php echo (($dino['domable'] ?? 1) == 0) ? 'selected' : ''; ?>>No</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:8px;">Método de domado</label>
+                        <input type="text" name="metodo_domado" value="<?php echo htmlspecialchars($dino['metodo_domado'] ?? ''); ?>" placeholder="Emergente, Pasivo, Knockout...">
+                    </div>
+                    <div>
+                        <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:8px;">Comida favorita</label>
+                        <input type="text" name="comida_favorita" value="<?php echo htmlspecialchars($dino['comida_favorita'] ?? ''); ?>" placeholder="Kibble, Carne cruda, Vegetales...">
+                    </div>
+                    <div>
+                        <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:8px;">Nivel máximo salvaje</label>
+                        <input type="number" name="nivel_max_salvaje" min="1" max="500" value="<?php echo (int)($dino['nivel_max_salvaje'] ?? 150); ?>">
+                    </div>
+                    <div>
+                        <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:8px;">Tiempo incubación (min)</label>
+                        <input type="number" name="tiempo_incubacion" min="0" value="<?php echo (int)($dino['tiempo_incubacion'] ?? 0); ?>">
+                    </div>
+                    <div>
+                        <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:8px;">Tiempo madurez (min)</label>
+                        <input type="number" name="tiempo_madurez" min="0" value="<?php echo (int)($dino['tiempo_madurez'] ?? 0); ?>">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ayuda a Cría (Gigantoraptor) -->
+            <div class="campo">
+                <label style="font-size:1rem; font-weight:bold; color:var(--accent); margin-bottom:15px; display:block;">
+                    <span class="material-symbols-outlined" style="vertical-align:middle; font-size:1.2rem;">egg</span>
+                    Ayuda a Cría (Gigantoraptor, etc.)
+                </label>
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:15px;">
+                    <input type="checkbox" name="ayuda_cria" id="ayuda_cria" value="1" <?php echo ($dino['ayuda_cria'] ?? 0) ? 'checked' : ''; ?> style="width:20px; height:20px;">
+                    <label for="ayuda_cria" style="font-size:0.95rem; color:var(--text-main);">¿Ayuda en la cría de otros dinos?</label>
+                </div>
+                <div>
+                    <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:8px;">Descripción de la ayuda</label>
+                    <textarea name="ayuda_cria_descripcion" rows="4" placeholder="Ej: El Gigantoraptor aumenta la efectividad de domesticación de crías salvajes..."><?php echo htmlspecialchars($dino['ayuda_cria_descripcion'] ?? ''); ?></textarea>
                 </div>
             </div>
 

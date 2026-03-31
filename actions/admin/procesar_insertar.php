@@ -43,7 +43,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conexion->beginTransaction();
 
         // Insertar en tabla 'dinosaurios'
-        $sqlDino = "INSERT INTO dinosaurios (nombre, especie, dieta, descripcion, imagen, stat_health, stat_stamina, stat_oxygen, stat_food, stat_weight, stat_melee, stat_speed, stat_torpidity) VALUES (:n, :e, :d, :desc, :img, :sh, :ss, :so, :sf, :sw, :sm, :sp, :st)";
+        $sqlDino = "INSERT INTO dinosaurios (nombre, especie, dieta, descripcion, imagen, 
+            stat_health, stat_stamina, stat_oxygen, stat_food, stat_weight, stat_melee, stat_speed, stat_torpidity,
+            iw_health, iw_stamina, iw_oxygen, iw_food, iw_weight, iw_melee, iw_speed, iw_torpidity,
+            es_tanque, es_buff, es_recolector, es_montura, es_volador, es_acuatico, es_subterraneo,
+            buff_descripcion, buff_damage, buff_armor, buff_speed, buff_otro,
+            tiene_formas, formas_descripcion,
+            recolecta_carne, recolecta_pescado, recolecta_madera, recolecta_piedra, recolecta_metal, 
+            recolecta_bayas, recolecta_paja, recolecta_fibra, recolecta_texugo,
+            domable, metodo_domado, comida_favorita, nivel_max_salvaje,
+            tiempo_incubacion, tiempo_madurez, ayuda_cria, ayuda_cria_descripcion
+            ) VALUES (:n, :e, :d, :desc, :img, :sh, :ss, :so, :sf, :sw, :sm, :sp, :st,
+            :iwh, :iws, :iwo, :iwf, :iww, :iwm, :iwsp, :iwt,
+            :et, :eb, :er, :em, :ev, :ea, :es, :bd, :bda, :bar, :bs, :bo, :tf, :fd,
+            :rc, :rpe, :rma, :rpi, :rme, :rba, :rpa, :rfi, :rte,
+            :dom, :mdom, :cf, :nms, :ti, :tma, :ac, :acd)";
         $stmtDino = $conexion->prepare($sqlDino);
         $stmtDino->execute([
             ':n' => $nombre, ':e' => $especie, ':d' => $dieta, ':desc' => $descripcion, ':img' => $imagen,
@@ -55,6 +69,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ':sm' => (int)($_POST['stat_melee']    ?? 0),
             ':sp' => (int)($_POST['stat_speed']    ?? 0),
             ':st' => (int)($_POST['stat_torpidity']?? 0),
+            ':iwh'  => (float)($_POST['iw_health']    ?? 0.2),
+            ':iws'  => (float)($_POST['iw_stamina']   ?? 0.1),
+            ':iwo'  => (float)($_POST['iw_oxygen']    ?? 0.1),
+            ':iwf'  => (float)($_POST['iw_food']      ?? 0.15),
+            ':iww'  => (float)($_POST['iw_weight']    ?? 0.02),
+            ':iwm'  => (float)($_POST['iw_melee']     ?? 0.05),
+            ':iwsp' => (float)($_POST['iw_speed']     ?? 0.0),
+            ':iwt'  => (float)($_POST['iw_torpidity'] ?? 0.06),
+            ':et' => isset($_POST['es_tanque']) ? 1 : 0,
+            ':eb' => isset($_POST['es_buff']) ? 1 : 0,
+            ':er' => isset($_POST['es_recolector']) ? 1 : 0,
+            ':em' => isset($_POST['es_montura']) ? 1 : 0,
+            ':ev' => isset($_POST['es_volador']) ? 1 : 0,
+            ':ea' => isset($_POST['es_acuatico']) ? 1 : 0,
+            ':es' => isset($_POST['es_subterraneo']) ? 1 : 0,
+            ':bd' => $_POST['buff_descripcion'] ?? '',
+            ':bda' => (int)($_POST['buff_damage'] ?? 0),
+            ':bar' => (int)($_POST['buff_armor'] ?? 0),
+            ':bs' => (int)($_POST['buff_speed'] ?? 0),
+            ':bo' => $_POST['buff_otro'] ?? '',
+            ':tf' => isset($_POST['tiene_formas']) ? 1 : 0,
+            ':fd' => $_POST['formas_descripcion'] ?? '',
+            ':rc' => isset($_POST['recolecta_carne']) ? 1 : 0,
+            ':rpe' => isset($_POST['recolecta_pescado']) ? 1 : 0,
+            ':rma' => isset($_POST['recolecta_madera']) ? 1 : 0,
+            ':rpi' => isset($_POST['recolecta_piedra']) ? 1 : 0,
+            ':rme' => isset($_POST['recolecta_metal']) ? 1 : 0,
+            ':rba' => isset($_POST['recolecta_bayas']) ? 1 : 0,
+            ':rpa' => isset($_POST['recolecta_paja']) ? 1 : 0,
+            ':rfi' => isset($_POST['recolecta_fibra']) ? 1 : 0,
+            ':rte' => isset($_POST['recolecta_texugo']) ? 1 : 0,
+            ':dom' => (int)($_POST['domable'] ?? 1),
+            ':mdom' => $_POST['metodo_domado'] ?? '',
+            ':cf' => $_POST['comida_favorita'] ?? '',
+            ':nms' => (int)($_POST['nivel_max_salvaje'] ?? 150),
+            ':ti' => (int)($_POST['tiempo_incubacion'] ?? 0),
+            ':tma' => (int)($_POST['tiempo_madurez'] ?? 0),
+            ':ac' => isset($_POST['ayuda_cria']) ? 1 : 0,
+            ':acd' => $_POST['ayuda_cria_descripcion'] ?? '',
         ]);
 
         // Obtener el ID del dinosaurio que acabamos de crear
