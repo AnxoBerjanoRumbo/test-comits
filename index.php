@@ -5,6 +5,7 @@ include 'config/db.php';
 $busqueda = isset($_GET['buscar']) ? $_GET['buscar'] : '';
 $dieta    = isset($_GET['dieta'])  ? $_GET['dieta']  : '';
 $mapa_id  = (isset($_GET['mapa']) && is_numeric($_GET['mapa'])) ? (int)$_GET['mapa'] : 0;
+$rol_filtro = isset($_GET['rol']) ? $_GET['rol'] : '';
 
 // Cargar todos los mapas para el selector del formulario
 $stmt_mapas_lista = $conexion->prepare("SELECT * FROM mapas ORDER BY nombre_mapa ASC");
@@ -65,6 +66,13 @@ if ($busqueda != '') {
 if ($dieta != '') {
     $sql       .= " AND {$alias}dieta = :dieta";
     $sql_count .= " AND {$alias}dieta = :dieta";
+}
+
+// Filtro por rol/utilidad
+$roles_validos = ['es_tanque','es_buff','es_recolector','es_montura','es_volador','es_acuatico','es_subterraneo'];
+if ($rol_filtro !== '' && in_array($rol_filtro, $roles_validos)) {
+    $sql       .= " AND {$alias}{$rol_filtro} = 1";
+    $sql_count .= " AND {$alias}{$rol_filtro} = 1";
 }
 
 // Paginación
@@ -137,9 +145,20 @@ $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach; ?>
             </select>
 
+            <select name="rol">
+                <option value="">Todos los roles</option>
+                <option value="es_tanque"      <?php echo $rol_filtro === 'es_tanque'      ? 'selected' : ''; ?>>🛡️ Tanque / Defensa</option>
+                <option value="es_buff"        <?php echo $rol_filtro === 'es_buff'        ? 'selected' : ''; ?>>📈 Buff / Soporte</option>
+                <option value="es_recolector"  <?php echo $rol_filtro === 'es_recolector'  ? 'selected' : ''; ?>>📦 Recolección</option>
+                <option value="es_montura"     <?php echo $rol_filtro === 'es_montura'     ? 'selected' : ''; ?>>🐴 Montura / Transporte</option>
+                <option value="es_volador"     <?php echo $rol_filtro === 'es_volador'     ? 'selected' : ''; ?>>🦅 Volador</option>
+                <option value="es_acuatico"    <?php echo $rol_filtro === 'es_acuatico'    ? 'selected' : ''; ?>>🐳 Acuático</option>
+                <option value="es_subterraneo" <?php echo $rol_filtro === 'es_subterraneo' ? 'selected' : ''; ?>>🦇 Subterráneo / Cueva</option>
+            </select>
+
             <button type="submit">Filtrar</button>
             
-            <?php if ($busqueda != '' || $dieta != '' || $mapa_id > 0 || $cat_id > 0): ?>
+            <?php if ($busqueda != '' || $dieta != '' || $mapa_id > 0 || $cat_id > 0 || $rol_filtro != ''): ?>
                 <a href="index.php" class="boton-limpiar">Limpiar</a>
             <?php endif; ?>
         </form>

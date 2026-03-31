@@ -471,100 +471,50 @@ if (count($comentarios) > 0) {
             <div id="tab-stats" class="dino-tab-panel">
 
                 <!-- Aviso disclaimer -->
-                <div
-                    style="display:flex; align-items:center; gap:10px; background:rgba(var(--accent-rgb),0.07); border:1px solid rgba(var(--accent-rgb),0.25); border-radius:8px; padding:14px 18px; margin-bottom:30px;">
+                <div style="display:flex; align-items:center; gap:10px; background:rgba(var(--accent-rgb),0.07); border:1px solid rgba(var(--accent-rgb),0.25); border-radius:8px; padding:14px 18px; margin-bottom:30px;">
                     <span class="material-symbols-outlined" style="color:var(--accent); flex-shrink:0;">info</span>
-                    <p style="margin:0; font-size:0.83rem; color:var(--text-muted);">Los stats base son para <strong
-                            style="color:var(--text-main);">servidores vanilla sin multiplicadores</strong>. La calculadora
-                        usa las fórmulas oficiales de Wildcard: <code
-                            style="background:rgba(255,255,255,0.08); padding:1px 5px; border-radius:3px; font-size:0.8em;">V = B × (1 + Lw × Iw)</code>.
-                        Mueve los sliders para simular niveles salvajes.</p>
+                    <p style="margin:0; font-size:0.83rem; color:var(--text-muted);">Stats para <strong style="color:var(--text-main);">servidores vanilla sin multiplicadores</strong>.
+                    Simula las 3 fases del juego: <strong style="color:#95a5a6;">Wild</strong> → <strong style="color:var(--accent);">Tamed</strong> → <strong style="color:#ff9800;">Bred</strong>.</p>
                 </div>
 
-                <div class="stats-grid-calc"
-                    style="display:grid; grid-template-columns:1fr 1.2fr; gap:40px; align-items:start;">
+                <div class="stats-grid-calc" style="display:grid; grid-template-columns:1fr 1.2fr; gap:40px; align-items:start;">
 
                     <!-- Radar Chart -->
-                    <div
-                        style="background:rgba(255,255,255,0.02); border:1px solid var(--border-color); border-radius:var(--radius); padding:25px; position:sticky; top:80px;">
-                        <h4
-                            style="margin:0 0 20px; color:var(--text-muted); font-size:0.8rem; text-transform:uppercase; letter-spacing:1px;">
-                            Gráfico Radar · Valores calculados</h4>
+                    <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-color); border-radius:var(--radius); padding:25px; position:sticky; top:80px;">
+                        <h4 style="margin:0 0 20px; color:var(--text-muted); font-size:0.8rem; text-transform:uppercase; letter-spacing:1px;">Gráfico Radar · Valores calculados</h4>
                         <canvas id="statsRadar" style="max-height:320px;"></canvas>
                         <div style="text-align:center; margin-top:16px;">
-                            <span id="radar-mode-label"
-                                style="font-size:0.78rem; color:var(--accent); font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Nivel
-                                Salvaje (Wild)</span>
+                            <span id="radar-mode-label" style="font-size:0.78rem; color:var(--accent); font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Nivel Salvaje (Wild)</span>
                         </div>
                     </div>
 
                     <div>
-                        <!-- LABORATORIO DE CRÍA (NUEVO) -->
-                        <div style="background:rgba(var(--accent-rgb),0.05); border:1px solid rgba(var(--accent-rgb),0.3); border-radius:12px; padding:20px; margin-bottom:25px; box-shadow: inset 0 0 20px rgba(var(--accent-rgb),0.02);">
-                            <h4 style="margin:0 0 15px; color:var(--accent); font-size:0.95rem; text-transform:uppercase; letter-spacing:1px; display:flex; align-items:center; gap:8px;">
-                                <span class="material-symbols-outlined" style="font-size:1.3rem;">science</span> Laboratorio de Cría y Domesticación
-                            </h4>
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px;">
-                                <!-- Imprinting -->
-                            <div>
-                                    <label style="display:flex; align-items:center; justify-content:space-between; font-size:0.85rem; color:var(--text-muted); margin-bottom:8px; font-weight:600;">
-                                        Impronta / Crianza <span id="imp-val" style="color:var(--accent); font-weight:800;">0%</span>
-                                    </label>
-                                    <input type="range" id="imprint-slider" min="0" max="100" value="0" class="stat-slider-input" style="--thumb-color:var(--accent);" oninput="updateStats()">
-                                </div>
-                                <!-- Eficiencia de Taming -->
-                                <div>
-                                    <label style="display:flex; align-items:center; justify-content:space-between; font-size:0.85rem; color:var(--text-muted); margin-bottom:8px; font-weight:600;">
-                                        Taming / Domesticado <span id="tej-val" style="color:var(--accent); font-weight:800;">100%</span>
-                                    </label>
-                                    <input type="range" id="taming-slider" min="0" max="100" value="100" class="stat-slider-input" style="--thumb-color:var(--accent);" oninput="updateStats()">
-                                </div>
-                            </div>
-                        </div>
 
-                        <div
-                            style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
-                            <h4
-                                style="margin:0; color:var(--text-muted); font-size:0.8rem; text-transform:uppercase; letter-spacing:1px;">
-                                Simular Distribución de Niveles</h4>
-                            <button onclick="resetSliders()"
-                                style="background:rgba(255,255,255,0.05); border:1px solid var(--border-color); color:var(--text-muted); border-radius:6px; padding:5px 14px; cursor:pointer; font-size:0.8rem; font-family:inherit; transition: 0.3s; display:flex; align-items:center; gap:5px;" onmouseover="this.style.background='var(--accent)'; this.style.color='var(--accent-text)';" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.color='var(--text-muted)';">
-                                <span class="material-symbols-outlined" style="font-size:14px;">refresh</span> Resetear
-                            </button>
-                        </div>
-
-                        <!-- BUSCADOR DE DINOSAURIO SALVAJE -->
-                        <div style="background:rgba(var(--accent-rgb),0.08); border:1px solid rgba(var(--accent-rgb),0.3); border-radius:12px; padding:18px; margin-bottom:20px; display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
-                            <div style="background:rgba(var(--accent-rgb),0.2); width:45px; height:45px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                <span class="material-symbols-outlined" style="color:var(--accent); font-size:1.5rem;">radar</span>
-                            </div>
-                            <div style="flex:1; min-width:200px;">
-                                <label style="display:block; font-size:0.75rem; font-weight:800; color:var(--accent); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Encuentro Salvaje (Wild)</label>
-                                <div style="display:flex; align-items:center; gap:10px;">
-                                    <span style="color:var(--text-muted); font-size:0.9rem; font-weight:600;">Lv Puntos</span>
-                                    <input type="number" id="gen-level" value="150" min="1" max="450" style="width:90px; padding:8px 12px; border-radius:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,152,0,0.4); color:#fff; font-family:inherit; font-weight:800; font-size:1.1rem; outline:none;">
+                        <!-- ══ FASE 1: WILD ══ -->
+                        <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-color); border-radius:12px; padding:20px; margin-bottom:20px;">
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:10px;">
+                                <h4 style="margin:0; font-size:0.9rem; font-weight:800; color:var(--text-main); display:flex; align-items:center; gap:8px; text-transform:uppercase; letter-spacing:1px;">
+                                    <span class="material-symbols-outlined" style="color:#95a5a6; font-size:1.2rem;">travel_explore</span>
+                                    Fase 1 — Salvaje (Wild)
+                                </h4>
+                                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <span style="color:var(--text-muted); font-size:0.82rem;">Nivel:</span>
+                                        <input type="number" id="gen-level" value="150" min="1" max="450"
+                                            style="width:70px; padding:5px 8px; border-radius:6px; background:rgba(0,0,0,0.4); border:1px solid var(--border-color); color:#fff; font-family:inherit; font-weight:800; font-size:0.95rem; outline:none; text-align:center;">
+                                    </div>
+                                    <button onclick="rollWildStats()" style="background:var(--accent); color:var(--accent-text); font-weight:700; border:none; border-radius:6px; padding:6px 14px; display:flex; align-items:center; gap:4px; cursor:pointer; font-family:inherit; font-size:0.8rem; text-transform:uppercase; transition:0.3s;" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter='none'">
+                                        <span class="material-symbols-outlined" style="font-size:0.95rem;">casino</span> Rolear
+                                    </button>
+                                    <button onclick="resetSliders()" style="background:rgba(255,255,255,0.05); border:1px solid var(--border-color); color:var(--text-muted); border-radius:6px; padding:6px 12px; cursor:pointer; font-size:0.8rem; font-family:inherit; transition:0.3s; display:flex; align-items:center; gap:4px;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                                        <span class="material-symbols-outlined" style="font-size:0.9rem;">refresh</span> Reset
+                                    </button>
                                 </div>
                             </div>
-                            <button onclick="rollWildStats()" style="background:var(--accent); color:var(--accent-text); font-weight:800; border:none; border-radius:8px; padding:12px 20px; display:flex; align-items:center; gap:6px; cursor:pointer; font-family:inherit; text-transform:uppercase; font-size:0.85rem; letter-spacing:0.5px; transition:0.3s;" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter='none'">
-                                <span class="material-symbols-outlined" style="font-size:1.1rem;">casino</span> Rolear Stats
-                            </button>
-                        </div>
+                            <p style="margin:0 0 14px; font-size:0.76rem; color:var(--text-muted);">Cada punto de nivel sube el stat un <code style="background:rgba(255,255,255,0.06); padding:1px 4px; border-radius:3px;">Iw</code>. Las mutaciones cuentan como +2 niveles wild por stat.</p>
 
-                        <?php
-                        $stat_defs = [
-                            'health'    => ['Vida',      'favorite',   '#e74c3c', (float)($dino['iw_health']    ?? 0.2),  $stats_data['health']],
-                            'stamina'   => ['Energía',   'bolt',       '#f39c12', (float)($dino['iw_stamina']   ?? 0.1),  $stats_data['stamina']],
-                            'oxygen'    => ['Oxígeno',   'water_drop', '#3498db', (float)($dino['iw_oxygen']    ?? 0.1),  $stats_data['oxygen']],
-                            'food'      => ['Comida',    'restaurant', '#2ecc71', (float)($dino['iw_food']      ?? 0.15), $stats_data['food']],
-                            'weight'    => ['Peso',      'weight',     '#9b59b6', (float)($dino['iw_weight']    ?? 0.02), $stats_data['weight']],
-                            'melee'     => ['Melée',     'swords',     '#e67e22', (float)($dino['iw_melee']     ?? 0.05), $stats_data['melee']],
-                            'speed'     => ['Velocidad', 'speed',      '#1abc9c', (float)($dino['iw_speed']     ?? 0.0),  $stats_data['speed']],
-                            'torpidity' => ['Torpor',    'bedtime',    '#95a5a6', (float)($dino['iw_torpidity'] ?? 0.06), $stats_data['torpidity']],
-                        ];
-                        foreach ($stat_defs as $key => [$label, $icon, $color, $iw, $base]):
-                            if ($base <= 0)
-                                continue;
-                            ?>
+                            <?php foreach ($stat_defs as $key => [$label, $icon, $color, $iw, $base]):
+                                if ($base <= 0) continue; ?>
                             <div class="stat-slider-row">
                                 <div class="stat-slider-label" style="color:<?php echo $color; ?>;">
                                     <span class="material-symbols-outlined" style="font-size:1rem;"><?php echo $icon; ?></span>
@@ -573,11 +523,13 @@ if (count($comentarios) > 0) {
                                 <input type="range" min="0" max="150" value="0" class="stat-slider-input"
                                     id="slider-<?php echo $key; ?>" data-base="<?php echo $base; ?>"
                                     data-iw="<?php echo $iw; ?>" data-stat="<?php echo $key; ?>"
-                                    style="--thumb-color:<?php echo $color; ?>;" oninput="updateStats()" <?php if ($iw == 0)
-                                           echo 'disabled title="No aumenta en estado salvaje"'; ?>>
+                                    style="--thumb-color:<?php echo $color; ?>;" oninput="updateStats()"
+                                    <?php if ($iw == 0) echo 'disabled title="Este stat no sube en estado salvaje"'; ?>>
                                 <div style="display:flex; align-items:center; gap:4px; background:rgba(255,255,255,0.05); padding:3px 6px; border-radius:6px;">
                                     <span style="color:#aaa; font-size:0.8rem;">+</span>
-                                    <input type="number" id="mut-<?php echo $key; ?>" value="0" min="0" max="254" oninput="updateStats()" style="width:36px; background:transparent; border:none; color:var(--accent); font-weight:800; font-family:inherit; text-align:center; outline:none;" <?php if($iw==0) echo 'disabled'; ?>>
+                                    <input type="number" id="mut-<?php echo $key; ?>" value="0" min="0" max="254" oninput="updateStats()"
+                                        style="width:36px; background:transparent; border:none; color:var(--accent); font-weight:800; font-family:inherit; text-align:center; outline:none;"
+                                        <?php if($iw==0) echo 'disabled'; ?>>
                                     <span style="color:#aaa; font-size:0.7rem; font-weight:700;">Mut</span>
                                 </div>
                                 <div class="stat-level-num" id="level-<?php echo $key; ?>">Lv 0</div>
@@ -585,20 +537,89 @@ if (count($comentarios) > 0) {
                                     <?php echo number_format($base, 1); ?>
                                 </div>
                             </div>
-                        <?php endforeach; ?>
+                            <?php endforeach; ?>
 
-                        <div
-                            style="margin-top:25px; padding:18px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid var(--border-color);">
-                            <p
-                                style="margin:0 0 10px; font-size:0.82rem; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">
-                                Nivel total simulado</p>
-                            <div style="display:flex; align-items:center; gap:15px;">
-                                <span id="nivel-total"
-                                    style="font-size:2rem; font-weight:900; color:var(--accent);">0</span>
-                                <span style="font-size:0.85rem; color:var(--text-muted);">/ 150 puntos wild
-                                    distribuidos</span>
+                            <div style="margin-top:14px; padding:10px 14px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid var(--border-color); display:flex; align-items:center; gap:10px;">
+                                <span style="font-size:0.78rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Nivel wild total:</span>
+                                <span id="nivel-total" style="font-size:1.5rem; font-weight:900; color:var(--accent);">0</span>
+                                <span style="font-size:0.8rem; color:var(--text-muted);">/ 150 puntos</span>
                             </div>
                         </div>
+
+                        <!-- ══ FASE 2: TAMED ══ -->
+                        <div style="background:rgba(var(--accent-rgb),0.04); border:1px solid rgba(var(--accent-rgb),0.25); border-radius:12px; padding:20px; margin-bottom:20px;">
+                            <h4 style="margin:0 0 6px; font-size:0.9rem; font-weight:800; color:var(--accent); display:flex; align-items:center; gap:8px; text-transform:uppercase; letter-spacing:1px;">
+                                <span class="material-symbols-outlined" style="font-size:1.2rem;">pets</span>
+                                Fase 2 — Domesticado (Tamed)
+                            </h4>
+                            <p style="margin:0 0 14px; font-size:0.76rem; color:var(--text-muted);">
+                                Al domar, el dino recibe un bonus en todos los stats según la eficiencia (100% = sin daño recibido). Además puedes invertir hasta 73 niveles extra en el stat que quieras.
+                            </p>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+                                <div>
+                                    <label style="display:flex; align-items:center; justify-content:space-between; font-size:0.82rem; color:var(--text-muted); margin-bottom:6px; font-weight:600;">
+                                        Eficiencia de Taming <span id="tej-val" style="color:var(--accent); font-weight:800;">100%</span>
+                                    </label>
+                                    <input type="range" id="taming-slider" min="0" max="100" value="100" class="stat-slider-input" style="--thumb-color:var(--accent);" oninput="updateStats()">
+                                    <p style="margin:5px 0 0; font-size:0.71rem; color:var(--text-muted);">100% = sin daño. Afecta al bonus de todos los stats.</p>
+                                </div>
+                                <div>
+                                    <label style="display:flex; align-items:center; justify-content:space-between; font-size:0.82rem; color:var(--text-muted); margin-bottom:6px; font-weight:600;">
+                                        Niveles domesticados <span id="tamed-levels-val" style="color:var(--accent); font-weight:800;">0</span>
+                                    </label>
+                                    <input type="range" id="tamed-levels-slider" min="0" max="73" value="0" class="stat-slider-input" style="--thumb-color:var(--accent);" oninput="updateStats()">
+                                    <p style="margin:5px 0 0; font-size:0.71rem; color:var(--text-muted);">Puntos extra tras domarlo (máx. 73 en vanilla).</p>
+                                </div>
+                            </div>
+                            <div>
+                                <p style="margin:0 0 7px; font-size:0.76rem; color:var(--text-muted); font-weight:600;">¿En qué stat inviertes los niveles domesticados?</p>
+                                <div style="display:flex; flex-wrap:wrap; gap:6px;" id="tamed-stat-selector">
+                                    <?php foreach ($stat_defs as $key => [$label, $icon, $color, $iw, $base]):
+                                        if ($base <= 0) continue; ?>
+                                    <button type="button" class="tamed-stat-btn <?php echo $key === 'health' ? 'active' : ''; ?>"
+                                        data-stat="<?php echo $key; ?>" data-color="<?php echo $color; ?>"
+                                        style="background:<?php echo $key === 'health' ? $color : 'rgba(255,255,255,0.05)'; ?>; color:<?php echo $key === 'health' ? '#fff' : 'var(--text-muted)'; ?>; border:1px solid <?php echo $key === 'health' ? $color : 'var(--border-color)'; ?>; border-radius:20px; padding:4px 10px; font-size:0.76rem; font-weight:600; cursor:pointer; font-family:inherit; transition:0.2s; display:flex; align-items:center; gap:4px;"
+                                        onclick="selectTamedStat(this, '<?php echo $key; ?>', '<?php echo $color; ?>')">
+                                        <span class="material-symbols-outlined" style="font-size:0.85rem;"><?php echo $icon; ?></span>
+                                        <?php echo $label; ?>
+                                    </button>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ══ FASE 3: BRED ══ -->
+                        <div style="background:rgba(255,152,0,0.04); border:1px solid rgba(255,152,0,0.25); border-radius:12px; padding:20px;">
+                            <h4 style="margin:0 0 6px; font-size:0.9rem; font-weight:800; color:#ff9800; display:flex; align-items:center; gap:8px; text-transform:uppercase; letter-spacing:1px;">
+                                <span class="material-symbols-outlined" style="font-size:1.2rem;">egg</span>
+                                Fase 3 — Criado (Bred)
+                            </h4>
+                            <p style="margin:0 0 14px; font-size:0.76rem; color:var(--text-muted);">
+                                La cría hereda los stats de los padres. Con impronta al 100% recibe +20% en todos los stats aplicables. Las mutaciones añaden +2 niveles wild en un stat y cambian el color.
+                            </p>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                                <div>
+                                    <label style="display:flex; align-items:center; justify-content:space-between; font-size:0.82rem; color:var(--text-muted); margin-bottom:6px; font-weight:600;">
+                                        Impronta <span id="imp-val" style="color:#ff9800; font-weight:800;">0%</span>
+                                    </label>
+                                    <input type="range" id="imprint-slider" min="0" max="100" value="0" class="stat-slider-input" style="--thumb-color:#ff9800;" oninput="updateStats()">
+                                    <p style="margin:5px 0 0; font-size:0.71rem; color:var(--text-muted);">100% = impronta perfecta. +20% en stats aplicables.</p>
+                                </div>
+                                <div style="background:rgba(255,255,255,0.03); border-radius:8px; padding:10px; border:1px solid rgba(255,255,255,0.06);">
+                                    <p style="margin:0 0 6px; font-size:0.76rem; color:var(--text-muted); font-weight:600;">Stats afectados por impronta:</p>
+                                    <div style="display:flex; flex-wrap:wrap; gap:4px;">
+                                        <?php foreach ($stat_defs as $key => [$label, $icon, $color, $iw, $base]):
+                                            if ($base <= 0) continue;
+                                            $afectado = !in_array($key, ['stamina', 'oxygen', 'speed']); ?>
+                                        <span style="font-size:0.71rem; padding:2px 7px; border-radius:10px; background:<?php echo $afectado ? 'rgba(255,152,0,0.15)' : 'rgba(255,255,255,0.04)'; ?>; color:<?php echo $afectado ? '#ff9800' : 'var(--text-muted)'; ?>; border:1px solid <?php echo $afectado ? 'rgba(255,152,0,0.3)' : 'rgba(255,255,255,0.06)'; ?>;">
+                                            <?php echo $label; ?>
+                                        </span>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div><!-- /tab-stats -->
@@ -1037,54 +1058,107 @@ if (count($comentarios) > 0) {
                 const B = BASE_STATS[key] || 0;
                 const impSlider = document.getElementById('imprint-slider');
                 const tamSlider = document.getElementById('taming-slider');
-                
-                const impronta = impSlider ? parseInt(impSlider.value) / 100 : 0;
-                const tamingEff = tamSlider ? parseInt(tamSlider.value) / 100 : 1;
-                
-                // Extraer niveles de mutación
+                const tamedLvSlider = document.getElementById('tamed-levels-slider');
+
+                const impronta   = impSlider    ? parseInt(impSlider.value)    / 100 : 0;
+                const tamingEff  = tamSlider    ? parseInt(tamSlider.value)    / 100 : 1;
+                const tamedLevels= tamedLvSlider? parseInt(tamedLvSlider.value)      : 0;
+
                 const mutInput = document.getElementById('mut-' + key);
                 const muts = mutInput ? parseInt(mutInput.value) || 0 : 0;
-                
-                // Muts añaden 2 niveles salvajes cada una:
+
+                // Stat seleccionado para los niveles domesticados
+                const selectedTamedStat = document.querySelector('.tamed-stat-btn.active')?.dataset.stat || 'health';
+
+                // ── FASE 1: WILD ──────────────────────────────────────────
+                // V_wild = B × (1 + (Lw + muts×2) × Iw)
                 const totalLw = lw + (muts * 2);
-                
-                // Demo interactiva
                 let v = B * (1 + totalLw * IW[key]);
-                
-                // Impronta general (+20% máximo)
-                if (impronta > 0 && key !== 'stamina' && key !== 'oxygen' && key !== 'speed') {
-                    v = v * (1 + (impronta * 0.20));
+
+                // ── FASE 2: TAMED ─────────────────────────────────────────
+                // Bonus de taming: afecta a todos los stats excepto torpor
+                // Ta (bonus aditivo) = B × 0.5 × tamingEff  (aproximación vanilla genérica)
+                if (key !== 'torpidity') {
+                    const Ta = B * 0.5 * tamingEff;
+                    v = v + Ta;
                 }
-                
-                // Bonus Taming simulado
-                if (key === 'melee') {
-                    v = v * (1 + (tamingEff * 0.176));
+
+                // Niveles domesticados: solo al stat seleccionado
+                // Cada nivel domesticado sube el stat un Id (mismo Iw que wild en vanilla)
+                if (key === selectedTamedStat && tamedLevels > 0) {
+                    v = v * (1 + tamedLevels * IW[key]);
                 }
-                
+
+                // ── FASE 3: BRED ──────────────────────────────────────────
+                // Impronta: +20% en stats aplicables (no stamina, oxygen, speed)
+                if (impronta > 0 && key !== 'stamina' && key !== 'oxygen' && key !== 'speed' && key !== 'torpidity') {
+                    v = v * (1 + impronta * 0.2);
+                }
+
                 return v;
+            }
+
+            let selectedTamedStatKey = 'health';
+            let selectedTamedStatColor = '#e74c3c';
+
+            function selectTamedStat(btn, key, color) {
+                document.querySelectorAll('.tamed-stat-btn').forEach(b => {
+                    b.style.background = 'rgba(255,255,255,0.05)';
+                    b.style.color = 'var(--text-muted)';
+                    b.style.borderColor = 'var(--border-color)';
+                    b.classList.remove('active');
+                });
+                btn.style.background = color;
+                btn.style.color = '#fff';
+                btn.style.borderColor = color;
+                btn.classList.add('active');
+                selectedTamedStatKey = key;
+                selectedTamedStatColor = color;
+                updateStats();
             }
 
             function updateStats() {
                 let totalLevels = 0;
-                const impSlider = document.getElementById('imprint-slider');
-                const tamSlider = document.getElementById('taming-slider');
-                if(document.getElementById('imp-val') && impSlider) document.getElementById('imp-val').textContent = impSlider.value + '%';
-                if(document.getElementById('tej-val') && tamSlider) document.getElementById('tej-val').textContent = tamSlider.value + '%';
+                const impSlider      = document.getElementById('imprint-slider');
+                const tamSlider      = document.getElementById('taming-slider');
+                const tamedLvSlider  = document.getElementById('tamed-levels-slider');
+
+                if (document.getElementById('imp-val')         && impSlider)     document.getElementById('imp-val').textContent         = impSlider.value + '%';
+                if (document.getElementById('tej-val')         && tamSlider)     document.getElementById('tej-val').textContent         = tamSlider.value + '%';
+                if (document.getElementById('tamed-levels-val')&& tamedLvSlider) document.getElementById('tamed-levels-val').textContent = tamedLvSlider.value;
+
+                // Actualizar visual del slider de tamed-levels
+                if (tamedLvSlider) {
+                    const accent = getAccentColor();
+                    const pct = (tamedLvSlider.value / 73 * 100);
+                    tamedLvSlider.style.background = `linear-gradient(to right, ${accent} 0%, ${accent} ${pct}%, rgba(255,255,255,0.1) ${pct}%, rgba(255,255,255,0.1) 100%)`;
+                }
 
                 const newData = STAT_KEYS.map(key => {
                     const slider = document.getElementById('slider-' + key);
-                    if (!slider || slider.disabled) return BASE_STATS[key];
+                    if (!slider || slider.disabled) return calcV(key, 0);
                     const lw = parseInt(slider.value);
                     totalLevels += lw;
                     const v = calcV(key, lw);
                     const levelEl = document.getElementById('level-' + key);
-                    const valEl = document.getElementById('val-' + key);
+                    const valEl   = document.getElementById('val-'   + key);
                     if (levelEl) levelEl.textContent = 'Lv ' + lw;
-                    if (valEl) valEl.textContent = v >= 10 ? Math.round(v).toLocaleString('es-ES') : v.toFixed(2);
+                    if (valEl)   valEl.textContent   = v >= 10 ? Math.round(v).toLocaleString('es-ES') : v.toFixed(2);
                     return v;
                 });
 
                 document.getElementById('nivel-total').textContent = totalLevels;
+
+                // Etiqueta del radar según fases activas
+                const imp    = impSlider    ? parseInt(impSlider.value)    : 0;
+                const tam    = tamSlider    ? parseInt(tamSlider.value)    : 100;
+                const tamedL = tamedLvSlider? parseInt(tamedLvSlider.value): 0;
+                let label = 'Nivel Salvaje (Wild)';
+                if (imp > 0)              label = 'Criado · Impronta ' + imp + '%';
+                else if (tamedL > 0)      label = 'Domesticado · ' + tamedL + ' niveles extra';
+                else if (tam < 100)       label = 'Domesticado · Eficiencia ' + tam + '%';
+                const labelEl = document.getElementById('radar-mode-label');
+                if (labelEl) labelEl.textContent = label;
 
                 if (radarChart) {
                     radarChart.data.datasets[0].data = newData;
@@ -1227,7 +1301,15 @@ if (count($comentarios) > 0) {
             }
 
             function resetSliders() {
-                document.querySelectorAll('.stat-slider-input').forEach(s => { s.value = s.id === 'taming-slider' ? 100 : 0; s.dispatchEvent(new Event('input')); });
+                document.querySelectorAll('.stat-slider-input').forEach(s => {
+                    if (s.id === 'taming-slider') { s.value = 100; }
+                    else if (s.id === 'imprint-slider' || s.id === 'tamed-levels-slider') { s.value = 0; }
+                    else { s.value = 0; }
+                    s.dispatchEvent(new Event('input'));
+                });
+                // Resetear selector de stat domesticado a health
+                const healthBtn = document.querySelector('.tamed-stat-btn[data-stat="health"]');
+                if (healthBtn) selectTamedStat(healthBtn, 'health', '#e74c3c');
                 updateStats();
             }
 
