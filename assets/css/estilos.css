@@ -697,11 +697,10 @@ body {
     box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.12);
 }
 
-/* Resaltar selects con valor activo */
+/* Resaltar selects con valor activo — solo borde, sin cambiar background para evitar dropdown blanco */
 .buscador-select.has-value {
     border-color: var(--accent);
     color: var(--accent);
-    background: rgba(var(--accent-rgb), 0.06);
 }
 
 .buscador-btn-submit {
@@ -2517,3 +2516,97 @@ body.theme-aberration::-webkit-scrollbar-thumb:hover { background-color: #cc33ff
 body.theme-extinction::-webkit-scrollbar-thumb:hover { background-color: #ffd900; }
 body.theme-scorched  ::-webkit-scrollbar-thumb:hover { background-color: #ff8533; }
 body.theme-daltonico ::-webkit-scrollbar-thumb:hover { background-color: #e6e600; }
+
+/* ==========================================================================
+   ROLES Y UTILIDAD - CARDS
+   ========================================================================== */
+.rol-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-top: 3px solid var(--rol-color, var(--accent));
+    border-radius: 14px;
+    padding: 22px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+@media (hover: hover) {
+    .rol-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+    }
+}
+
+.rol-card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.rol-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.rol-card-icon .material-symbols-outlined {
+    font-size: 1.4rem;
+}
+
+.rol-card-title {
+    margin: 0 0 2px;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+.rol-card-sub {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.rol-card-desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin: 0;
+}
+
+.rol-stat-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.rol-stat-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    min-width: 80px;
+}
+
+.rol-bar-wrap {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.rol-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.6s ease;
+}
+
+.rol-stat-val {
+    font-size: 0.82rem;
+    font-weight: 800;
+    min-width: 40px;
+    text-align: right;
+}

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 include 'config/db.php';
 
@@ -642,318 +642,210 @@ if (count($comentarios) > 0) {
     ══════════════════════════════════════════ -->
         <div id="tab-habilidades" class="dino-tab-panel">
 
-            <div style="margin-bottom:30px;">
+            <div style="margin-bottom:28px;">
                 <h3 style="margin:0 0 6px; font-size:1.4rem;">Roles y Utilidad</h3>
-                <p style="margin:0; color:var(--text-muted); font-size:0.9rem;">Descubre para qué sirve <strong
-                        style="color:var(--text-main);"><?php echo htmlspecialchars($dino['nombre']); ?></strong>
-                    en tu tribu y qué roles desempeña mejor en el juego.</p>
+                <p style="margin:0; color:var(--text-muted); font-size:0.9rem;">Descubre para qué sirve <strong style="color:var(--text-main);"><?php echo htmlspecialchars($dino['nombre']); ?></strong> en tu tribu.</p>
             </div>
 
-            <!-- HABILIDADES Y CARACTERÍSTICAS - DATOS REALES DE ARK -->
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:25px; position:relative; z-index:1;">
-                
+            <!-- BADGES DE ROLES RÁPIDOS -->
+            <?php
+            $roles_activos = [];
+            if ($features['es_tanque'])     $roles_activos[] = ['🛡️','Tanque','#3498db'];
+            if ($features['es_buff'])       $roles_activos[] = ['📈','Soporte','#e74c3c'];
+            if ($features['es_recolector']) $roles_activos[] = ['📦','Recolector','#2ecc71'];
+            if ($features['es_montura'])    $roles_activos[] = ['🐴','Montura','#f39c12'];
+            if ($features['es_volador'])    $roles_activos[] = ['🦅','Volador','#00bcd4'];
+            if ($features['es_acuatico'])   $roles_activos[] = ['🐳','Acuático','#2196f3'];
+            if ($features['es_subterraneo'])$roles_activos[] = ['🦇','Cueva','#795548'];
+            ?>
+            <?php if (!empty($roles_activos)): ?>
+            <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:30px;">
+                <?php foreach ($roles_activos as [$emoji, $nombre, $color]): ?>
+                <div style="display:flex; align-items:center; gap:8px; padding:8px 16px; border-radius:30px; background:<?php echo $color; ?>18; border:1px solid <?php echo $color; ?>44;">
+                    <span style="font-size:1.1rem;"><?php echo $emoji; ?></span>
+                    <span style="font-size:0.85rem; font-weight:700; color:<?php echo $color; ?>;"><?php echo $nombre; ?></span>
+                </div>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:20px;">
+
                 <?php if ($features['es_tanque']): ?>
-                <!-- ROL: TANQUE -->
-                <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; overflow:hidden; transition:transform 0.3s; box-shadow:0 8px 30px rgba(0,0,0,0.3);">
-                    <div style="height:5px; background:linear-gradient(90deg, #3498db, #9b59b6);"></div>
-                    <div style="padding:28px;">
-                        <div style="display:flex; align-items:center; gap:14px; margin-bottom:18px;">
-                            <div style="background:rgba(52, 152, 219, 0.15); border-radius:10px; padding:12px; display:flex;">
-                                <span class="material-symbols-outlined" style="color:#3498db; font-size:1.4rem;">shield</span>
-                            </div>
-                            <h4 style="margin:0; font-size:1.15rem; color:#fff; font-weight:800;">Rol: Tanque</h4>
+                <div class="rol-card" style="--rol-color:#3498db;">
+                    <div class="rol-card-header">
+                        <div class="rol-card-icon" style="background:rgba(52,152,219,0.15);">
+                            <span class="material-symbols-outlined" style="color:#3498db;">shield</span>
                         </div>
-                        <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.7; margin:0 0 18px;">
-                            <?php if ($features['tiene_formas'] && !empty($features['formas_descripcion'])): ?>
-                                <?php echo nl2br(htmlspecialchars($features['formas_descripcion'])); ?>
-                            <?php else: ?>
-                                Este dinosaurio puede absorber grandes cantidades de daño, protegiendo a tu tribu en combate.
-                            <?php endif; ?>
-                        </p>
+                        <div>
+                            <h4 class="rol-card-title">Tanque</h4>
+                            <p class="rol-card-sub">Absorbe daño y protege a la tribu</p>
+                        </div>
+                    </div>
+                    <?php if ($features['buff_armor'] > 0): ?>
+                    <div class="rol-stat-bar">
+                        <span class="rol-stat-label">Reducción de daño</span>
+                        <div class="rol-bar-wrap">
+                            <div class="rol-bar-fill" style="width:<?php echo min($features['buff_armor'],100); ?>%; background:#3498db;"></div>
+                        </div>
+                        <span class="rol-stat-val" style="color:#3498db;"><?php echo $features['buff_armor']; ?>%</span>
+                    </div>
+                    <?php endif; ?>
+                    <?php if ($features['tiene_formas'] && !empty($features['formas_descripcion'])): ?>
+                    <p class="rol-card-desc"><?php echo nl2br(htmlspecialchars($features['formas_descripcion'])); ?></p>
+                    <?php else: ?>
+                    <p class="rol-card-desc">Puede absorber grandes cantidades de daño en combate.</p>
+                    <?php endif; ?>
+                </div>
+                <?php endif; ?>
+
+                <?php if ($features['es_buff']): ?>
+                <div class="rol-card" style="--rol-color:#e74c3c;">
+                    <div class="rol-card-header">
+                        <div class="rol-card-icon" style="background:rgba(231,76,60,0.15);">
+                            <span class="material-symbols-outlined" style="color:#e74c3c;">volume_up</span>
+                        </div>
+                        <div>
+                            <h4 class="rol-card-title">Soporte / Buff</h4>
+                            <p class="rol-card-sub">Potencia a los aliados cercanos</p>
+                        </div>
+                    </div>
+                    <?php if (!empty($features['buff_descripcion'])): ?>
+                    <p class="rol-card-desc"><?php echo nl2br(htmlspecialchars($features['buff_descripcion'])); ?></p>
+                    <?php endif; ?>
+                    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">
+                        <?php if ($features['buff_damage'] > 0): ?>
+                        <div class="rol-stat-bar" style="width:100%;">
+                            <span class="rol-stat-label">⚔️ Daño</span>
+                            <div class="rol-bar-wrap"><div class="rol-bar-fill" style="width:<?php echo min($features['buff_damage'],100); ?>%; background:#e74c3c;"></div></div>
+                            <span class="rol-stat-val" style="color:#e74c3c;">+<?php echo $features['buff_damage']; ?>%</span>
+                        </div>
+                        <?php endif; ?>
                         <?php if ($features['buff_armor'] > 0): ?>
-                        <div style="background:rgba(52, 152, 219, 0.1); padding:10px; border-radius:8px;">
-                            <span style="color:#3498db; font-weight:700; font-size:0.85rem;">🛡️ Reducción de daño: <?php echo $features['buff_armor']; ?>%</span>
+                        <div class="rol-stat-bar" style="width:100%;">
+                            <span class="rol-stat-label">🛡️ Armadura</span>
+                            <div class="rol-bar-wrap"><div class="rol-bar-fill" style="width:<?php echo min($features['buff_armor'],100); ?>%; background:#3498db;"></div></div>
+                            <span class="rol-stat-val" style="color:#3498db;">+<?php echo $features['buff_armor']; ?>%</span>
+                        </div>
+                        <?php endif; ?>
+                        <?php if ($features['buff_speed'] > 0): ?>
+                        <div class="rol-stat-bar" style="width:100%;">
+                            <span class="rol-stat-label">⚡ Velocidad</span>
+                            <div class="rol-bar-wrap"><div class="rol-bar-fill" style="width:<?php echo min($features['buff_speed'],100); ?>%; background:#1abc9c;"></div></div>
+                            <span class="rol-stat-val" style="color:#1abc9c;">+<?php echo $features['buff_speed']; ?>%</span>
+                        </div>
+                        <?php endif; ?>
+                        <?php if (!empty($features['buff_otro'])): ?>
+                        <span style="font-size:0.8rem; color:#f1c40f; background:rgba(241,196,15,0.1); border:1px solid rgba(241,196,15,0.3); padding:4px 10px; border-radius:20px;"><?php echo htmlspecialchars($features['buff_otro']); ?></span>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <?php if ($features['es_recolector']): ?>
+                <?php
+                $recursos = [];
+                if ($features['recolecta_carne'])  $recursos[] = ['🥩','Carne',   '#e74c3c'];
+                if ($features['recolecta_pescado']) $recursos[] = ['🐟','Pescado', '#3498db'];
+                if ($features['recolecta_madera'])  $recursos[] = ['🪵','Madera',  '#8b6914'];
+                if ($features['recolecta_piedra'])  $recursos[] = ['🪨','Piedra',  '#95a5a6'];
+                if ($features['recolecta_metal'])   $recursos[] = ['⛏️','Metal',   '#7f8c8d'];
+                if ($features['recolecta_bayas'])   $recursos[] = ['🫐','Bayas',   '#9b59b6'];
+                if ($features['recolecta_paja'])    $recursos[] = ['🌾','Paja',    '#f1c40f'];
+                if ($features['recolecta_fibra'])   $recursos[] = ['🌿','Fibra',   '#2ecc71'];
+                if ($features['recolecta_texugo'])  $recursos[] = ['🐾','Texugo',  '#e67e22'];
+                ?>
+                <div class="rol-card" style="--rol-color:#2ecc71;">
+                    <div class="rol-card-header">
+                        <div class="rol-card-icon" style="background:rgba(46,204,113,0.15);">
+                            <span class="material-symbols-outlined" style="color:#2ecc71;">inventory_2</span>
+                        </div>
+                        <div>
+                            <h4 class="rol-card-title">Recolección</h4>
+                            <p class="rol-card-sub"><?php echo count($recursos); ?> recurso<?php echo count($recursos)!==1?'s':''; ?> disponible<?php echo count($recursos)!==1?'s':''; ?></p>
+                        </div>
+                    </div>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(90px,1fr)); gap:8px; margin-top:4px;">
+                        <?php foreach ($recursos as [$emoji, $nombre, $color]): ?>
+                        <div style="display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 6px; border-radius:10px; background:<?php echo $color; ?>12; border:1px solid <?php echo $color; ?>30;">
+                            <span style="font-size:1.4rem;"><?php echo $emoji; ?></span>
+                            <span style="font-size:0.72rem; font-weight:700; color:<?php echo $color; ?>;"><?php echo $nombre; ?></span>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <?php if ($features['es_volador'] || $features['es_acuatico'] || $features['es_subterraneo'] || $features['es_montura']): ?>
+                <div class="rol-card" style="--rol-color:#00bcd4;">
+                    <div class="rol-card-header">
+                        <div class="rol-card-icon" style="background:rgba(0,188,212,0.15);">
+                            <span class="material-symbols-outlined" style="color:#00bcd4;">category</span>
+                        </div>
+                        <div>
+                            <h4 class="rol-card-title">Características</h4>
+                            <p class="rol-card-sub">Habilidades especiales de movimiento</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
+                        <?php if ($features['es_volador']): ?>
+                        <div style="display:flex; align-items:center; gap:6px; padding:8px 14px; border-radius:20px; background:rgba(0,188,212,0.1); border:1px solid rgba(0,188,212,0.3);">
+                            <span>🦅</span><span style="font-size:0.82rem; font-weight:700; color:#00bcd4;">Volador</span>
+                        </div>
+                        <?php endif; ?>
+                        <?php if ($features['es_acuatico']): ?>
+                        <div style="display:flex; align-items:center; gap:6px; padding:8px 14px; border-radius:20px; background:rgba(33,150,243,0.1); border:1px solid rgba(33,150,243,0.3);">
+                            <span>🐳</span><span style="font-size:0.82rem; font-weight:700; color:#2196f3;">Acuático</span>
+                        </div>
+                        <?php endif; ?>
+                        <?php if ($features['es_subterraneo']): ?>
+                        <div style="display:flex; align-items:center; gap:6px; padding:8px 14px; border-radius:20px; background:rgba(121,85,72,0.1); border:1px solid rgba(121,85,72,0.3);">
+                            <span>🦇</span><span style="font-size:0.82rem; font-weight:700; color:#a1887f;">Subterráneo</span>
+                        </div>
+                        <?php endif; ?>
+                        <?php if ($features['es_montura']): ?>
+                        <div style="display:flex; align-items:center; gap:6px; padding:8px 14px; border-radius:20px; background:rgba(156,39,176,0.1); border:1px solid rgba(156,39,176,0.3);">
+                            <span>🐴</span><span style="font-size:0.82rem; font-weight:700; color:#ce93d8;">Montura</span>
                         </div>
                         <?php endif; ?>
                     </div>
                 </div>
                 <?php endif; ?>
 
-                <?php if ($features['es_buff']): ?>
-                <!-- ROL: BUFF/BOOST -->
-                <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; overflow:hidden; transition:transform 0.3s; box-shadow:0 8px 30px rgba(0,0,0,0.3);">
-                    <div style="height:5px; background:linear-gradient(90deg, #e74c3c, #f1c40f);"></div>
-                    <div style="padding:28px;">
-                        <div style="display:flex; align-items:center; gap:14px; margin-bottom:18px;">
-                            <div style="background:rgba(231, 76, 60, 0.15); border-radius:10px; padding:12px; display:flex;">
-                                <span class="material-symbols-outlined" style="color:#e74c3c; font-size:1.4rem;">volume_up</span>
-                            </div>
-                            <h4 style="margin:0; font-size:1.15rem; color:#fff; font-weight:800;">Rol: Soporte / Buff</h4>
+                <?php if ($features['tiene_formas'] && !empty($features['formas_descripcion'])): ?>
+                <div class="rol-card" style="--rol-color:#f39c12;">
+                    <div class="rol-card-header">
+                        <div class="rol-card-icon" style="background:rgba(243,156,18,0.15);">
+                            <span class="material-symbols-outlined" style="color:#f39c12;">transform</span>
                         </div>
-                        <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.7; margin:0 0 18px;">
-                            <?php if (!empty($features['buff_descripcion'])): ?>
-                                <?php echo nl2br(htmlspecialchars($features['buff_descripcion'])); ?>
-                            <?php else: ?>
-                                Este dinosaurio proporciona bonuses a otros dinosaurios cercanos.
-                            <?php endif; ?>
-                        </p>
-                        <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                            <?php if ($features['buff_damage'] > 0): ?>
-                            <span style="background:rgba(231, 76, 60, 0.15); color:#e74c3c; padding:6px 12px; border-radius:20px; font-size:0.8rem; font-weight:700;">⚔️ Daño +<?php echo $features['buff_damage']; ?>%</span>
-                            <?php endif; ?>
-                            <?php if ($features['buff_armor'] > 0): ?>
-                            <span style="background:rgba(52, 152, 219, 0.15); color:#3498db; padding:6px 12px; border-radius:20px; font-size:0.8rem; font-weight:700;">🛡️ Armadura +<?php echo $features['buff_armor']; ?>%</span>
-                            <?php endif; ?>
-                            <?php if ($features['buff_speed'] > 0): ?>
-                            <span style="background:rgba(26, 188, 156, 0.15); color:#1abc9c; padding:6px 12px; border-radius:20px; font-size:0.8rem; font-weight:700;">⚡ Velocidad +<?php echo $features['buff_speed']; ?>%</span>
-                            <?php endif; ?>
-                            <?php if (!empty($features['buff_otro'])): ?>
-                            <span style="background:rgba(241, 196, 15, 0.15); color:#f1c40f; padding:6px 12px; border-radius:20px; font-size:0.8rem; font-weight:700;"><?php echo htmlspecialchars($features['buff_otro']); ?></span>
-                            <?php endif; ?>
+                        <div>
+                            <h4 class="rol-card-title">Formas / Modos</h4>
+                            <p class="rol-card-sub">Múltiples configuraciones</p>
                         </div>
                     </div>
+                    <p class="rol-card-desc"><?php echo nl2br(htmlspecialchars($features['formas_descripcion'])); ?></p>
                 </div>
                 <?php endif; ?>
 
-                <?php if ($features['es_recolector']): ?>
-                <!-- ROL: RECOLECCIÓN -->
-                <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; overflow:hidden; transition:transform 0.3s; box-shadow:0 8px 30px rgba(0,0,0,0.3);">
-                    <div style="height:5px; background:linear-gradient(90deg, #2ecc71, #1abc9c);"></div>
-                    <div style="padding:28px;">
-                         <div style="display:flex; align-items:center; gap:14px; margin-bottom:18px;">
-                            <div style="background:rgba(46, 204, 113, 0.15); border-radius:10px; padding:12px; display:flex;">
-                                <span class="material-symbols-outlined" style="color:#2ecc71; font-size:1.4rem;">inventory_2</span>
-                            </div>
-                            <h4 style="margin:0; font-size:1.15rem; color:#fff; font-weight:800;">Recolección</h4>
-                        </div>
-                        <ul style="padding:0; margin:0; list-style:none; display:flex; flex-direction:column; gap:10px;">
-                            <?php if ($features['recolecta_carne']): ?>
-                            <li style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted);"><span>🥩 Carne</span> <span style="color:#e74c3c;">★</span></li>
-                            <?php endif; ?>
-                            <?php if ($features['recolecta_pescado']): ?>
-                            <li style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted);"><span>🐟 Pescado</span> <span style="color:#3498db;">★</span></li>
-                            <?php endif; ?>
-                            <?php if ($features['recolecta_madera']): ?>
-                            <li style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted);"><span>🪵 Madera</span> <span style="color:#8b4513;">★</span></li>
-                            <?php endif; ?>
-                            <?php if ($features['recolecta_piedra']): ?>
-                            <li style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted);"><span>🪨 Piedra</span> <span style="color:#95a5a6;">★</span></li>
-                            <?php endif; ?>
-                            <?php if ($features['recolecta_metal']): ?>
-                            <li style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted);"><span>⛏️ Metal</span> <span style="color:#7f8c8d;">★</span></li>
-                            <?php endif; ?>
-                            <?php if ($features['recolecta_bayas']): ?>
-                            <li style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted);"><span>🫐 Bayas</span> <span style="color:#9b59b6;">★</span></li>
-                            <?php endif; ?>
-                            <?php if ($features['recolecta_paja']): ?>
-                            <li style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted);"><span>🌾 Paja</span> <span style="color:#f1c40f;">★</span></li>
-                            <?php endif; ?>
-                            <?php if ($features['recolecta_fibra']): ?>
-                            <li style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted);"><span>🌿 Fibra</span> <span style="color:#2ecc71;">★</span></li>
-                            <?php endif; ?>
-                            <?php if ($features['recolecta_texugo']): ?>
-                            <li style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted);"><span>🐾 Texugo</span> <span style="color:#e67e22;">★</span></li>
-                            <?php endif; ?>
-                        </ul>
-                    </div>
+            </div><!-- /grid roles -->
+
+            <?php if ($features['ayuda_cria']): ?>
+            <div style="margin-top:20px; background:rgba(241,196,15,0.05); border:1px solid rgba(241,196,15,0.2); border-radius:14px; padding:20px; display:flex; gap:16px; align-items:flex-start;">
+                <div style="background:rgba(241,196,15,0.15); border-radius:10px; padding:10px; flex-shrink:0; display:flex;">
+                    <span class="material-symbols-outlined" style="color:#f1c40f; font-size:1.4rem;">egg</span>
                 </div>
-                <?php endif; ?>
-
-                <!-- INFORMACIÓN DE DOMESTICACIÓN -->
-                <?php if ($features['domable']): ?>
-                <?php
-                $nivel_max = (int)($features['nivel_max_salvaje'] ?? 150);
-                $metodo    = $features['metodo_domado'] ?? 'Knockout';
-                ?>
-                <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; overflow:hidden; transition:transform 0.3s; box-shadow:0 8px 30px rgba(0,0,0,0.3);">
-                    <div style="height:5px; background:linear-gradient(90deg, #9b59b6, #e91e63);"></div>
-                    <div style="padding:28px;">
-                        <div style="display:flex; align-items:center; gap:14px; margin-bottom:18px;">
-                            <div style="background:rgba(155, 89, 182, 0.15); border-radius:10px; padding:12px; display:flex;">
-                                <span class="material-symbols-outlined" style="color:#9b59b6; font-size:1.4rem;">pets</span>
-                            </div>
-                            <h4 style="margin:0; font-size:1.15rem; color:#fff; font-weight:800;">Domesticación</h4>
-                        </div>
-
-                        <!-- Info básica -->
-                        <ul style="padding:0; margin:0 0 20px; list-style:none; display:flex; flex-direction:column; gap:8px; font-size:0.9rem; color:var(--text-muted);">
-                            <?php if (!empty($features['metodo_domado'])): ?>
-                            <li style="display:flex; justify-content:space-between; align-items:center;">
-                                <span>Método</span>
-                                <strong style="color:var(--text-main); background:rgba(155,89,182,0.15); padding:3px 10px; border-radius:20px; font-size:0.85rem;">
-                                    <?php echo htmlspecialchars($features['metodo_domado']); ?>
-                                </strong>
-                            </li>
-                            <?php endif; ?>
-                            <?php if (!empty($features['comida_favorita'])): ?>
-                            <li style="display:flex; justify-content:space-between; align-items:center;">
-                                <span>Comida favorita</span>
-                                <strong style="color:var(--text-main);"><?php echo htmlspecialchars($features['comida_favorita']); ?></strong>
-                            </li>
-                            <?php endif; ?>
-                            <li style="display:flex; justify-content:space-between; align-items:center;">
-                                <span>Nivel máx. salvaje</span>
-                                <strong style="color:var(--accent);"><?php echo $nivel_max; ?></strong>
-                            </li>
-                        </ul>
-
-                        <!-- Calculadora de taming interactiva -->
-                        <div style="background:rgba(var(--accent-rgb),0.05); border:1px solid rgba(var(--accent-rgb),0.2); border-radius:10px; padding:16px;">
-                            <p style="margin:0 0 12px; font-size:0.78rem; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:5px;">
-                                <span class="material-symbols-outlined" style="font-size:1rem;">calculate</span>
-                                Calculadora de Taming
-                            </p>
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
-                                <div>
-                                    <label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:5px; font-weight:600;">Nivel del dino</label>
-                                    <input type="number" id="taming-nivel" min="1" max="<?php echo $nivel_max; ?>" value="150"
-                                        style="width:100%; padding:8px 12px; border-radius:8px; background:var(--input-bg); border:1px solid var(--border-color); color:var(--input-text); font-family:inherit; font-size:0.95rem; font-weight:700; outline:none; transition:0.3s;"
-                                        oninput="calcularTaming()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-color)'">
-                                </div>
-                                <div>
-                                    <label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:5px; font-weight:600;">Comida</label>
-                                    <select id="taming-comida" onchange="calcularTaming()"
-                                        style="width:100%; padding:8px 12px; border-radius:8px; background:var(--input-bg); border:1px solid var(--border-color); color:var(--input-text); font-family:inherit; font-size:0.88rem; outline:none; cursor:pointer; transition:0.3s;"
-                                        onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-color)'">
-                                        <option value="kibble_exc" data-food="80" data-interval="60">🥚 Kibble Excepcional</option>
-                                        <option value="kibble_sup" data-food="50" data-interval="60">🥚 Kibble Superior</option>
-                                        <option value="kibble_reg" data-food="35" data-interval="60">🥚 Kibble Regular</option>
-                                        <option value="kibble_sim" data-food="25" data-interval="60">🥚 Kibble Simple</option>
-                                        <option value="carne_cruda" data-food="10" data-interval="30">🥩 Carne Cruda</option>
-                                        <option value="carne_cocinada" data-food="7" data-interval="30">🍖 Carne Cocinada</option>
-                                        <option value="carne_prima" data-food="20" data-interval="30">🥩 Carne Prima</option>
-                                        <option value="pescado_crudo" data-food="7.5" data-interval="30">🐟 Pescado Crudo</option>
-                                        <option value="pescado_prima" data-food="15" data-interval="30">🐟 Pescado Prima</option>
-                                        <option value="mejobayas" data-food="8" data-interval="30">🫐 Mejobayas</option>
-                                        <option value="verduras" data-food="5" data-interval="30">🥕 Verduras</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <!-- Resultado -->
-                            <div id="taming-resultado" style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; text-align:center;">
-                                <div style="background:rgba(255,255,255,0.04); border-radius:8px; padding:10px;">
-                                    <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:4px;">Comida necesaria</div>
-                                    <div id="taming-cantidad" style="font-size:1.2rem; font-weight:900; color:var(--accent);">—</div>
-                                </div>
-                                <div style="background:rgba(255,255,255,0.04); border-radius:8px; padding:10px;">
-                                    <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:4px;">Tiempo estimado</div>
-                                    <div id="taming-tiempo" style="font-size:1.2rem; font-weight:900; color:var(--accent);">—</div>
-                                </div>
-                                <div style="background:rgba(255,255,255,0.04); border-radius:8px; padding:10px;">
-                                    <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:4px;">Nivel final</div>
-                                    <div id="taming-nivel-final" style="font-size:1.2rem; font-weight:900; color:#2ecc71;">—</div>
-                                </div>
-                            </div>
-                            <p style="margin:8px 0 0; font-size:0.68rem; color:var(--text-muted);">* Estimación vanilla sin multiplicadores. Método: <?php echo htmlspecialchars($metodo); ?>.</p>
-                        </div>
-                    </div>
+                <div>
+                    <h4 style="margin:0 0 6px; font-size:1rem; color:#f1c40f; font-weight:800;">Ayuda a Cría</h4>
+                    <p style="margin:0; font-size:0.88rem; color:var(--text-muted); line-height:1.6;">
+                        <?php echo !empty($features['ayuda_cria_descripcion'])
+                            ? nl2br(htmlspecialchars($features['ayuda_cria_descripcion']))
+                            : 'Este dinosaurio ayuda en la cría de otros, aumentando la efectividad de la impronta.'; ?>
+                    </p>
                 </div>
-
-                <script>
-                (function() {
-                    // Datos del dino para la calculadora
-                    const TAMING_METODO = <?php echo json_encode($metodo); ?>;
-                    const TAMING_NIVEL_MAX = <?php echo $nivel_max; ?>;
-                    // Torpor base para calcular cuánta comida necesita (aprox. nivel * 17 para Knockout)
-                    const TORPOR_BASE = <?php echo (int)($stats_data['torpidity'] ?? 500); ?>;
-                    const IW_TORPOR  = <?php echo (float)($dino['iw_torpidity'] ?? 0.06); ?>;
-
-                    window.calcularTaming = function() {
-                        const nivel = parseInt(document.getElementById('taming-nivel').value) || 1;
-                        const sel   = document.getElementById('taming-comida');
-                        const opt   = sel.options[sel.selectedIndex];
-                        const foodVal  = parseFloat(opt.dataset.food)     || 10;
-                        const interval = parseFloat(opt.dataset.interval) || 30;
-
-                        // Torpor total del dino a ese nivel
-                        const torpor = TORPOR_BASE * (1 + nivel * IW_TORPOR);
-
-                        // Comida necesaria: torpor / foodVal (aprox. ARK vanilla)
-                        // Para Pasivo: nivel * 3 unidades aprox.
-                        let cantidad;
-                        if (TAMING_METODO === 'Pasivo') {
-                            cantidad = Math.ceil(nivel * 3 / foodVal);
-                        } else {
-                            cantidad = Math.ceil(torpor / (foodVal * 10));
-                        }
-                        cantidad = Math.max(1, cantidad);
-
-                        // Tiempo total: cantidad * intervalo entre comidas
-                        const segs = cantidad * interval;
-                        let tiempoStr;
-                        if (segs < 60)        tiempoStr = segs + 's';
-                        else if (segs < 3600) tiempoStr = Math.round(segs/60) + ' min';
-                        else                  tiempoStr = (segs/3600).toFixed(1) + ' h';
-
-                        // Nivel final tras taming (~50% más)
-                        const nivelFinal = Math.floor(nivel * 1.5);
-
-                        document.getElementById('taming-cantidad').textContent    = cantidad + ' uds';
-                        document.getElementById('taming-tiempo').textContent      = tiempoStr;
-                        document.getElementById('taming-nivel-final').textContent = 'Lv ' + nivelFinal;
-                    };
-
-                    // Calcular al cargar
-                    window.calcularTaming();
-                })();
-                </script>
-                <?php endif; ?>
-
-                <!-- INFORMACIÓN DE CRÍA/AYUDA A CRIANZA -->
-                <?php if ($features['ayuda_cria']): ?>
-                <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; overflow:hidden; transition:transform 0.3s; box-shadow:0 8px 30px rgba(0,0,0,0.3);">
-                    <div style="height:5px; background:linear-gradient(90deg, #f1c40f, #e67e22);"></div>
-                    <div style="padding:28px;">
-                        <div style="display:flex; align-items:center; gap:14px; margin-bottom:18px;">
-                            <div style="background:rgba(241, 196, 15, 0.15); border-radius:10px; padding:12px; display:flex;">
-                                <span class="material-symbols-outlined" style="color:#f1c40f; font-size:1.4rem;">egg</span>
-                            </div>
-                            <h4 style="margin:0; font-size:1.15rem; color:#fff; font-weight:800;">Ayuda a Cría</h4>
-                        </div>
-                        <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.7; margin:0;">
-                            <?php if (!empty($features['ayuda_cria_descripcion'])): ?>
-                                <?php echo nl2br(htmlspecialchars($features['ayuda_cria_descripcion'])); ?>
-                            <?php else: ?>
-                                Este dinosaurio ayuda en la cría de otros dinosaurios, aumentando la efectividad de la impronta o facilitando el proceso de domesticación de crías.
-                            <?php endif; ?>
-                        </p>
-                    </div>
-                </div>
-                <?php endif; ?>
-
-                <!-- ROLES ADICIONALES: VOLADOR, ACUÁTICO, SUBTERRÁNEO, MONTAURA -->
-                <?php if ($features['es_volador'] || $features['es_acuatico'] || $features['es_subterraneo'] || $features['es_montura']): ?>
-                <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; overflow:hidden; transition:transform 0.3s; box-shadow:0 8px 30px rgba(0,0,0,0.3);">
-                    <div style="height:5px; background:linear-gradient(90deg, #00bcd4, #009688);"></div>
-                    <div style="padding:28px;">
-                        <div style="display:flex; align-items:center; gap:14px; margin-bottom:18px;">
-                            <div style="background:rgba(0, 188, 212, 0.15); border-radius:10px; padding:12px; display:flex;">
-                                <span class="material-symbols-outlined" style="color:#00bcd4; font-size:1.4rem;">category</span>
-                            </div>
-                            <h4 style="margin:0; font-size:1.15rem; color:#fff; font-weight:800;">Características</h4>
-                        </div>
-                        <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                            <?php if ($features['es_volador']): ?>
-                            <span style="background:rgba(0, 188, 212, 0.15); color:#00bcd4; padding:8px 14px; border-radius:20px; font-size:0.8rem; font-weight:600;">🦅 Volador</span>
-                            <?php endif; ?>
-                            <?php if ($features['es_acuatico']): ?>
-                            <span style="background:rgba(33, 150, 243, 0.15); color:#2196f3; padding:8px 14px; border-radius:20px; font-size:0.8rem; font-weight:600;">🐳 Acuático</span>
-                            <?php endif; ?>
-                            <?php if ($features['es_subterraneo']): ?>
-                            <span style="background:rgba(121, 85, 72, 0.15); color:#795548; padding:8px 14px; border-radius:20px; font-size:0.8rem; font-weight:600;">🦇 Subterráneo</span>
-                            <?php endif; ?>
-                            <?php if ($features['es_montura']): ?>
-                            <span style="background:rgba(156, 39, 176, 0.15); color:#9c27b0; padding:8px 14px; border-radius:20px; font-size:0.8rem; font-weight:600;">🐴 Montura</span>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-                <?php endif; ?>
-
             </div>
+            <?php endif; ?>
 
         </div><!-- /tab-habilidades -->
-
 
         <!-- ══════════════════════════════════════════
          TAB: COMENTARIOS
