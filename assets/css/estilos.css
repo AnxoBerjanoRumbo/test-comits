@@ -1867,16 +1867,18 @@ body.theme-daltonico {
 
 .dropdown-notificaciones {
     position: absolute;
-    top: 50px;
-    right: -20px;
-    width: 320px;
+    top: 60px;
+    right: 0;
+    width: 350px;
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
     z-index: 1000;
     display: none;
     overflow: hidden;
+    backdrop-filter: blur(10px);
+    transform-origin: top right;
 }
 
 .dropdown-notificaciones.active {
@@ -1885,20 +1887,41 @@ body.theme-daltonico {
 }
 
 .header-dropdown {
-    padding: 15px;
+    padding: 18px 20px;
     border-bottom: 1px solid var(--border-color);
-    background: rgba(var(--accent-rgb), 0.05);
+    background: rgba(var(--accent-rgb), 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .header-dropdown h3 {
     margin: 0;
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: var(--accent);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .lista-notificaciones {
-    max-height: 400px;
+    max-height: 450px;
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+}
+
+.lista-notificaciones::-webkit-scrollbar {
+    width: 6px;
+}
+
+.lista-notificaciones::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.lista-notificaciones::-webkit-scrollbar-thumb {
+    background-color: var(--accent);
+    border-radius: 10px;
 }
 
 .notificacion-container {
@@ -1914,36 +1937,67 @@ body.theme-daltonico {
 }
 
 .notificacion-item {
-    padding: 15px 35px 15px 15px;
+    padding: 18px 45px 18px 18px;
     border-bottom: 1px solid var(--border-color);
     text-decoration: none;
     display: block;
     color: var(--text-main);
+    transition: all 0.2s ease;
+}
+
+.notificacion-container:last-child .notificacion-item {
+    border-bottom: none;
 }
 
 .btn-borrar-notif {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
     background: transparent;
     border: none;
     color: var(--text-muted);
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2px;
+    width: 28px;
+    height: 28px;
     transition: all 0.2s ease;
+    opacity: 0.4;
+    padding: 0;
+}
+
+.btn-borrar-notif .material-symbols-outlined {
+    font-size: 18px;
+    display: block;
+    line-height: 1;
 }
 
 .btn-borrar-notif:hover {
     color: var(--error-color);
     background: rgba(255, 68, 68, 0.1);
+    opacity: 1;
+}
+
+.btn-clear-all-notif {
+    transition: all 0.2s ease !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    color: var(--text-muted) !important;
+    text-transform: uppercase;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    letter-spacing: 0.5px;
 }
 
 .btn-clear-all-notif:hover {
     color: var(--error-color) !important;
+    background: rgba(255, 68, 68, 0.05) !important;
+    border-color: rgba(255, 68, 68, 0.2) !important;
 }
 
 .notificacion-mensaje {

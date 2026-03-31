@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $mensaje_completo = trim($_POST['mensaje']);
 
     if (empty($mensaje_completo)) {
-        header("Location: ../../panel_superadmin.php?error=mensaje_vacio");
+        header("Location: ../../panel_superadmin.php?error=mensaje_vacio#formulario-comunicado");
         exit();
     }
 
@@ -71,11 +71,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         registrarAccionAdmin($conexion, $_SESSION['usuario_id'], 'Mensaje Global', $log_detalle);
 
-        header("Location: ../../panel_superadmin.php?status=mensaje_enviado");
+        header("Location: ../../panel_superadmin.php?status=mensaje_enviado#formulario-comunicado");
         exit();
     } catch (PDOException $e) {
         error_log("Error al enviar mensaje a admins: " . $e->getMessage());
-        header("Location: ../../panel_superadmin.php?error=interno");
+        header("Location: ../../panel_superadmin.php?error=interno#formulario-comunicado");
         exit();
     }
 } else {

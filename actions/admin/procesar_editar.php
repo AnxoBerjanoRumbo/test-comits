@@ -53,9 +53,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conexion->beginTransaction();
 
         // Actualizar en tabla 'dinosaurios'
-        $sqlUpdate = "UPDATE dinosaurios SET nombre = :n, especie = :e, dieta = :d, descripcion = :desc, imagen = :img WHERE id = :id";
+        $sqlUpdate = "UPDATE dinosaurios SET nombre = :n, especie = :e, dieta = :d, descripcion = :desc, imagen = :img,
+            stat_health = :sh, stat_stamina = :ss, stat_oxygen = :so, stat_food = :sf,
+            stat_weight = :sw, stat_melee = :sm, stat_speed = :sp, stat_torpidity = :st
+            WHERE id = :id";
         $stmtUpdate = $conexion->prepare($sqlUpdate);
-        $stmtUpdate->execute([':n' => $nombre, ':e' => $especie, ':d' => $dieta, ':desc' => $descripcion, ':img' => $imagen, ':id' => $id]);
+        $stmtUpdate->execute([
+            ':n' => $nombre, ':e' => $especie, ':d' => $dieta, ':desc' => $descripcion, ':img' => $imagen, ':id' => $id,
+            ':sh' => (int)($_POST['stat_health']    ?? 0),
+            ':ss' => (int)($_POST['stat_stamina']   ?? 0),
+            ':so' => (int)($_POST['stat_oxygen']    ?? 0),
+            ':sf' => (int)($_POST['stat_food']      ?? 0),
+            ':sw' => (int)($_POST['stat_weight']    ?? 0),
+            ':sm' => (int)($_POST['stat_melee']     ?? 0),
+            ':sp' => (int)($_POST['stat_speed']     ?? 0),
+            ':st' => (int)($_POST['stat_torpidity'] ?? 0),
+        ]);
 
         // Actualizar tabla intermedia 'dino_mapas'
         // Lo más seguro es borrar y volver a insertar

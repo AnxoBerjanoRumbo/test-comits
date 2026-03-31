@@ -267,6 +267,18 @@ document.addEventListener('DOMContentLoaded', function () {
                             .then(res => {
                                 if (res.status === 'success') {
                                     itemContainer.remove();
+                                    
+                                    // Actualizar badge inmediatamente
+                                    const badge = btnNotif.querySelector('.badge-notif');
+                                    if (badge) {
+                                        const currentCount = parseInt(badge.textContent);
+                                        if (currentCount > 1) {
+                                            badge.textContent = currentCount - 1;
+                                        } else {
+                                            badge.remove();
+                                        }
+                                    }
+
                                     if (listaNotif.children.length === 0) {
                                         listaNotif.innerHTML = '<div class="sin-notificaciones">No tienes notificaciones.</div>';
                                     }
@@ -289,13 +301,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 const btnClearAll = document.createElement('button');
                 btnClearAll.className = 'btn-clear-all-notif';
                 btnClearAll.textContent = 'Limpiar todas';
-                btnClearAll.style.float = 'right';
-                btnClearAll.style.background = 'none';
-                btnClearAll.style.border = 'none';
-                btnClearAll.style.color = 'var(--text-muted)';
-                btnClearAll.style.cursor = 'pointer';
-                btnClearAll.style.fontSize = '0.8rem';
-                btnClearAll.style.textDecoration = 'underline';
                 
                 btnClearAll.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -317,11 +322,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
                 
                 headerDiv.appendChild(btnClearAll);
-                
-                // Clear floats
-                const clearFix = document.createElement('div');
-                clearFix.style.clear = 'both';
-                headerDiv.appendChild(clearFix);
             }
         }
 
@@ -336,28 +336,80 @@ document.addEventListener('DOMContentLoaded', function () {
             return fecha.toLocaleDateString();
         }
 
-        // Polling cada 15s para actualizar el badge
+        // Polling cada 5s para actualizar el badge (más rápido)
         setInterval(function () {
-            fetch(basePath + 'actions/contar_notificaciones_no_leidas.php')
-                .then(res => res.json())
-                .then(data => {
-                    const count = data.count;
-                    const oldBadge = btnNotif.querySelector('.badge-notif');
+            if (!dropdownNotif.classList.contains('active')) {
+                fetch(basePath + 'actions/contar_notificaciones_no_leidas.php')
+                    .then(res => res.json())
+                    .then(data => {
+                        const count = data.count;
+                        const oldBadge = btnNotif.querySelector('.badge-notif');
 
-                    if (count > 0) {
-                        if (oldBadge) {
-                            oldBadge.textContent = count;
-                        } else {
-                            const newBadge = document.createElement('span');
-                            newBadge.className = 'badge-notif';
-                            newBadge.textContent = count;
-                            btnNotif.appendChild(newBadge);
+                        if (count > 0) {
+                            if (oldBadge) {
+                                oldBadge.textContent = count;
+                            } else {
+                                const newBadge = document.createElement('span');
+                                newBadge.className = 'badge-notif';
+                                newBadge.textContent = count;
+                                btnNotif.appendChild(newBadge);
+                            }
+                        } else if (oldBadge) {
+                            oldBadge.remove();
                         }
-                    } else if (oldBadge) {
-                        oldBadge.remove();
+                    })
+                    .catch(err => console.error('Polling error:', err));
+            }
+        }, 5000);
+    }
+    // 7. Envío de Comunicados vía AJAX (Panel Superadmin)
+    const formComunicado = document.getElementById('formulario-comunicado');
+    if (formComunicado) {
+        formComunicado.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const btnSubmit = this.querySelector('button[type="submit"]');
+            const originalText = btnSubmit.textContent;
+            btnSubmit.disabled = true;
+            btnSubmit.textContent = 'Enviando...';
+            
+            const formData = new FormData(this);
+            
+            fetch(this.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                // Como el PHP redirige, detectamos el final
+                if (response.ok) {
+                    // Resetear todo el formulario (asunto, destinatario, mensaje)
+                    this.reset();
+                    
+                    // Actualizar el contador de caracteres si existe
+                    const contadorTxt = this.querySelector('.contador-caracteres');
+                    if (contadorTxt) {
+                        const maxChars = 10000;
+                        contadorTxt.textContent = `0 / ${maxChars} caracteres`;
+                        contadorTxt.classList.remove('limite-cerca', 'limite-excedido');
                     }
-                })
-                .catch(err => console.error('Polling error:', err));
-        }, 15000);
+                    
+                    // Mostrar feedback visual temporal
+                    btnSubmit.textContent = '¡Enviado con éxito!';
+                    btnSubmit.style.backgroundColor = 'var(--success-color)';
+                    
+                    setTimeout(() => {
+                        btnSubmit.disabled = false;
+                        btnSubmit.textContent = originalText;
+                        btnSubmit.style.backgroundColor = '';
+                    }, 3000);
+                }
+            })
+            .catch(err => {
+                console.error('Error al enviar comunicado:', err);
+                btnSubmit.disabled = false;
+                btnSubmit.textContent = 'Error al enviar';
+                btnSubmit.style.backgroundColor = 'var(--error-color)';
+            });
+        });
     }
 });

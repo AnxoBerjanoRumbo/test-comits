@@ -363,7 +363,7 @@ if (isset($_GET['tab_blacklist'])) $tab_activa = 'blacklist';
                     <div class="alerta-error mb-20">Debes escribir algo en el mensaje antes de enviarlo.</div>
                 <?php endif; ?>
 
-                <form action="actions/admin/procesar_mensaje_admins.php" method="POST" class="form-ark bg-soft-dark border-radius" style="padding: 25px; border-top: 1px solid var(--border-color); border-left: 4px solid var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                <form id="formulario-comunicado" action="actions/admin/procesar_mensaje_admins.php" method="POST" class="form-ark bg-soft-dark border-radius" style="padding: 25px; border-top: 1px solid var(--border-color); border-left: 4px solid var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     
                     <div class="campo mb-20">
@@ -400,7 +400,7 @@ if (isset($_GET['tab_blacklist'])) $tab_activa = 'blacklist';
                     </div>
                     
                     <div style="margin-top: 25px;">
-                        <button type="submit" class="boton-insertar w-100">Enviar Comunicación Push</button>
+                        <button type="submit" class="boton-insertar w-100">Enviar mensaje</button>
                         <small class="texto-auxiliar d-block text-center mt-10" style="color: var(--text-muted);">El resto de administradores recibirán una alerta de tu parte con este mensaje.</small>
                     </div>
                 </form>

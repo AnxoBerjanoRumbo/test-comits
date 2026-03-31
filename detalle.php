@@ -93,7 +93,7 @@ if (count($comentarios) > 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($dino['nombre']); ?> - ARK Hub</title>
     <link rel="stylesheet" href="assets/css/estilos.css?v=1.3">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
     <?php 
@@ -178,6 +178,120 @@ endif; ?>
                 <?php endforeach; ?>
             </div>
         </section>
+        <?php endif; ?>
+
+        <?php
+        // Calcular si hay algún stat cargado
+        $stats_data = [
+            'stat_health'    => (int)($dino['stat_health']    ?? 0),
+            'stat_stamina'   => (int)($dino['stat_stamina']   ?? 0),
+            'stat_oxygen'    => (int)($dino['stat_oxygen']    ?? 0),
+            'stat_food'      => (int)($dino['stat_food']      ?? 0),
+            'stat_weight'    => (int)($dino['stat_weight']    ?? 0),
+            'stat_melee'     => (int)($dino['stat_melee']     ?? 0),
+            'stat_speed'     => (int)($dino['stat_speed']     ?? 0),
+            'stat_torpidity' => (int)($dino['stat_torpidity'] ?? 0),
+        ];
+        $tiene_stats = array_sum($stats_data) > 0;
+        ?>
+
+        <?php if ($tiene_stats): ?>
+        <section style="margin-top: 35px; padding: 30px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: var(--radius); border-top: 3px solid var(--accent);">
+            <h3 style="margin: 0 0 25px 0; color: var(--accent); display:flex; align-items:center; gap:10px;">
+                <span class="material-symbols-outlined">radar</span>
+                Stats Base (Nivel 1 Salvaje)
+            </h3>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;">
+                <!-- Gráfico Radar -->
+                <div style="position: relative; max-height: 340px;">
+                    <canvas id="statsRadar"></canvas>
+                </div>
+
+                <!-- Barras de progreso -->
+                <div style="display: flex; flex-direction: column; gap: 14px;">
+                    <?php
+                    $stat_labels = [
+                        'stat_health'    => ['Vida',      'favorite',   '#e74c3c'],
+                        'stat_stamina'   => ['Energía',   'bolt',       '#f39c12'],
+                        'stat_oxygen'    => ['Oxígeno',   'water_drop', '#3498db'],
+                        'stat_food'      => ['Comida',    'restaurant', '#2ecc71'],
+                        'stat_weight'    => ['Peso',      'weight',     '#9b59b6'],
+                        'stat_melee'     => ['Melée',     'swords',     '#e67e22'],
+                        'stat_speed'     => ['Velocidad', 'speed',      '#1abc9c'],
+                        'stat_torpidity' => ['Torpor',    'bedtime',    '#95a5a6'],
+                    ];
+                    $max_stat = max(array_filter($stats_data)) ?: 1;
+                    foreach ($stat_labels as $key => [$label, $icon, $color]):
+                        $val = $stats_data[$key];
+                        $pct = round(($val / $max_stat) * 100);
+                    ?>
+                    <div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                            <span style="display:flex; align-items:center; gap:6px; font-size:0.85rem; color:<?php echo $color; ?>;">
+                                <span class="material-symbols-outlined" style="font-size:1rem;"><?php echo $icon; ?></span>
+                                <?php echo $label; ?>
+                            </span>
+                            <strong style="font-size:0.9rem; color: var(--text-main);"><?php echo number_format($val); ?></strong>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.06); border-radius: 20px; height: 8px; overflow:hidden;">
+                            <div style="width:<?php echo $pct; ?>%; height:100%; background: <?php echo $color; ?>; border-radius:20px; transition: width 1s ease;"></div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </section>
+
+        <script>
+        (function() {
+            const ctx = document.getElementById('statsRadar').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Vida', 'Energía', 'Oxígeno', 'Comida', 'Peso', 'Melée', 'Velocidad', 'Torpor'],
+                    datasets: [{
+                        label: '<?php echo addslashes($dino['nombre']); ?>',
+                        data: [<?php echo implode(',', array_values($stats_data)); ?>],
+                        backgroundColor: 'rgba(0, 255, 204, 0.10)',
+                        borderColor: 'rgba(0, 255, 204, 0.85)',
+                        pointBackgroundColor: [
+                            '#e74c3c','#f39c12','#3498db','#2ecc71',
+                            '#9b59b6','#e67e22','#1abc9c','#95a5a6'
+                        ],
+                        pointBorderColor: '#fff',
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        borderWidth: 2,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => ' ' + ctx.raw.toLocaleString('es-ES')
+                            }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            angleLines:   { color: 'rgba(255,255,255,0.08)' },
+                            grid:         { color: 'rgba(255,255,255,0.08)' },
+                            pointLabels:  { color: '#aaa', font: { size: 12, family: 'inherit' } },
+                            ticks: {
+                                display: false,
+                                backdropColor: 'transparent'
+                            },
+                            suggestedMin: 0,
+                        }
+                    }
+                }
+            });
+        })();
+        </script>
         <?php endif; ?>
 
         <section id="comentarios" class="seccion-comentarios" style="margin-top: 40px;">

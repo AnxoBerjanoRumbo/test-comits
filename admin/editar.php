@@ -142,6 +142,39 @@ $cats_seleccionadas = $stmt_dc->fetchAll(PDO::FETCH_COLUMN);
                 </div>
             </div>
 
+            <!-- Stats Base ARK -->
+            <div class="campo">
+                <label style="font-size:1rem; font-weight:bold; color:var(--accent); margin-bottom:15px; display:block;">
+                    <span class="material-symbols-outlined" style="vertical-align:middle; font-size:1.2rem;">radar</span>
+                    Stats Base (Nivel 1 Salvaje)
+                </label>
+                <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:20px;">Introduce el valor base de cada stat a nivel 1 (consulta ARK Wiki).</p>
+                <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:18px;">
+                    <?php
+                    $stats = [
+                        'stat_health'   => ['Vida (Health)',          'favorite',   '#e74c3c'],
+                        'stat_stamina'  => ['Energía (Stamina)',       'bolt',       '#f39c12'],
+                        'stat_oxygen'   => ['Oxígeno (Oxygen)',        'water_drop', '#3498db'],
+                        'stat_food'     => ['Comida (Food)',           'restaurant', '#2ecc71'],
+                        'stat_weight'   => ['Peso (Weight)',           'weight',     '#9b59b6'],
+                        'stat_melee'    => ['Daño Cuerpo a Cuerpo',    'swords',     '#e67e22'],
+                        'stat_speed'    => ['Velocidad (%)',           'speed',      '#1abc9c'],
+                        'stat_torpidity'=> ['Torpor (Inconsciencia)',  'bedtime',    '#95a5a6'],
+                    ];
+                    foreach ($stats as $key => [$label, $icon, $color]): ?>
+                    <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:10px; padding:15px;">
+                        <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight:600; color:<?php echo $color; ?>; margin-bottom:10px;">
+                            <span class="material-symbols-outlined" style="font-size:1.1rem;"><?php echo $icon; ?></span>
+                            <?php echo $label; ?>
+                        </label>
+                        <input type="number" name="<?php echo $key; ?>" min="0" max="99999"
+                               value="<?php echo (int)($dino[$key] ?? 0); ?>"
+                               style="font-size:1.1rem; font-weight:700; color:<?php echo $color; ?>; border-color:<?php echo $color; ?>33;">
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
             <button type="submit" class="boton-insertar">Guardar Cambios</button>
         </form>
     <?php include '../includes/footer.php'; ?>

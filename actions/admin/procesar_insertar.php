@@ -43,9 +43,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conexion->beginTransaction();
 
         // Insertar en tabla 'dinosaurios'
-        $sqlDino = "INSERT INTO dinosaurios (nombre, especie, dieta, descripcion, imagen) VALUES (:n, :e, :d, :desc, :img)";
+        $sqlDino = "INSERT INTO dinosaurios (nombre, especie, dieta, descripcion, imagen, stat_health, stat_stamina, stat_oxygen, stat_food, stat_weight, stat_melee, stat_speed, stat_torpidity) VALUES (:n, :e, :d, :desc, :img, :sh, :ss, :so, :sf, :sw, :sm, :sp, :st)";
         $stmtDino = $conexion->prepare($sqlDino);
-        $stmtDino->execute([':n' => $nombre, ':e' => $especie, ':d' => $dieta, ':desc' => $descripcion, ':img' => $imagen]);
+        $stmtDino->execute([
+            ':n' => $nombre, ':e' => $especie, ':d' => $dieta, ':desc' => $descripcion, ':img' => $imagen,
+            ':sh' => (int)($_POST['stat_health']   ?? 0),
+            ':ss' => (int)($_POST['stat_stamina']  ?? 0),
+            ':so' => (int)($_POST['stat_oxygen']   ?? 0),
+            ':sf' => (int)($_POST['stat_food']     ?? 0),
+            ':sw' => (int)($_POST['stat_weight']   ?? 0),
+            ':sm' => (int)($_POST['stat_melee']    ?? 0),
+            ':sp' => (int)($_POST['stat_speed']    ?? 0),
+            ':st' => (int)($_POST['stat_torpidity']?? 0),
+        ]);
 
         // Obtener el ID del dinosaurio que acabamos de crear
         $dino_id = $conexion->lastInsertId();
