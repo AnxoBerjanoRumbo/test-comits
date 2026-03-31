@@ -27,11 +27,8 @@ try {
         include_once '../config/admin_logger.php';
         registrarAccionAdmin($conexion, $_SESSION['usuario_id'], 'Borrar Comentario', "Comentario ID {$comentario_id} eliminado en dino ID {$dino_id}");
     } else {
-        // Un usuario normal solo puede borrar sus comentarios (y sus respuestas se borrarían si fuera admin, pero aquí solo borra el suyo)
-        // Por seguridad, si un usuario borra su comentario, borramos también las respuestas que pudiera tener
-        $stmt_h = $conexion->prepare("DELETE FROM comentarios WHERE respuesta_a = :id");
-        $stmt_h->execute([':id' => $comentario_id]);
-
+        // Usuario normal: solo puede borrar su propio comentario
+        // Las respuestas de admins a su comentario NO se borran (son del admin)
         $stmt = $conexion->prepare("DELETE FROM comentarios WHERE id = :id AND usuario_id = :u_id");
         $stmt->execute([':id' => $comentario_id, ':u_id' => $_SESSION['usuario_id']]);
     }

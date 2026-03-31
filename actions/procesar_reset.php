@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    if (strlen($nueva_password) < 4) {
+    if (strlen($nueva_password) < 8) {
         header("Location: ../reset_password.php?token=$token&error=corta");
         exit();
     }

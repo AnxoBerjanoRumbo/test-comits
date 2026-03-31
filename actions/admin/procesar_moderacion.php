@@ -3,7 +3,7 @@ session_start();
 include '../../config/db.php';
 
 // Verificar permisos
-if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['p_moderar']) || $_SESSION['p_moderar'] != 1) {
+if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['p_moderar']) || $_SESSION['p_moderar'] !== 1) {
     header("Location: ../../index.php");
     exit();
 }
