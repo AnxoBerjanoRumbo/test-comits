@@ -42,6 +42,14 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Resaltar selects del buscador con valor activo
+    document.querySelectorAll('.buscador-select').forEach(sel => {
+        if (sel.value) sel.classList.add('has-value');
+        sel.addEventListener('change', function() {
+            this.classList.toggle('has-value', !!this.value);
+        });
+    });
+
     // Sistema de Temas Dinámicos (Global)
     window.setTheme = function (themeName) {
         document.body.classList.remove('theme-ragnarok', 'theme-aberration', 'theme-extinction', 'theme-scorched', 'theme-daltonico');

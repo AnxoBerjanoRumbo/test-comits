@@ -762,21 +762,8 @@ if (count($comentarios) > 0) {
                 <!-- INFORMACIÓN DE DOMESTICACIÓN -->
                 <?php if ($features['domable']): ?>
                 <?php
-                // Calcular tiempos de taming estimados para niveles clave
-                // Fórmula ARK vanilla: tiempo_base = nivel * 50 segundos (aprox. para Knockout)
-                // Para Pasivo es diferente pero usamos una aproximación general
                 $nivel_max = (int)($features['nivel_max_salvaje'] ?? 150);
-                $metodo = $features['metodo_domado'] ?? 'Knockout';
-                // Segundos por nivel según método (aproximación vanilla)
-                $segs_por_nivel = ($metodo === 'Pasivo') ? 30 : 50;
-                $niveles_ejemplo = [30, 75, 120, $nivel_max];
-                $niveles_ejemplo = array_unique(array_filter($niveles_ejemplo, fn($n) => $n <= $nivel_max));
-                sort($niveles_ejemplo);
-                function formatTiempo($segs) {
-                    if ($segs < 60) return $segs . 's';
-                    if ($segs < 3600) return round($segs/60) . ' min';
-                    return round($segs/3600, 1) . ' h';
-                }
+                $metodo    = $features['metodo_domado'] ?? 'Knockout';
                 ?>
                 <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; overflow:hidden; transition:transform 0.3s; box-shadow:0 8px 30px rgba(0,0,0,0.3);">
                     <div style="height:5px; background:linear-gradient(90deg, #9b59b6, #e91e63);"></div>
@@ -787,7 +774,9 @@ if (count($comentarios) > 0) {
                             </div>
                             <h4 style="margin:0; font-size:1.15rem; color:#fff; font-weight:800;">Domesticación</h4>
                         </div>
-                        <ul style="padding:0; margin:0; list-style:none; display:flex; flex-direction:column; gap:8px; font-size:0.9rem; color:var(--text-muted);">
+
+                        <!-- Info básica -->
+                        <ul style="padding:0; margin:0 0 20px; list-style:none; display:flex; flex-direction:column; gap:8px; font-size:0.9rem; color:var(--text-muted);">
                             <?php if (!empty($features['metodo_domado'])): ?>
                             <li style="display:flex; justify-content:space-between; align-items:center;">
                                 <span>Método</span>
@@ -808,24 +797,106 @@ if (count($comentarios) > 0) {
                             </li>
                         </ul>
 
-                        <!-- Tiempos de taming estimados -->
-                        <div style="margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.06);">
-                            <p style="margin:0 0 10px; font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:5px;">
-                                <span class="material-symbols-outlined" style="font-size:0.95rem;">schedule</span>
-                                Tiempo estimado de taming (vanilla)
+                        <!-- Calculadora de taming interactiva -->
+                        <div style="background:rgba(var(--accent-rgb),0.05); border:1px solid rgba(var(--accent-rgb),0.2); border-radius:10px; padding:16px;">
+                            <p style="margin:0 0 12px; font-size:0.78rem; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:5px;">
+                                <span class="material-symbols-outlined" style="font-size:1rem;">calculate</span>
+                                Calculadora de Taming
                             </p>
-                            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(80px, 1fr)); gap:8px;">
-                                <?php foreach ($niveles_ejemplo as $nv): ?>
-                                <div style="background:rgba(155,89,182,0.08); border:1px solid rgba(155,89,182,0.2); border-radius:8px; padding:8px; text-align:center;">
-                                    <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:3px;">Lv <?php echo $nv; ?></div>
-                                    <div style="font-size:0.9rem; font-weight:800; color:#9b59b6;"><?php echo formatTiempo($nv * $segs_por_nivel); ?></div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+                                <div>
+                                    <label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:5px; font-weight:600;">Nivel del dino</label>
+                                    <input type="number" id="taming-nivel" min="1" max="<?php echo $nivel_max; ?>" value="150"
+                                        style="width:100%; padding:8px 12px; border-radius:8px; background:var(--input-bg); border:1px solid var(--border-color); color:var(--input-text); font-family:inherit; font-size:0.95rem; font-weight:700; outline:none; transition:0.3s;"
+                                        oninput="calcularTaming()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-color)'">
                                 </div>
-                                <?php endforeach; ?>
+                                <div>
+                                    <label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:5px; font-weight:600;">Comida</label>
+                                    <select id="taming-comida" onchange="calcularTaming()"
+                                        style="width:100%; padding:8px 12px; border-radius:8px; background:var(--input-bg); border:1px solid var(--border-color); color:var(--input-text); font-family:inherit; font-size:0.88rem; outline:none; cursor:pointer; transition:0.3s;"
+                                        onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-color)'">
+                                        <option value="kibble_exc" data-food="80" data-interval="60">🥚 Kibble Excepcional</option>
+                                        <option value="kibble_sup" data-food="50" data-interval="60">🥚 Kibble Superior</option>
+                                        <option value="kibble_reg" data-food="35" data-interval="60">🥚 Kibble Regular</option>
+                                        <option value="kibble_sim" data-food="25" data-interval="60">🥚 Kibble Simple</option>
+                                        <option value="carne_cruda" data-food="10" data-interval="30">🥩 Carne Cruda</option>
+                                        <option value="carne_cocinada" data-food="7" data-interval="30">🍖 Carne Cocinada</option>
+                                        <option value="carne_prima" data-food="20" data-interval="30">🥩 Carne Prima</option>
+                                        <option value="pescado_crudo" data-food="7.5" data-interval="30">🐟 Pescado Crudo</option>
+                                        <option value="pescado_prima" data-food="15" data-interval="30">🐟 Pescado Prima</option>
+                                        <option value="mejobayas" data-food="8" data-interval="30">🫐 Mejobayas</option>
+                                        <option value="verduras" data-food="5" data-interval="30">🥕 Verduras</option>
+                                    </select>
+                                </div>
                             </div>
-                            <p style="margin:8px 0 0; font-size:0.7rem; color:var(--text-muted);">* Estimación para servidores vanilla sin multiplicadores. Con eficiencia 100% (sin daño).</p>
+                            <!-- Resultado -->
+                            <div id="taming-resultado" style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; text-align:center;">
+                                <div style="background:rgba(255,255,255,0.04); border-radius:8px; padding:10px;">
+                                    <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:4px;">Comida necesaria</div>
+                                    <div id="taming-cantidad" style="font-size:1.2rem; font-weight:900; color:var(--accent);">—</div>
+                                </div>
+                                <div style="background:rgba(255,255,255,0.04); border-radius:8px; padding:10px;">
+                                    <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:4px;">Tiempo estimado</div>
+                                    <div id="taming-tiempo" style="font-size:1.2rem; font-weight:900; color:var(--accent);">—</div>
+                                </div>
+                                <div style="background:rgba(255,255,255,0.04); border-radius:8px; padding:10px;">
+                                    <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:4px;">Nivel final</div>
+                                    <div id="taming-nivel-final" style="font-size:1.2rem; font-weight:900; color:#2ecc71;">—</div>
+                                </div>
+                            </div>
+                            <p style="margin:8px 0 0; font-size:0.68rem; color:var(--text-muted);">* Estimación vanilla sin multiplicadores. Método: <?php echo htmlspecialchars($metodo); ?>.</p>
                         </div>
                     </div>
                 </div>
+
+                <script>
+                (function() {
+                    // Datos del dino para la calculadora
+                    const TAMING_METODO = <?php echo json_encode($metodo); ?>;
+                    const TAMING_NIVEL_MAX = <?php echo $nivel_max; ?>;
+                    // Torpor base para calcular cuánta comida necesita (aprox. nivel * 17 para Knockout)
+                    const TORPOR_BASE = <?php echo (int)($stats_data['torpidity'] ?? 500); ?>;
+                    const IW_TORPOR  = <?php echo (float)($dino['iw_torpidity'] ?? 0.06); ?>;
+
+                    window.calcularTaming = function() {
+                        const nivel = parseInt(document.getElementById('taming-nivel').value) || 1;
+                        const sel   = document.getElementById('taming-comida');
+                        const opt   = sel.options[sel.selectedIndex];
+                        const foodVal  = parseFloat(opt.dataset.food)     || 10;
+                        const interval = parseFloat(opt.dataset.interval) || 30;
+
+                        // Torpor total del dino a ese nivel
+                        const torpor = TORPOR_BASE * (1 + nivel * IW_TORPOR);
+
+                        // Comida necesaria: torpor / foodVal (aprox. ARK vanilla)
+                        // Para Pasivo: nivel * 3 unidades aprox.
+                        let cantidad;
+                        if (TAMING_METODO === 'Pasivo') {
+                            cantidad = Math.ceil(nivel * 3 / foodVal);
+                        } else {
+                            cantidad = Math.ceil(torpor / (foodVal * 10));
+                        }
+                        cantidad = Math.max(1, cantidad);
+
+                        // Tiempo total: cantidad * intervalo entre comidas
+                        const segs = cantidad * interval;
+                        let tiempoStr;
+                        if (segs < 60)        tiempoStr = segs + 's';
+                        else if (segs < 3600) tiempoStr = Math.round(segs/60) + ' min';
+                        else                  tiempoStr = (segs/3600).toFixed(1) + ' h';
+
+                        // Nivel final tras taming (~50% más)
+                        const nivelFinal = Math.floor(nivel * 1.5);
+
+                        document.getElementById('taming-cantidad').textContent    = cantidad + ' uds';
+                        document.getElementById('taming-tiempo').textContent      = tiempoStr;
+                        document.getElementById('taming-nivel-final').textContent = 'Lv ' + nivelFinal;
+                    };
+
+                    // Calcular al cargar
+                    window.calcularTaming();
+                })();
+                </script>
                 <?php endif; ?>
 
                 <!-- INFORMACIÓN DE CRÍA/AYUDA A CRIANZA -->

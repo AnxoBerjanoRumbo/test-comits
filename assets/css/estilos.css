@@ -630,22 +630,23 @@ body {
    ========================================================================== */
 .buscador {
     background: var(--bg-header);
-    padding: 24px;
+    padding: 16px 20px;
     border-radius: var(--radius);
     border: 1px solid var(--border-color);
     margin-bottom: 40px;
     box-shadow: var(--shadow);
 }
 
-/* Fila 1: input + botón */
-.buscador-principal {
+.buscador-fila {
     display: flex;
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .buscador-input-wrap {
     flex: 1;
+    min-width: 200px;
     position: relative;
     display: flex;
     align-items: center;
@@ -653,20 +654,20 @@ body {
 
 .buscador-icon {
     position: absolute;
-    left: 14px;
+    left: 12px;
     color: var(--text-muted);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     pointer-events: none;
 }
 
 .buscador-input-wrap input[type="text"] {
     width: 100%;
-    padding: 13px 44px 13px 44px;
+    padding: 11px 14px 11px 38px;
     background: var(--input-bg);
     border: 1px solid var(--border-color);
     color: var(--input-text);
-    border-radius: 10px;
-    font-size: 1rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
     font-family: 'Outfit', sans-serif;
     outline: none;
     transition: all 0.3s;
@@ -677,31 +678,43 @@ body {
     box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.12);
 }
 
-.buscador-clear-input {
-    position: absolute;
-    right: 12px;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    transition: color 0.2s;
+.buscador-select {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--input-text);
+    padding: 11px 14px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-family: 'Outfit', sans-serif;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: 130px;
 }
 
-.buscador-clear-input:hover { color: var(--text-main); }
+.buscador-select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.12);
+}
+
+/* Resaltar selects con valor activo */
+.buscador-select.has-value {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(var(--accent-rgb), 0.06);
+}
 
 .buscador-btn-submit {
     background: var(--accent);
     color: var(--accent-text);
     border: none;
-    padding: 13px 24px;
-    border-radius: 10px;
+    padding: 11px 22px;
+    border-radius: 8px;
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-family: inherit;
     cursor: pointer;
     transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
     white-space: nowrap;
 }
 
@@ -709,106 +722,67 @@ body {
     .buscador-btn-submit:hover {
         background: var(--accent-hover);
         transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(var(--accent-rgb), 0.3);
+        box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.3);
     }
 }
 
-/* Fila 2: grupos de filtros */
-.buscador-filtros {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border-color);
-}
-
-.filtro-grupo {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-}
-
-.filtro-label {
+.buscador-btn-limpiar {
     display: flex;
     align-items: center;
-    gap: 5px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-    padding-top: 5px;
-    min-width: 90px;
-}
-
-.filtro-label .material-symbols-outlined {
-    font-size: 0.95rem;
-}
-
-.filtro-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
-
-.filtro-chip {
-    display: inline-flex;
-    align-items: center;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    background: rgba(255, 255, 255, 0.04);
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
     border: 1px solid var(--border-color);
-    text-decoration: none;
-    transition: all 0.2s ease;
-    cursor: pointer;
-}
-
-.filtro-chip:hover {
-    background: rgba(var(--accent-rgb), 0.08);
-    border-color: var(--accent);
-    color: var(--accent);
-}
-
-.filtro-chip.active {
-    background: rgba(var(--accent-rgb), 0.15);
-    border-color: var(--accent);
-    color: var(--accent);
-    font-weight: 700;
-}
-
-.buscador-limpiar-todo {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.78rem;
     color: var(--text-muted);
     text-decoration: none;
-    padding: 5px 10px;
-    border-radius: 6px;
-    border: 1px solid rgba(255,255,255,0.08);
     transition: all 0.2s;
-    align-self: flex-start;
-    margin-top: 4px;
+    flex-shrink: 0;
 }
 
-.buscador-limpiar-todo:hover {
-    color: var(--error-color);
+.buscador-btn-limpiar:hover {
     border-color: var(--error-color);
+    color: var(--error-color);
     background: rgba(255,68,68,0.06);
 }
 
-.buscador-limpiar-todo .material-symbols-outlined {
-    font-size: 0.95rem;
+/* Chips de filtros activos */
+.buscador-activos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+}
+
+.filtro-activo-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(var(--accent-rgb), 0.1);
+    border: 1px solid rgba(var(--accent-rgb), 0.3);
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.filtro-activo-chip .material-symbols-outlined { font-size: 0.85rem; }
+
+.filtro-activo-chip:hover {
+    background: rgba(255,68,68,0.1);
+    border-color: var(--error-color);
+    color: var(--error-color);
 }
 
 @media (max-width: 768px) {
-    .buscador-principal { flex-direction: column; }
-    .filtro-grupo { flex-direction: column; gap: 6px; }
-    .filtro-label { min-width: unset; }
+    .buscador-fila { gap: 8px; }
+    .buscador-select { min-width: 0; flex: 1; }
+    .buscador-input-wrap { min-width: 100%; }
 }
 
 .boton-limpiar {
