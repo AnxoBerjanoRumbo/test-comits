@@ -47,6 +47,34 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.classList.remove('theme-ragnarok', 'theme-aberration', 'theme-extinction', 'theme-scorched', 'theme-daltonico');
         document.body.classList.add('theme-' + themeName);
         localStorage.setItem('ark_hub_theme', themeName);
+
+        // Actualizar gráfico radar si existe
+        if (window.radarChart) {
+            const accentRgb = getComputedStyle(document.body).getPropertyValue('--accent-rgb').trim() || '0,255,204';
+            window.radarChart.data.datasets[0].backgroundColor = `rgba(${accentRgb},0.10)`;
+            window.radarChart.data.datasets[0].borderColor = `rgba(${accentRgb},0.85)`;
+            window.radarChart.update('none');
+        }
+
+        // Actualizar sliders de Impronta y Taming con el color del acento
+        const accent = getComputedStyle(document.body).getPropertyValue('--accent').trim();
+        const imprintSlider = document.getElementById('imprint-slider');
+        const tamingSlider = document.getElementById('taming-slider');
+        const impVal = document.getElementById('imp-val');
+        const tejVal = document.getElementById('tej-val');
+
+        if (imprintSlider && accent) {
+            imprintSlider.style.setProperty('--thumb-color', accent);
+            const pct = (imprintSlider.value / 100 * 100);
+            imprintSlider.style.background = `linear-gradient(to right, ${accent} 0%, ${accent} ${pct}%, rgba(255,255,255,0.1) ${pct}%, rgba(255,255,255,0.1) 100%)`;
+        }
+        if (tamingSlider && accent) {
+            tamingSlider.style.setProperty('--thumb-color', accent);
+            const pct = (tamingSlider.value / 100 * 100);
+            tamingSlider.style.background = `linear-gradient(to right, ${accent} 0%, ${accent} ${pct}%, rgba(255,255,255,0.1) ${pct}%, rgba(255,255,255,0.1) 100%)`;
+        }
+        if (impVal) impVal.style.color = accent;
+        if (tejVal) tejVal.style.color = accent;
     };
 
     const savedTheme = localStorage.getItem('ark_hub_theme');
