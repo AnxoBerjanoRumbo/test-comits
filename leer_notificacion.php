@@ -28,7 +28,7 @@ if ($notif['leida'] == 0) {
 // Separar asunto del cuerpo si empieza por [Mensaje]
 $asunto = 'Notificación del Sistema';
 $cuerpo = $notif['mensaje'];
-if (str_starts_with($notif['mensaje'], '[Mensaje] ')) {
+if (strpos($notif['mensaje'], '[Mensaje] ') === 0) {
     $sin_prefijo = substr($notif['mensaje'], strlen('[Mensaje] '));
     $pos_salto = strpos($sin_prefijo, "\n\n");
     if ($pos_salto !== false) {
