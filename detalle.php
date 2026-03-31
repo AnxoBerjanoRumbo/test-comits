@@ -37,10 +37,26 @@ $stmt_cats->bindParam(':id', $id);
 $stmt_cats->execute();
 $cats_dino = $stmt_cats->fetchAll(PDO::FETCH_COLUMN);
 
+// 4. Obtener características especiales del dinosaurio
+$sql_features = "SELECT 
+    es_tanque, es_buff, es_recolector, es_montura, es_volador, es_acuatico, es_subterraneo,
+    buff_descripcion, buff_damage, buff_armor, buff_speed, buff_otro,
+    tiene_formas, formas_descripcion,
+    recolecta_carne, recolecta_pescado, recolecta_madera, recolecta_piedra, 
+    recolecta_metal, recolecta_bayas, recolecta_paja, recolecta_fibra, recolecta_texugo,
+    domable, metodo_domado, comida_favorita, nivel_max_salvaje,
+    tiempo_incubacion, tiempo_madurez, ayuda_cria, ayuda_cria_descripcion
+    FROM dinosaurios WHERE id = :id";
+$stmt_features = $conexion->prepare($sql_features);
+$stmt_features->bindParam(':id', $id);
+$stmt_features->execute();
+$features = $stmt_features->fetch(PDO::FETCH_ASSOC);
+
 // 4. Paginación de Comentarios
 $comentarios_por_pagina = 10;
-$pagina_actual = isset($_GET['p']) && is_numeric($_GET['p']) ? (int)$_GET['p'] : 1;
-if ($pagina_actual < 1) $pagina_actual = 1;
+$pagina_actual = isset($_GET['p']) && is_numeric($_GET['p']) ? (int) $_GET['p'] : 1;
+if ($pagina_actual < 1)
+    $pagina_actual = 1;
 $offset = ($pagina_actual - 1) * $comentarios_por_pagina;
 
 // 4.1. Contar total de comentarios RAÍZ (los que no son respuesta)
@@ -70,7 +86,7 @@ $respuestas = [];
 if (count($comentarios) > 0) {
     $ids_raiz = array_column($comentarios, 'id');
     $placeholders = implode(',', array_fill(0, count($ids_raiz), '?'));
-    
+
     $sql_resp = "SELECT c.*, u.nick, u.rol, u.foto_perfil 
                  FROM comentarios c 
                  JOIN usuarios u ON c.usuario_id = u.id 
@@ -79,7 +95,7 @@ if (count($comentarios) > 0) {
     $stmt_resp = $conexion->prepare($sql_resp);
     $stmt_resp->execute($ids_raiz);
     $all_resp = $stmt_resp->fetchAll(PDO::FETCH_ASSOC);
-    
+
     foreach ($all_resp as $r) {
         $respuestas[$r['respuesta_a']][] = $r;
     }
@@ -88,318 +104,821 @@ if (count($comentarios) > 0) {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($dino['nombre']); ?> - ARK Hub</title>
-    <link rel="stylesheet" href="assets/css/estilos.css?v=1.3">
+    <title><?php echo htmlspecialchars($dino['nombre']); ?> - ARK Survival Hub</title>
+    <meta name="description"
+        content="Ficha completa de <?php echo htmlspecialchars($dino['nombre']); ?> en ARK. Stats, calculadora de niveles, consejos de crianza y más.">
+    <link rel="stylesheet" href="assets/css/estilos.css?v=1.6">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        /* ── HERO ── */
+        .dino-hero {
+            position: relative;
+            width: 100%;
+            min-height: 420px;
+            display: flex;
+            align-items: flex-end;
+            overflow: hidden;
+            background: #0a0a0a;
+        }
+
+        .dino-hero-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center 30%;
+            filter: brightness(0.35) saturate(1.2);
+            transform: scale(1.05);
+            transition: transform 8s ease;
+        }
+
+        .dino-hero:hover .dino-hero-bg {
+            transform: scale(1.08);
+        }
+
+        .dino-hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(8, 8, 8, 1) 0%, rgba(8, 8, 8, 0.5) 50%, transparent 100%);
+        }
+
+        .dino-hero-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 30px 50px;
+        }
+
+        .dino-hero-nombre {
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+            margin: 0 0 8px 0;
+            line-height: 1.05;
+        }
+
+        .dino-hero-especie {
+            font-size: 1rem;
+            color: var(--accent);
+            font-style: italic;
+            margin: 0 0 20px 0;
+            opacity: 0.9;
+        }
+
+        .dino-hero-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 30px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            backdrop-filter: blur(6px);
+        }
+
+        .hero-tag-dieta {
+            background: rgba(var(--accent-rgb), 0.12);
+            border: 1px solid rgba(var(--accent-rgb), 0.3);
+            color: var(--accent);
+        }
+
+        .hero-tag-mapa {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ccc;
+        }
+
+        .hero-tag-cat {
+            background: rgba(255, 152, 0, 0.12);
+            border: 1px solid rgba(255, 152, 0, 0.3);
+            color: #ff9800;
+        }
+
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── STAT CALCULATOR ── */
+        .stat-slider-row {
+            display: grid;
+            grid-template-columns: 105px 1fr 105px 60px 80px;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-slider-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-slider-label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .stat-slider-input {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .stat-slider-input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #fff;
+            background: var(--thumb-color, var(--accent));
+        }
+
+        .stat-slider-input::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #fff;
+            background: var(--thumb-color, var(--accent));
+        }
+
+        .stat-level-num {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 4px 8px;
+        }
+
+        .stat-calc-value {
+            text-align: right;
+            font-size: 0.95rem;
+            font-weight: 800;
+        }
+
+        /* ── BREEDING TIPS ── */
+        .tip-card {
+            display: flex;
+            gap: 18px;
+            padding: 22px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            margin-bottom: 15px;
+            transition: border-color 0.2s;
+        }
+
+        .tip-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .tip-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 680px) {
+            .stat-slider-row {
+                grid-template-columns: 90px 1fr 85px 50px;
+                gap: 8px;
+            }
+
+            .stat-calc-value {
+                display: none;
+            }
+
+            .stats-grid-calc {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <?php 
-    // Recuperar todos los parámetros GET menos el ID para mantener el contexto de búsqueda/filtros
+    <?php
     $params_volver = $_GET;
     unset($params_volver['id'], $params_volver['p'], $params_volver['status'], $params_volver['error']);
-    
-    $header_titulo = "Ficha de Criatura";
+    $header_titulo = $dino['nombre'];
     $header_volver_link = "index.php" . (!empty($params_volver) ? '?' . http_build_query($params_volver) : '');
     $header_volver_texto = "Volver al listado";
-    include 'includes/header.php'; 
+    include 'includes/header.php';
     ?>
 
-    <main class="contenedor-detalle">
-        <?php if (isset($_GET['status']) && $_GET['status'] == 'edit_success'): ?>
-            <div class="alerta-exito mb-20" style="text-align: center;">Información de la criatura actualizada correctamente.</div>
+    <?php
+    // Preparar datos para el hero
+    $src_hero = '';
+    if (!empty($dino['imagen'])) {
+        $src_hero = (strpos($dino['imagen'], 'http') === 0) ? $dino['imagen'] : "assets/img/dinos/" . $dino['imagen'];
+        if (strpos($src_hero, 'res.cloudinary.com') !== false) {
+            $src_hero = str_replace('/upload/', '/upload/f_auto,q_auto,w_1600,c_limit/', $src_hero);
+        }
+    }
+
+    // Preparar stats
+    $stats_data = [
+        'health' => (int) ($dino['stat_health'] ?? 0),
+        'stamina' => (int) ($dino['stat_stamina'] ?? 0),
+        'oxygen' => (int) ($dino['stat_oxygen'] ?? 0),
+        'food' => (int) ($dino['stat_food'] ?? 0),
+        'weight' => (int) ($dino['stat_weight'] ?? 0),
+        'melee' => (int) ($dino['stat_melee'] ?? 0),
+        'speed' => (int) ($dino['stat_speed'] ?? 0),
+        'torpidity' => (int) ($dino['stat_torpidity'] ?? 0),
+    ];
+    $tiene_stats = array_sum($stats_data) > 0;
+
+    // Dieta para tips contextuales
+    $esCarnivoro = in_array($dino['dieta'], ['Carnívoro', 'Piscívoro']);
+    $esHerbivoro = $dino['dieta'] === 'Herbívoro';
+    $esOmnivoro = $dino['dieta'] === 'Omnívoro';
+    $esPoneHuevos = in_array(strtolower($dino['nombre']), ['pteranodon', 'quetzal', 'argentavis', 'rex', 'spino', 'raptor', 'brontosaurus', 'bronto', 'iguanodon', 'stego', 'ankylo', 'mammoth', 'pachy', 'carno', 'allosaurus', 'allosaurio', 'yutyrannus', 'diplocaulus', 'dimetrodon', 'oviraptor', 'archaeopteryx', 'lystrosaurus', 'hesperornis', 'kaprosuchus', 'pegomastax', 'microraptor', 'basilosaurus', 'ichthyornis', 'terror bird', 'gastornis', 'arthropluera', 'camelsaurus', 'gigantopithecus', 'diplodocus', 'diplodoco']);
+    $nombreLower = strtolower($dino['nombre']);
+    ?>
+
+    <!-- HERO -->
+    <div class="dino-hero">
+        <?php if ($src_hero): ?>
+            <div class="dino-hero-bg" style="background-image: url('<?php echo htmlspecialchars($src_hero); ?>');"></div>
         <?php endif; ?>
-        <section class="ficha-principal">
-            <h2 class="nombre-dino"><?php echo htmlspecialchars($dino['nombre']); ?></h2>
-            
-            <?php if(!empty($dino['imagen'])): ?>
-                <div class="dino-img-detalle" style="text-align: center; margin-bottom: 20px;">
-                    <?php 
-                    $src_dino_d = (strpos($dino['imagen'], 'http') === 0) ? $dino['imagen'] : "assets/img/dinos/" . $dino['imagen'];
-                    
-                    if (strpos($src_dino_d, 'res.cloudinary.com') !== false) {
-                        // En el detalle usamos w_1200 o simplemente calidad auto
-                        $src_dino_d = str_replace('/upload/', '/upload/f_auto,q_auto,w_1200,c_limit/', $src_dino_d);
-                    }
-                    ?>
-                    <img src="<?php echo htmlspecialchars($src_dino_d); ?>" alt="<?php echo htmlspecialchars($dino['nombre']); ?>" style="max-width: 100%; border-radius: 8px;" onerror="this.src='assets/img/dinos/default_dino.jpg'">
-                </div>
+        <div class="dino-hero-overlay"></div>
+        <div class="dino-hero-content">
+            <?php if (isset($_GET['status']) && $_GET['status'] == 'edit_success'): ?>
+                <div class="alerta-exito mb-20" style="max-width:600px;">✓ Criatura actualizada correctamente.</div>
             <?php endif; ?>
 
-            <div class="info-grid">
-                <div class="dato">
-                    <strong>Especie:</strong> 
-                    <span><?php echo htmlspecialchars($dino['especie']); ?></span>
-                </div>
-                <div class="dato">
-                    <strong>Dieta:</strong> 
-                    <span><?php echo htmlspecialchars($dino['dieta']); ?></span>
-                </div>
-            </div>
+            <h1 class="dino-hero-nombre"><?php echo htmlspecialchars($dino['nombre']); ?></h1>
+            <p class="dino-hero-especie"><?php echo htmlspecialchars($dino['especie']); ?></p>
 
-            <?php if(!empty($dino['descripcion'])): ?>
-                <div class="dino-descripcion" style="margin-top: 20px;">
-                    <h3>Descripción</h3>
-                    <p style="white-space: pre-wrap; color: #ccc;"><?php echo htmlspecialchars($dino['descripcion']); ?></p>
-                </div>
-            <?php endif; ?>
-            
-            <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_insertar'] ?? 0) == 1): ?>
-                <div style="margin-top: 20px; text-align: center;">
-                    <a href="admin/editar.php?id=<?php echo $dino['id']; ?>" class="btn-nav btn-registro">Editar Criatura</a>
-                </div>
-            <?php endif; ?>
-        </section>
-
-        <section class="seccion-mapas">
-            <h3>Ubicación conocida</h3>
-            <div class="lista-mapas">
-                <?php if (count($mapas) > 0): ?>
-                    <?php foreach ($mapas as $mapa): ?>
-                        <span class="tag-mapa"><?php echo htmlspecialchars($mapa['nombre_mapa']); ?></span>
-                    <?php
-    endforeach; ?>
-                <?php
-else: ?>
-                    <p class="sin-datos">No se han registrado avistamientos en los mapas actuales.</p>
-                <?php
-endif; ?>
-            </div>
-        </section>
-
-        <?php if (count($cats_dino) > 0): ?>
-        <section class="seccion-mapas">
-            <h3>Categorías</h3>
-            <div class="lista-mapas">
+            <div class="dino-hero-tags">
+                <span class="hero-tag hero-tag-dieta">
+                    <span class="material-symbols-outlined" style="font-size:14px;">restaurant</span>
+                    <?php echo htmlspecialchars($dino['dieta']); ?>
+                </span>
+                <?php foreach ($mapas as $mapa): ?>
+                    <span class="hero-tag hero-tag-mapa">
+                        <span class="material-symbols-outlined" style="font-size:14px;">map</span>
+                        <?php echo htmlspecialchars($mapa['nombre_mapa']); ?>
+                    </span>
+                <?php endforeach; ?>
                 <?php foreach ($cats_dino as $cat): ?>
-                    <span class="tag-mapa"><?php echo htmlspecialchars($cat); ?></span>
+                    <span class="hero-tag hero-tag-cat">
+                        <span class="material-symbols-outlined" style="font-size:14px;">label</span>
+                        <?php echo htmlspecialchars($cat); ?>
+                    </span>
                 <?php endforeach; ?>
             </div>
-        </section>
-        <?php endif; ?>
+        </div>
+    </div>
 
-        <?php
-        // Calcular si hay algún stat cargado
-        $stats_data = [
-            'stat_health'    => (int)($dino['stat_health']    ?? 0),
-            'stat_stamina'   => (int)($dino['stat_stamina']   ?? 0),
-            'stat_oxygen'    => (int)($dino['stat_oxygen']    ?? 0),
-            'stat_food'      => (int)($dino['stat_food']      ?? 0),
-            'stat_weight'    => (int)($dino['stat_weight']    ?? 0),
-            'stat_melee'     => (int)($dino['stat_melee']     ?? 0),
-            'stat_speed'     => (int)($dino['stat_speed']     ?? 0),
-            'stat_torpidity' => (int)($dino['stat_torpidity'] ?? 0),
-        ];
-        $tiene_stats = array_sum($stats_data) > 0;
-        ?>
-
+    <!-- NAVEGACIÓN DE TABS -->
+    <div class="dino-tabs-nav" id="dino-tabs-nav">
+        <button class="dino-tab-btn active" onclick="switchDinoTab('info', this)">
+            <span class="material-symbols-outlined">description</span> Info
+        </button>
         <?php if ($tiene_stats): ?>
-        <section style="margin-top: 35px; padding: 30px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: var(--radius); border-top: 3px solid var(--accent);">
-            <h3 style="margin: 0 0 25px 0; color: var(--accent); display:flex; align-items:center; gap:10px;">
-                <span class="material-symbols-outlined">radar</span>
-                Stats Base (Nivel 1 Salvaje)
-            </h3>
+            <button class="dino-tab-btn" onclick="switchDinoTab('stats', this)">
+                <span class="material-symbols-outlined">radar</span> Stats
+            </button>
+        <?php endif; ?>
+        <button class="dino-tab-btn" onclick="switchDinoTab('habilidades', this)">
+            <span class="material-symbols-outlined">stars</span> Roles y Utilidad
+        </button>
+        <button class="dino-tab-btn" onclick="switchDinoTab('comentarios', this)" id="tab-btn-comentarios">
+            <span class="material-symbols-outlined">forum</span>
+            Foro
+            <?php if ($total_comentarios > 0): ?>
+                <span
+                    style="background:var(--accent);color:var(--accent-text);border-radius:20px;padding:1px 7px;font-size:0.72rem; font-weight:800;"><?php echo $total_comentarios; ?></span>
+            <?php endif; ?>
+        </button>
+    </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;">
-                <!-- Gráfico Radar -->
-                <div style="position: relative; max-height: 340px;">
-                    <canvas id="statsRadar"></canvas>
+    <main class="contenedor-detalle">
+
+        <!-- ══════════════════════════════════════════
+         TAB: INFO
+    ══════════════════════════════════════════ -->
+        <div id="tab-info" class="dino-tab-panel active">
+
+            <?php if (!empty($dino['descripcion'])): ?>
+                <!-- CARD DE DESCRIPCIÓN PREMIUM (NUEVA UI) -->
+                <div style="background:linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.85) 100%); border:1px solid rgba(255,255,255,0.06); border-radius:18px; padding:35px; margin-bottom:30px; box-shadow:0 15px 40px rgba(0,0,0,0.5); position:relative; overflow:hidden;">
+                    <!-- Aureola Decorativa -->
+                    <div style="position:absolute; top:-60px; right:-60px; width:180px; height:180px; background:var(--accent); filter:blur(110px); opacity:0.15; z-index:0; border-radius:50%;"></div>
+                    
+                    <h3 style="margin:0 0 22px; font-size:1.6rem; color:#fff; display:flex; align-items:center; gap:12px; position:relative; z-index:1; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:18px;">
+                        <span class="material-symbols-outlined" style="font-size:1.9rem; color:var(--accent);">auto_stories</span>
+                        Ficha Técnica y Descripción
+                    </h3>
+                    <div style="font-size:1.05rem; line-height:1.75; color:rgba(255,255,255,0.78); position:relative; z-index:1; text-align:justify; font-weight:400;">
+                        <?php echo nl2br(htmlspecialchars($dino['descripcion'])); ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_insertar'] ?? 0) == 1): ?>
+                <div style="text-align:center; padding:10px 0 25px;">
+                    <a href="admin/editar.php?id=<?php echo $dino['id']; ?>" class="btn-nav btn-registro"
+                        style="display:inline-flex; align-items:center; gap:8px; padding:12px 28px; background:var(--accent); color:var(--accent-text); font-weight:800; border-radius:30px; box-shadow:0 5px 20px rgba(var(--accent-rgb),0.3); text-decoration:none;">
+                        <span class="material-symbols-outlined" style="font-size:1.1rem;">edit</span>
+                        Editar Criatura
+                    </a>
+                </div>
+            <?php endif; ?>
+        </div><!-- /tab-info -->
+
+
+        <!-- ══════════════════════════════════════════
+         TAB: STATS (solo si tiene datos)
+    ══════════════════════════════════════════ -->
+        <?php if ($tiene_stats): ?>
+            <div id="tab-stats" class="dino-tab-panel">
+
+                <!-- Aviso disclaimer -->
+                <div
+                    style="display:flex; align-items:center; gap:10px; background:rgba(var(--accent-rgb),0.07); border:1px solid rgba(var(--accent-rgb),0.25); border-radius:8px; padding:14px 18px; margin-bottom:30px;">
+                    <span class="material-symbols-outlined" style="color:var(--accent); flex-shrink:0;">info</span>
+                    <p style="margin:0; font-size:0.83rem; color:var(--text-muted);">Los stats base son para <strong
+                            style="color:var(--text-main);">servidores vanilla sin multiplicadores</strong>. La calculadora
+                        usa las fórmulas oficiales de Wildcard: <code
+                            style="background:rgba(255,255,255,0.08); padding:1px 5px; border-radius:3px; font-size:0.8em;">V = B × (1 + Lw × Iw)</code>.
+                        Mueve los sliders para simular niveles salvajes.</p>
                 </div>
 
-                <!-- Barras de progreso -->
-                <div style="display: flex; flex-direction: column; gap: 14px;">
-                    <?php
-                    $stat_labels = [
-                        'stat_health'    => ['Vida',      'favorite',   '#e74c3c'],
-                        'stat_stamina'   => ['Energía',   'bolt',       '#f39c12'],
-                        'stat_oxygen'    => ['Oxígeno',   'water_drop', '#3498db'],
-                        'stat_food'      => ['Comida',    'restaurant', '#2ecc71'],
-                        'stat_weight'    => ['Peso',      'weight',     '#9b59b6'],
-                        'stat_melee'     => ['Melée',     'swords',     '#e67e22'],
-                        'stat_speed'     => ['Velocidad', 'speed',      '#1abc9c'],
-                        'stat_torpidity' => ['Torpor',    'bedtime',    '#95a5a6'],
-                    ];
-                    $max_stat = max(array_filter($stats_data)) ?: 1;
-                    foreach ($stat_labels as $key => [$label, $icon, $color]):
-                        $val = $stats_data[$key];
-                        $pct = round(($val / $max_stat) * 100);
-                    ?>
-                    <div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
-                            <span style="display:flex; align-items:center; gap:6px; font-size:0.85rem; color:<?php echo $color; ?>;">
-                                <span class="material-symbols-outlined" style="font-size:1rem;"><?php echo $icon; ?></span>
-                                <?php echo $label; ?>
-                            </span>
-                            <strong style="font-size:0.9rem; color: var(--text-main);"><?php echo number_format($val); ?></strong>
-                        </div>
-                        <div style="background: rgba(255,255,255,0.06); border-radius: 20px; height: 8px; overflow:hidden;">
-                            <div style="width:<?php echo $pct; ?>%; height:100%; background: <?php echo $color; ?>; border-radius:20px; transition: width 1s ease;"></div>
+                <div class="stats-grid-calc"
+                    style="display:grid; grid-template-columns:1fr 1.2fr; gap:40px; align-items:start;">
+
+                    <!-- Radar Chart -->
+                    <div
+                        style="background:rgba(255,255,255,0.02); border:1px solid var(--border-color); border-radius:var(--radius); padding:25px; position:sticky; top:80px;">
+                        <h4
+                            style="margin:0 0 20px; color:var(--text-muted); font-size:0.8rem; text-transform:uppercase; letter-spacing:1px;">
+                            Gráfico Radar · Valores calculados</h4>
+                        <canvas id="statsRadar" style="max-height:320px;"></canvas>
+                        <div style="text-align:center; margin-top:16px;">
+                            <span id="radar-mode-label"
+                                style="font-size:0.78rem; color:var(--accent); font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Nivel
+                                Salvaje (Wild)</span>
                         </div>
                     </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-        </section>
 
-        <script>
-        (function() {
-            const ctx = document.getElementById('statsRadar').getContext('2d');
-            new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: ['Vida', 'Energía', 'Oxígeno', 'Comida', 'Peso', 'Melée', 'Velocidad', 'Torpor'],
-                    datasets: [{
-                        label: '<?php echo addslashes($dino['nombre']); ?>',
-                        data: [<?php echo implode(',', array_values($stats_data)); ?>],
-                        backgroundColor: 'rgba(0, 255, 204, 0.10)',
-                        borderColor: 'rgba(0, 255, 204, 0.85)',
-                        pointBackgroundColor: [
-                            '#e74c3c','#f39c12','#3498db','#2ecc71',
-                            '#9b59b6','#e67e22','#1abc9c','#95a5a6'
-                        ],
-                        pointBorderColor: '#fff',
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
-                        borderWidth: 2,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: ctx => ' ' + ctx.raw.toLocaleString('es-ES')
-                            }
-                        }
-                    },
-                    scales: {
-                        r: {
-                            angleLines:   { color: 'rgba(255,255,255,0.08)' },
-                            grid:         { color: 'rgba(255,255,255,0.08)' },
-                            pointLabels:  { color: '#aaa', font: { size: 12, family: 'inherit' } },
-                            ticks: {
-                                display: false,
-                                backdropColor: 'transparent'
-                            },
-                            suggestedMin: 0,
-                        }
-                    }
-                }
-            });
-        })();
-        </script>
+                    <div>
+                        <!-- LABORATORIO DE CRÍA (NUEVO) -->
+                        <div style="background:rgba(var(--accent-rgb),0.05); border:1px solid rgba(var(--accent-rgb),0.3); border-radius:12px; padding:20px; margin-bottom:25px; box-shadow: inset 0 0 20px rgba(var(--accent-rgb),0.02);">
+                            <h4 style="margin:0 0 15px; color:var(--accent); font-size:0.95rem; text-transform:uppercase; letter-spacing:1px; display:flex; align-items:center; gap:8px;">
+                                <span class="material-symbols-outlined" style="font-size:1.3rem;">science</span> Laboratorio de Cría y Domesticación
+                            </h4>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px;">
+                                <!-- Imprinting -->
+                            <div>
+                                    <label style="display:flex; align-items:center; justify-content:space-between; font-size:0.85rem; color:var(--text-muted); margin-bottom:8px; font-weight:600;">
+                                        Impronta / Crianza <span id="imp-val" style="color:var(--accent); font-weight:800;">0%</span>
+                                    </label>
+                                    <input type="range" id="imprint-slider" min="0" max="100" value="0" class="stat-slider-input" style="--thumb-color:var(--accent);" oninput="updateStats()">
+                                </div>
+                                <!-- Eficiencia de Taming -->
+                                <div>
+                                    <label style="display:flex; align-items:center; justify-content:space-between; font-size:0.85rem; color:var(--text-muted); margin-bottom:8px; font-weight:600;">
+                                        Taming / Domesticado <span id="tej-val" style="color:var(--accent); font-weight:800;">100%</span>
+                                    </label>
+                                    <input type="range" id="taming-slider" min="0" max="100" value="100" class="stat-slider-input" style="--thumb-color:var(--accent);" oninput="updateStats()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+                            <h4
+                                style="margin:0; color:var(--text-muted); font-size:0.8rem; text-transform:uppercase; letter-spacing:1px;">
+                                Simular Distribución de Niveles</h4>
+                            <button onclick="resetSliders()"
+                                style="background:rgba(255,255,255,0.05); border:1px solid var(--border-color); color:var(--text-muted); border-radius:6px; padding:5px 14px; cursor:pointer; font-size:0.8rem; font-family:inherit; transition: 0.3s; display:flex; align-items:center; gap:5px;" onmouseover="this.style.background='var(--accent)'; this.style.color='var(--accent-text)';" onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.color='var(--text-muted)';">
+                                <span class="material-symbols-outlined" style="font-size:14px;">refresh</span> Resetear
+                            </button>
+                        </div>
+
+                        <!-- BUSCADOR DE DINOSAURIO SALVAJE -->
+                        <div style="background:rgba(var(--accent-rgb),0.08); border:1px solid rgba(var(--accent-rgb),0.3); border-radius:12px; padding:18px; margin-bottom:20px; display:flex; gap:15px; align-items:center; flex-wrap:wrap;">
+                            <div style="background:rgba(var(--accent-rgb),0.2); width:45px; height:45px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                <span class="material-symbols-outlined" style="color:var(--accent); font-size:1.5rem;">radar</span>
+                            </div>
+                            <div style="flex:1; min-width:200px;">
+                                <label style="display:block; font-size:0.75rem; font-weight:800; color:var(--accent); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Encuentro Salvaje (Wild)</label>
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <span style="color:var(--text-muted); font-size:0.9rem; font-weight:600;">Lv Puntos</span>
+                                    <input type="number" id="gen-level" value="150" min="1" max="450" style="width:90px; padding:8px 12px; border-radius:8px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,152,0,0.4); color:#fff; font-family:inherit; font-weight:800; font-size:1.1rem; outline:none;">
+                                </div>
+                            </div>
+                            <button onclick="rollWildStats()" style="background:var(--accent); color:var(--accent-text); font-weight:800; border:none; border-radius:8px; padding:12px 20px; display:flex; align-items:center; gap:6px; cursor:pointer; font-family:inherit; text-transform:uppercase; font-size:0.85rem; letter-spacing:0.5px; transition:0.3s;" onmouseover="this.style.filter='brightness(1.15)'" onmouseout="this.style.filter='none'">
+                                <span class="material-symbols-outlined" style="font-size:1.1rem;">casino</span> Rolear Stats
+                            </button>
+                        </div>
+
+                        <?php
+                        $stat_defs = [
+                            'health'    => ['Vida',      'favorite',   '#e74c3c', (float)($dino['iw_health']    ?? 0.2),  $stats_data['health']],
+                            'stamina'   => ['Energía',   'bolt',       '#f39c12', (float)($dino['iw_stamina']   ?? 0.1),  $stats_data['stamina']],
+                            'oxygen'    => ['Oxígeno',   'water_drop', '#3498db', (float)($dino['iw_oxygen']    ?? 0.1),  $stats_data['oxygen']],
+                            'food'      => ['Comida',    'restaurant', '#2ecc71', (float)($dino['iw_food']      ?? 0.15), $stats_data['food']],
+                            'weight'    => ['Peso',      'weight',     '#9b59b6', (float)($dino['iw_weight']    ?? 0.02), $stats_data['weight']],
+                            'melee'     => ['Melée',     'swords',     '#e67e22', (float)($dino['iw_melee']     ?? 0.05), $stats_data['melee']],
+                            'speed'     => ['Velocidad', 'speed',      '#1abc9c', (float)($dino['iw_speed']     ?? 0.0),  $stats_data['speed']],
+                            'torpidity' => ['Torpor',    'bedtime',    '#95a5a6', (float)($dino['iw_torpidity'] ?? 0.06), $stats_data['torpidity']],
+                        ];
+                        foreach ($stat_defs as $key => [$label, $icon, $color, $iw, $base]):
+                            if ($base <= 0)
+                                continue;
+                            ?>
+                            <div class="stat-slider-row">
+                                <div class="stat-slider-label" style="color:<?php echo $color; ?>;">
+                                    <span class="material-symbols-outlined" style="font-size:1rem;"><?php echo $icon; ?></span>
+                                    <?php echo $label; ?>
+                                </div>
+                                <input type="range" min="0" max="150" value="0" class="stat-slider-input"
+                                    id="slider-<?php echo $key; ?>" data-base="<?php echo $base; ?>"
+                                    data-iw="<?php echo $iw; ?>" data-stat="<?php echo $key; ?>"
+                                    style="--thumb-color:<?php echo $color; ?>;" oninput="updateStats()" <?php if ($iw == 0)
+                                           echo 'disabled title="No aumenta en estado salvaje"'; ?>>
+                                <div style="display:flex; align-items:center; gap:4px; background:rgba(255,255,255,0.05); padding:3px 6px; border-radius:6px;">
+                                    <span style="color:#aaa; font-size:0.8rem;">+</span>
+                                    <input type="number" id="mut-<?php echo $key; ?>" value="0" min="0" max="254" oninput="updateStats()" style="width:36px; background:transparent; border:none; color:var(--accent); font-weight:800; font-family:inherit; text-align:center; outline:none;" <?php if($iw==0) echo 'disabled'; ?>>
+                                    <span style="color:#aaa; font-size:0.7rem; font-weight:700;">Mut</span>
+                                </div>
+                                <div class="stat-level-num" id="level-<?php echo $key; ?>">Lv 0</div>
+                                <div class="stat-calc-value" id="val-<?php echo $key; ?>" style="color:<?php echo $color; ?>;">
+                                    <?php echo number_format($base, 1); ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+
+                        <div
+                            style="margin-top:25px; padding:18px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid var(--border-color);">
+                            <p
+                                style="margin:0 0 10px; font-size:0.82rem; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">
+                                Nivel total simulado</p>
+                            <div style="display:flex; align-items:center; gap:15px;">
+                                <span id="nivel-total"
+                                    style="font-size:2rem; font-weight:900; color:var(--accent);">0</span>
+                                <span style="font-size:0.85rem; color:var(--text-muted);">/ 150 puntos wild
+                                    distribuidos</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /tab-stats -->
         <?php endif; ?>
 
-        <section id="comentarios" class="seccion-comentarios" style="margin-top: 40px;">
-            <h3>Comentarios y Aportes</h3>
-            
+
+        <!-- ══════════════════════════════════════════
+         TAB: HABILIDADES Y UTILIDAD
+    ══════════════════════════════════════════ -->
+        <div id="tab-habilidades" class="dino-tab-panel">
+
+            <div style="margin-bottom:30px;">
+                <h3 style="margin:0 0 6px; font-size:1.4rem;">Roles y Utilidad</h3>
+                <p style="margin:0; color:var(--text-muted); font-size:0.9rem;">Descubre para qué sirve <strong
+                        style="color:var(--text-main);"><?php echo htmlspecialchars($dino['nombre']); ?></strong>
+                    en tu tribu y qué roles desempeña mejor en el juego.</p>
+            </div>
+
+            <!-- HABILIDADES Y CARACTERÍSTICAS - DATOS REALES DE ARK -->
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:25px; position:relative; z-index:1;">
+                
+                <?php if ($features['es_tanque']): ?>
+                <!-- ROL: TANQUE -->
+                <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; overflow:hidden; transition:transform 0.3s; box-shadow:0 8px 30px rgba(0,0,0,0.3);">
+                    <div style="height:5px; background:linear-gradient(90deg, #3498db, #9b59b6);"></div>
+                    <div style="padding:28px;">
+                        <div style="display:flex; align-items:center; gap:14px; margin-bottom:18px;">
+                            <div style="background:rgba(52, 152, 219, 0.15); border-radius:10px; padding:12px; display:flex;">
+                                <span class="material-symbols-outlined" style="color:#3498db; font-size:1.4rem;">shield</span>
+                            </div>
+                            <h4 style="margin:0; font-size:1.15rem; color:#fff; font-weight:800;">Rol: Tanque</h4>
+                        </div>
+                        <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.7; margin:0 0 18px;">
+                            <?php if ($features['tiene_formas'] && !empty($features['formas_descripcion'])): ?>
+                                <?php echo nl2br(htmlspecialchars($features['formas_descripcion'])); ?>
+                            <?php else: ?>
+                                Este dinosaurio puede absorber grandes cantidades de daño, protegiendo a tu tribu en combate.
+                            <?php endif; ?>
+                        </p>
+                        <?php if ($features['buff_armor'] > 0): ?>
+                        <div style="background:rgba(52, 152, 219, 0.1); padding:10px; border-radius:8px;">
+                            <span style="color:#3498db; font-weight:700; font-size:0.85rem;">🛡️ Reducción de daño: <?php echo $features['buff_armor']; ?>%</span>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <?php if ($features['es_buff']): ?>
+                <!-- ROL: BUFF/BOOST -->
+                <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; overflow:hidden; transition:transform 0.3s; box-shadow:0 8px 30px rgba(0,0,0,0.3);">
+                    <div style="height:5px; background:linear-gradient(90deg, #e74c3c, #f1c40f);"></div>
+                    <div style="padding:28px;">
+                        <div style="display:flex; align-items:center; gap:14px; margin-bottom:18px;">
+                            <div style="background:rgba(231, 76, 60, 0.15); border-radius:10px; padding:12px; display:flex;">
+                                <span class="material-symbols-outlined" style="color:#e74c3c; font-size:1.4rem;">volume_up</span>
+                            </div>
+                            <h4 style="margin:0; font-size:1.15rem; color:#fff; font-weight:800;">Rol: Soporte / Buff</h4>
+                        </div>
+                        <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.7; margin:0 0 18px;">
+                            <?php if (!empty($features['buff_descripcion'])): ?>
+                                <?php echo nl2br(htmlspecialchars($features['buff_descripcion'])); ?>
+                            <?php else: ?>
+                                Este dinosaurio proporciona bonuses a otros dinosaurios cercanos.
+                            <?php endif; ?>
+                        </p>
+                        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                            <?php if ($features['buff_damage'] > 0): ?>
+                            <span style="background:rgba(231, 76, 60, 0.15); color:#e74c3c; padding:6px 12px; border-radius:20px; font-size:0.8rem; font-weight:700;">⚔️ Daño +<?php echo $features['buff_damage']; ?>%</span>
+                            <?php endif; ?>
+                            <?php if ($features['buff_armor'] > 0): ?>
+                            <span style="background:rgba(52, 152, 219, 0.15); color:#3498db; padding:6px 12px; border-radius:20px; font-size:0.8rem; font-weight:700;">🛡️ Armadura +<?php echo $features['buff_armor']; ?>%</span>
+                            <?php endif; ?>
+                            <?php if ($features['buff_speed'] > 0): ?>
+                            <span style="background:rgba(26, 188, 156, 0.15); color:#1abc9c; padding:6px 12px; border-radius:20px; font-size:0.8rem; font-weight:700;">⚡ Velocidad +<?php echo $features['buff_speed']; ?>%</span>
+                            <?php endif; ?>
+                            <?php if (!empty($features['buff_otro'])): ?>
+                            <span style="background:rgba(241, 196, 15, 0.15); color:#f1c40f; padding:6px 12px; border-radius:20px; font-size:0.8rem; font-weight:700;"><?php echo htmlspecialchars($features['buff_otro']); ?></span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <?php if ($features['es_recolector']): ?>
+                <!-- ROL: RECOLECCIÓN -->
+                <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; overflow:hidden; transition:transform 0.3s; box-shadow:0 8px 30px rgba(0,0,0,0.3);">
+                    <div style="height:5px; background:linear-gradient(90deg, #2ecc71, #1abc9c);"></div>
+                    <div style="padding:28px;">
+                         <div style="display:flex; align-items:center; gap:14px; margin-bottom:18px;">
+                            <div style="background:rgba(46, 204, 113, 0.15); border-radius:10px; padding:12px; display:flex;">
+                                <span class="material-symbols-outlined" style="color:#2ecc71; font-size:1.4rem;">inventory_2</span>
+                            </div>
+                            <h4 style="margin:0; font-size:1.15rem; color:#fff; font-weight:800;">Recolección</h4>
+                        </div>
+                        <ul style="padding:0; margin:0; list-style:none; display:flex; flex-direction:column; gap:10px;">
+                            <?php if ($features['recolecta_carne']): ?>
+                            <li style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted);"><span>🥩 Carne</span> <span style="color:#e74c3c;">★</span></li>
+                            <?php endif; ?>
+                            <?php if ($features['recolecta_pescado']): ?>
+                            <li style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted);"><span>🐟 Pescado</span> <span style="color:#3498db;">★</span></li>
+                            <?php endif; ?>
+                            <?php if ($features['recolecta_madera']): ?>
+                            <li style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted);"><span>🪵 Madera</span> <span style="color:#8b4513;">★</span></li>
+                            <?php endif; ?>
+                            <?php if ($features['recolecta_piedra']): ?>
+                            <li style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted);"><span>🪨 Piedra</span> <span style="color:#95a5a6;">★</span></li>
+                            <?php endif; ?>
+                            <?php if ($features['recolecta_metal']): ?>
+                            <li style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted);"><span>⛏️ Metal</span> <span style="color:#7f8c8d;">★</span></li>
+                            <?php endif; ?>
+                            <?php if ($features['recolecta_bayas']): ?>
+                            <li style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted);"><span>🫐 Bayas</span> <span style="color:#9b59b6;">★</span></li>
+                            <?php endif; ?>
+                            <?php if ($features['recolecta_paja']): ?>
+                            <li style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted);"><span>🌾 Paja</span> <span style="color:#f1c40f;">★</span></li>
+                            <?php endif; ?>
+                            <?php if ($features['recolecta_fibra']): ?>
+                            <li style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted);"><span>🌿 Fibra</span> <span style="color:#2ecc71;">★</span></li>
+                            <?php endif; ?>
+                            <?php if ($features['recolecta_texugo']): ?>
+                            <li style="display:flex; justify-content:space-between; font-size:0.9rem; color:var(--text-muted);"><span>🐾 Texugo</span> <span style="color:#e67e22;">★</span></li>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <!-- INFORMACIÓN DE DOMESTICACIÓN -->
+                <?php if ($features['domable']): ?>
+                <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; overflow:hidden; transition:transform 0.3s; box-shadow:0 8px 30px rgba(0,0,0,0.3);">
+                    <div style="height:5px; background:linear-gradient(90deg, #9b59b6, #e91e63);"></div>
+                    <div style="padding:28px;">
+                        <div style="display:flex; align-items:center; gap:14px; margin-bottom:18px;">
+                            <div style="background:rgba(155, 89, 182, 0.15); border-radius:10px; padding:12px; display:flex;">
+                                <span class="material-symbols-outlined" style="color:#9b59b6; font-size:1.4rem;">pets</span>
+                            </div>
+                            <h4 style="margin:0; font-size:1.15rem; color:#fff; font-weight:800;">Domesticación</h4>
+                        </div>
+                        <ul style="padding:0; margin:0; list-style:none; display:flex; flex-direction:column; gap:8px; font-size:0.9rem; color:var(--text-muted);">
+                            <?php if (!empty($features['metodo_domado'])): ?>
+                            <li style="display:flex; justify-content:space-between;"><span>Método</span> <strong style="color:var(--text-main);"><?php echo htmlspecialchars($features['metodo_domado']); ?></strong></li>
+                            <?php endif; ?>
+                            <?php if (!empty($features['comida_favorita'])): ?>
+                            <li style="display:flex; justify-content:space-between;"><span>Comida favorita</span> <strong style="color:var(--text-main);"><?php echo htmlspecialchars($features['comida_favorita']); ?></strong></li>
+                            <?php endif; ?>
+                            <li style="display:flex; justify-content:space-between;"><span>Nivel máx. salvaje</span> <strong style="color:var(--accent);"><?php echo $features['nivel_max_salvaje']; ?></strong></li>
+                        </ul>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <!-- INFORMACIÓN DE CRÍA/AYUDA A CRIANZA -->
+                <?php if ($features['ayuda_cria']): ?>
+                <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; overflow:hidden; transition:transform 0.3s; box-shadow:0 8px 30px rgba(0,0,0,0.3);">
+                    <div style="height:5px; background:linear-gradient(90deg, #f1c40f, #e67e22);"></div>
+                    <div style="padding:28px;">
+                        <div style="display:flex; align-items:center; gap:14px; margin-bottom:18px;">
+                            <div style="background:rgba(241, 196, 15, 0.15); border-radius:10px; padding:12px; display:flex;">
+                                <span class="material-symbols-outlined" style="color:#f1c40f; font-size:1.4rem;">egg</span>
+                            </div>
+                            <h4 style="margin:0; font-size:1.15rem; color:#fff; font-weight:800;">Ayuda a Cría</h4>
+                        </div>
+                        <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.7; margin:0;">
+                            <?php if (!empty($features['ayuda_cria_descripcion'])): ?>
+                                <?php echo nl2br(htmlspecialchars($features['ayuda_cria_descripcion'])); ?>
+                            <?php else: ?>
+                                Este dinosaurio ayuda en la cría de otros dinosaurios, aumentando la efectividad de la impronta o facilitando el proceso de domesticación de crías.
+                            <?php endif; ?>
+                        </p>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <!-- ROLES ADICIONALES: VOLADOR, ACUÁTICO, SUBTERRÁNEO, MONTAURA -->
+                <?php if ($features['es_volador'] || $features['es_acuatico'] || $features['es_subterraneo'] || $features['es_montura']): ?>
+                <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; overflow:hidden; transition:transform 0.3s; box-shadow:0 8px 30px rgba(0,0,0,0.3);">
+                    <div style="height:5px; background:linear-gradient(90deg, #00bcd4, #009688);"></div>
+                    <div style="padding:28px;">
+                        <div style="display:flex; align-items:center; gap:14px; margin-bottom:18px;">
+                            <div style="background:rgba(0, 188, 212, 0.15); border-radius:10px; padding:12px; display:flex;">
+                                <span class="material-symbols-outlined" style="color:#00bcd4; font-size:1.4rem;">category</span>
+                            </div>
+                            <h4 style="margin:0; font-size:1.15rem; color:#fff; font-weight:800;">Características</h4>
+                        </div>
+                        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                            <?php if ($features['es_volador']): ?>
+                            <span style="background:rgba(0, 188, 212, 0.15); color:#00bcd4; padding:8px 14px; border-radius:20px; font-size:0.8rem; font-weight:600;">🦅 Volador</span>
+                            <?php endif; ?>
+                            <?php if ($features['es_acuatico']): ?>
+                            <span style="background:rgba(33, 150, 243, 0.15); color:#2196f3; padding:8px 14px; border-radius:20px; font-size:0.8rem; font-weight:600;">🐳 Acuático</span>
+                            <?php endif; ?>
+                            <?php if ($features['es_subterraneo']): ?>
+                            <span style="background:rgba(121, 85, 72, 0.15); color:#795548; padding:8px 14px; border-radius:20px; font-size:0.8rem; font-weight:600;">🦇 Subterráneo</span>
+                            <?php endif; ?>
+                            <?php if ($features['es_montura']): ?>
+                            <span style="background:rgba(156, 39, 176, 0.15); color:#9c27b0; padding:8px 14px; border-radius:20px; font-size:0.8rem; font-weight:600;">🐴 Montura</span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+            </div>
+
+        </div><!-- /tab-habilidades -->
+
+
+        <!-- ══════════════════════════════════════════
+         TAB: COMENTARIOS
+    ══════════════════════════════════════════ -->
+        <div id="tab-comentarios" class="dino-tab-panel">
+
             <?php if (isset($_SESSION['usuario_id'])): ?>
-                <form action="actions/procesar_comentario.php" method="POST" class="form-ark" style="margin-bottom: 25px;" id="form-comentario">
+                <form action="actions/procesar_comentario.php" method="POST" class="form-ark" style="margin-bottom: 30px;"
+                    id="form-comentario">
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="dino_id" value="<?php echo $dino['id']; ?>">
                     <input type="hidden" name="respuesta_a" id="input_respuesta_a" value="">
-                    
-                    <!-- Honeypot para evitar spam de bots -->
-                    <div style="display:none !important;">
-                        <label>No rellenar este campo:</label>
-                        <input type="text" name="website_url" value="">
-                    </div>
-                    
-                    <div id="indicador-respuesta" style="display: none; background: rgba(var(--accent-rgb), 0.1); padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px dashed var(--accent);">
+                    <div style="display:none !important;"><input type="text" name="website_url" value=""></div>
+
+                    <div id="indicador-respuesta"
+                        style="display:none; background:rgba(var(--accent-rgb),0.1); padding:10px; border-radius:8px; margin-bottom:10px; border:1px dashed var(--accent);">
                         <span class="f-09">Respondiendo a <strong id="nick-respuesta">@usuario</strong></span>
-                        <button type="button" onclick="cancelarRespuesta()" style="background: none; border: none; color: #ff5555; cursor: pointer; float: right; font-weight: bold;">[X] Cancelar</button>
+                        <button type="button" onclick="cancelarRespuesta()"
+                            style="background:none; border:none; color:#ff5555; cursor:pointer; float:right; font-weight:bold;">[X]
+                            Cancelar</button>
                     </div>
-                    <div style="display: flex; gap: 15px; margin-bottom: 10px;">
-                        <?php 
-                        $foto_mismo = $_SESSION['foto_perfil'] ?? 'default.png';
-                        $src_mismo = (strpos($foto_mismo, 'http') === 0) ? $foto_mismo : "assets/img/perfil/" . $foto_mismo;
+
+                    <div style="display:flex; gap:15px; margin-bottom:10px;">
+                        <?php
+                        $foto = $_SESSION['foto_perfil'] ?? 'default.png';
+                        $src_foto = (strpos($foto, 'http') === 0) ? $foto : "assets/img/perfil/" . $foto;
                         ?>
-                        <img src="<?php echo htmlspecialchars($src_mismo); ?>" 
-                             alt="Mi Perfil" 
-                             class="avatar-comentario"
-                             style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); flex-shrink: 0;"
-                             onerror="this.src='assets/img/perfil/default.png'">
-                        <textarea name="texto" required placeholder="Añade tu comentario o estrategia (máx 10.000 palabras)..." rows="4" style="width: 100%; border-radius: var(--radius);"></textarea>
+                        <img src="<?php echo htmlspecialchars($src_foto); ?>" alt="Mi Perfil" class="avatar-comentario"
+                            style="width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);flex-shrink:0;"
+                            onerror="this.src='assets/img/perfil/default.png'">
+                        <textarea name="texto" required
+                            placeholder="Añade tu experiencia con <?php echo htmlspecialchars($dino['nombre']); ?>: estrategias de taming, uso en PvP/PvE..."
+                            rows="4" style="width:100%;border-radius:var(--radius);"></textarea>
                     </div>
-                    <button type="submit" class="boton-insertar">Comentar</button>
+                    <button type="submit" class="boton-insertar">Publicar comentario</button>
                 </form>
             <?php else: ?>
-                <p style="background-color: #333; padding: 10px; border-radius: 5px; text-align: center;">Debes <a href="login.php" style="color: #4CAF50;">iniciar sesión</a> para dejar un comentario.</p>
+                <div
+                    style="background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:var(--radius); padding:25px; text-align:center; margin-bottom:25px;">
+                    <span class="material-symbols-outlined"
+                        style="font-size:2rem; color:var(--text-muted); display:block; margin-bottom:10px;">lock</span>
+                    <p style="margin:0; color:var(--text-muted);">Debes <a href="login.php"
+                            style="color:var(--accent);">iniciar sesión</a> para dejar un comentario.</p>
+                </div>
             <?php endif; ?>
 
             <div class="comentarios-lista">
                 <?php if (count($comentarios) > 0): ?>
                     <?php foreach ($comentarios as $c): ?>
-                        <div class="comentario <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? 'comentario-admin' : ''; ?>">
+                        <div
+                            class="comentario <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? 'comentario-admin' : ''; ?>">
                             <div class="comentario-header">
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <?php 
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <?php
                                     $foto_c = $c['foto_perfil'] ?? 'default.png';
                                     $src_c = (strpos($foto_c, 'http') === 0) ? $foto_c : "assets/img/perfil/" . $foto_c;
-                                    
-                                    // Solo mostrar enlace si eres moderador y no eres el propio usuario
                                     $can_moderate = isset($_SESSION['p_moderar']) && $_SESSION['p_moderar'] == 1 && $_SESSION['usuario_id'] != $c['usuario_id'] && $c['rol'] !== 'superadmin';
                                     ?>
-                                    
                                     <?php if ($can_moderate): ?>
-                                        <a href="admin/moderar_usuario.php?id=<?php echo $c['usuario_id']; ?>" title="Moderar a <?php echo htmlspecialchars($c['nick']); ?>" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
-                                    <?php endif; ?>
-
-                                    <img src="<?php echo htmlspecialchars($src_c); ?>" 
-                                         alt="Avatar" 
-                                         class="avatar-comentario"
-                                         onerror="this.src='assets/img/perfil/default.png'">
-                                    <strong class="comentario-nick <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? 'nick-admin' : ''; ?>">
-                                        <?php echo htmlspecialchars($c['nick']); ?> <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '(Admin)' : ''; ?>
-                                    </strong>
-
-                                    <?php if ($can_moderate): ?>
-                                        </a>
-                                    <?php endif; ?>
+                                        <a href="admin/moderar_usuario.php?id=<?php echo $c['usuario_id']; ?>"
+                                            style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">
+                                        <?php endif; ?>
+                                        <img src="<?php echo htmlspecialchars($src_c); ?>" alt="Avatar"
+                                            class="avatar-comentario" onerror="this.src='assets/img/perfil/default.png'">
+                                        <strong
+                                            class="comentario-nick <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? 'nick-admin' : ''; ?>">
+                                            <?php echo htmlspecialchars($c['nick']); ?>
+                                            <?php echo ($c['rol'] === 'admin' || $c['rol'] === 'superadmin') ? '(Admin)' : ''; ?>
+                                        </strong>
+                                        <?php if ($can_moderate): ?></a><?php endif; ?>
                                 </div>
-                                
                                 <div class="d-flex align-center gap-10">
                                     <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true): ?>
-                                        <button type="button" class="btn-nav f-08" style="padding: 4px 10px; border-color: var(--accent); color: var(--accent);" onclick="prepararRespuesta(<?php echo $c['id']; ?>, '<?php echo htmlspecialchars(addslashes($c['nick'])); ?>')">Contestar</button>
+                                        <button type="button" class="btn-nav f-08"
+                                            style="padding:4px 10px; border-color:var(--accent); color:var(--accent);"
+                                            onclick="prepararRespuesta(<?php echo $c['id']; ?>, '<?php echo htmlspecialchars(addslashes($c['nick'])); ?>')">Contestar</button>
                                     <?php endif; ?>
-                                    <?php if(isset($_SESSION['usuario_id']) && (($_SESSION['is_admin'] ?? false) === true || $_SESSION['usuario_id'] == $c['usuario_id'])): ?>
-                                        <form action="actions/borrar_comentario.php" method="POST" style="display: inline;">
+                                    <?php if (isset($_SESSION['usuario_id']) && (($_SESSION['is_admin'] ?? false) === true || $_SESSION['usuario_id'] == $c['usuario_id'])): ?>
+                                        <form action="actions/borrar_comentario.php" method="POST" style="display:inline;">
                                             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                             <input type="hidden" name="comentario_id" value="<?php echo $c['id']; ?>">
                                             <input type="hidden" name="dino_id" value="<?php echo $dino['id']; ?>">
-                                            <button type="submit" onclick="return confirm('¿Borrar este comentario?');" class="btn-borrar-comentario">Eliminar</button>
+                                            <button type="submit" onclick="return confirm('¿Borrar este comentario?');"
+                                                class="btn-borrar-comentario">Eliminar</button>
                                         </form>
                                     <?php endif; ?>
                                 </div>
                             </div>
                             <p class="comentario-texto"><?php echo nl2br(htmlspecialchars($c['texto'])); ?></p>
                         </div>
-                        
+
                         <?php if (isset($respuestas[$c['id']])): ?>
                             <?php foreach ($respuestas[$c['id']] as $r): ?>
                                 <div class="comentario comentario-admin comentario-respuesta">
                                     <div class="comentario-header">
-                                        <div style="display: flex; align-items: center; gap: 10px;">
-                                            <?php 
+                                        <div style="display:flex; align-items:center; gap:10px;">
+                                            <?php
                                             $foto_r = $r['foto_perfil'] ?? 'default.png';
                                             $src_r = (strpos($foto_r, 'http') === 0) ? $foto_r : "assets/img/perfil/" . $foto_r;
                                             ?>
-                                            <img src="<?php echo htmlspecialchars($src_r); ?>" alt="Avatar" class="avatar-comentario" onerror="this.src='assets/img/perfil/default.png'">
-                                            <strong class="comentario-nick nick-admin">
-                                                <?php echo htmlspecialchars($r['nick']); ?> (Admin)
-                                            </strong>
+                                            <img src="<?php echo htmlspecialchars($src_r); ?>" alt="Avatar" class="avatar-comentario"
+                                                onerror="this.src='assets/img/perfil/default.png'">
+                                            <strong class="comentario-nick nick-admin"><?php echo htmlspecialchars($r['nick']); ?>
+                                                (Admin)</strong>
                                             <span class="f-08 text-muted">ha respondido</span>
                                         </div>
-                                        <?php if(isset($_SESSION['usuario_id']) && (($_SESSION['is_admin'] ?? false) === true || $_SESSION['usuario_id'] == $r['usuario_id'])): ?>
-                                            <form action="actions/borrar_comentario.php" method="POST" style="display: inline;">
+                                        <?php if (isset($_SESSION['usuario_id']) && (($_SESSION['is_admin'] ?? false) === true || $_SESSION['usuario_id'] == $r['usuario_id'])): ?>
+                                            <form action="actions/borrar_comentario.php" method="POST" style="display:inline;">
                                                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                                                 <input type="hidden" name="comentario_id" value="<?php echo $r['id']; ?>">
                                                 <input type="hidden" name="dino_id" value="<?php echo $dino['id']; ?>">
-                                                <button type="submit" onclick="return confirm('¿Borrar esta respuesta?');" class="btn-borrar-comentario">Eliminar</button>
+                                                <button type="submit" onclick="return confirm('¿Borrar?');"
+                                                    class="btn-borrar-comentario">Eliminar</button>
                                             </form>
                                         <?php endif; ?>
                                     </div>
@@ -410,57 +929,323 @@ endif; ?>
                     <?php endforeach; ?>
 
                     <?php if ($total_paginas > 1): ?>
-                        <div class="paginacion-comentarios" style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+                        <div class="paginacion-container">
                             <?php if ($pagina_actual > 1): ?>
-                                <a href="detalle.php?id=<?php echo $id; ?>&p=<?php echo $pagina_actual - 1; ?>" class="btn-pag">« Anterior</a>
+                                <a href="detalle.php?id=<?php echo $id; ?>&p=<?php echo $pagina_actual - 1; ?>#tab-comentarios"
+                                    class="btn-pag prev">‹</a>
                             <?php endif; ?>
-
-                            <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
-                                <a href="detalle.php?id=<?php echo $id; ?>&p=<?php echo $i; ?>" class="btn-pag <?php echo ($i === $pagina_actual) ? 'active' : ''; ?>">
-                                    <?php echo $i; ?>
-                                </a>
+                            <?php 
+                            // Mostrar máximo 5 páginas con la actual en el centro
+                            $inicio = max(1, $pagina_actual - 2);
+                            $fin = min($total_paginas, $pagina_actual + 2);
+                            if ($fin - $inicio < 4) {
+                                if ($inicio == 1) $fin = min($total_paginas, 5);
+                                else $inicio = max(1, $fin - 4);
+                            }
+                            for ($i = $inicio; $i <= $fin; $i++): ?>
+                                <a href="detalle.php?id=<?php echo $id; ?>&p=<?php echo $i; ?>#tab-comentarios"
+                                    class="btn-pag <?php echo ($i === $pagina_actual) ? 'active' : ''; ?>"><?php echo $i; ?></a>
                             <?php endfor; ?>
-
                             <?php if ($pagina_actual < $total_paginas): ?>
-                                <a href="detalle.php?id=<?php echo $id; ?>&p=<?php echo $pagina_actual + 1; ?>" class="btn-pag">Siguiente »</a>
+                                <a href="detalle.php?id=<?php echo $id; ?>&p=<?php echo $pagina_actual + 1; ?>#tab-comentarios"
+                                    class="btn-pag next">›</a>
                             <?php endif; ?>
                         </div>
                     <?php endif; ?>
 
                 <?php else: ?>
-                    <p class="sin-datos" style="text-align: center; color: #888;">No hay comentarios todavía. ¡Sé el primero en aportar info!</p>
+                    <p class="sin-datos" style="text-align:center; padding:40px 0;">No hay comentarios todavía. ¡Sé el
+                        primero en aportar info sobre <?php echo htmlspecialchars($dino['nombre']); ?>!</p>
                 <?php endif; ?>
             </div>
-        </section>
+
+        </div><!-- /tab-comentarios -->
 
         <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_insertar'] ?? 0) == 1): ?>
-            <div style="margin-top: 40px; text-align: center; border-top: 1px solid #444; padding-top: 20px;">
-                <form action="actions/admin/procesar_eliminar.php" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que quieres extinguir a <?php echo htmlspecialchars($dino['nombre']); ?>? Esta acción borrará sus datos de la base de datos y NO se puede deshacer.');">
+            <div style="margin-top:40px; text-align:center; border-top:1px solid #333; padding-top:25px;">
+                <form action="actions/admin/procesar_eliminar.php" method="POST" style="display:inline;"
+                    onsubmit="return confirm('¿Extinguir a <?php echo htmlspecialchars($dino['nombre']); ?>? Esta acción es irreversible.');">
                     <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="id" value="<?php echo $dino['id']; ?>">
-                    <button type="submit" class="boton-eliminar" style="border: none; cursor: pointer;">
-                        Eliminar Criatura
-                    </button>
+                    <button type="submit" class="boton-eliminar" style="border:none; cursor:pointer;">Eliminar
+                        Criatura</button>
                 </form>
             </div>
-        <?php
-endif; ?>
+        <?php endif; ?>
+
+    </main>
 
     <script>
+        // ── TABS ──────────────────────────────────────────
+        function switchDinoTab(name, btn) {
+            document.querySelectorAll('.dino-tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.dino-tab-btn').forEach(b => b.classList.remove('active'));
+            const panel = document.getElementById('tab-' + name);
+            if (panel) panel.classList.add('active');
+            btn.classList.add('active');
+
+            // Init chart on first visit to stats tab
+            if (name === 'stats' && !window.radarInitialized) initRadar();
+        }
+
+        // ── COMENTARIOS ───────────────────────────────────
         function prepararRespuesta(id, nick) {
             document.getElementById('input_respuesta_a').value = id;
             document.getElementById('nick-respuesta').innerText = '@' + nick;
             document.getElementById('indicador-respuesta').style.display = 'block';
-            
-            // Hacer scroll suave hasta el formulario
-            document.getElementById('form-comentario').scrollIntoView({ behavior: 'smooth' });
-            // Enfocar el textarea
-            document.querySelector('#form-comentario textarea').focus();
+            // Ir a la tab de comentarios
+            document.querySelectorAll('.dino-tab-btn').forEach(b => { if (b.textContent.includes('Foro')) { switchDinoTab('comentarios', b); } });
+            setTimeout(() => { document.getElementById('form-comentario').scrollIntoView({ behavior: 'smooth' }); document.querySelector('#form-comentario textarea').focus(); }, 200);
         }
-
         function cancelarRespuesta() {
             document.getElementById('input_respuesta_a').value = '';
             document.getElementById('indicador-respuesta').style.display = 'none';
         }
+
+        <?php if ($tiene_stats): ?>
+            // ── CALCULADORA WILD ──────────────────────────────
+            const BASE_STATS = {
+                health: <?php echo $stats_data['health']; ?>,
+                stamina: <?php echo $stats_data['stamina']; ?>,
+                oxygen: <?php echo $stats_data['oxygen']; ?>,
+                food: <?php echo $stats_data['food']; ?>,
+                weight: <?php echo $stats_data['weight']; ?>,
+                melee: <?php echo $stats_data['melee']; ?>,
+                speed: <?php echo $stats_data['speed']; ?>,
+                torpidity: <?php echo $stats_data['torpidity']; ?>,
+            };
+            // Multiplicadores Iw reales de la BD (incremento por nivel salvaje)
+            const IW = {
+                health:   <?php echo (float)($dino['iw_health']    ?? 0.2);  ?>,
+                stamina:  <?php echo (float)($dino['iw_stamina']   ?? 0.1);  ?>,
+                oxygen:   <?php echo (float)($dino['iw_oxygen']    ?? 0.1);  ?>,
+                food:     <?php echo (float)($dino['iw_food']      ?? 0.15); ?>,
+                weight:   <?php echo (float)($dino['iw_weight']    ?? 0.02); ?>,
+                melee:    <?php echo (float)($dino['iw_melee']     ?? 0.05); ?>,
+                speed:    <?php echo (float)($dino['iw_speed']     ?? 0.0);  ?>,
+                torpidity:<?php echo (float)($dino['iw_torpidity'] ?? 0.06); ?>,
+            };
+            const STAT_LABELS = ['Vida', 'Energía', 'Oxígeno', 'Comida', 'Peso', 'Melée', 'Velocidad', 'Torpor'];
+            const STAT_KEYS = ['health', 'stamina', 'oxygen', 'food', 'weight', 'melee', 'speed', 'torpidity'];
+            const STAT_COLORS = ['#e74c3c', '#f39c12', '#3498db', '#2ecc71', '#9b59b6', '#e67e22', '#1abc9c', '#95a5a6'];
+
+            let radarChart = null;
+            window.radarChart = null;
+            window.radarInitialized = false;
+
+            function calcV(key, lw) {
+                const B = BASE_STATS[key] || 0;
+                const impSlider = document.getElementById('imprint-slider');
+                const tamSlider = document.getElementById('taming-slider');
+                
+                const impronta = impSlider ? parseInt(impSlider.value) / 100 : 0;
+                const tamingEff = tamSlider ? parseInt(tamSlider.value) / 100 : 1;
+                
+                // Extraer niveles de mutación
+                const mutInput = document.getElementById('mut-' + key);
+                const muts = mutInput ? parseInt(mutInput.value) || 0 : 0;
+                
+                // Muts añaden 2 niveles salvajes cada una:
+                const totalLw = lw + (muts * 2);
+                
+                // Demo interactiva
+                let v = B * (1 + totalLw * IW[key]);
+                
+                // Impronta general (+20% máximo)
+                if (impronta > 0 && key !== 'stamina' && key !== 'oxygen' && key !== 'speed') {
+                    v = v * (1 + (impronta * 0.20));
+                }
+                
+                // Bonus Taming simulado
+                if (key === 'melee') {
+                    v = v * (1 + (tamingEff * 0.176));
+                }
+                
+                return v;
+            }
+
+            function updateStats() {
+                let totalLevels = 0;
+                const impSlider = document.getElementById('imprint-slider');
+                const tamSlider = document.getElementById('taming-slider');
+                if(document.getElementById('imp-val') && impSlider) document.getElementById('imp-val').textContent = impSlider.value + '%';
+                if(document.getElementById('tej-val') && tamSlider) document.getElementById('tej-val').textContent = tamSlider.value + '%';
+
+                const newData = STAT_KEYS.map(key => {
+                    const slider = document.getElementById('slider-' + key);
+                    if (!slider || slider.disabled) return BASE_STATS[key];
+                    const lw = parseInt(slider.value);
+                    totalLevels += lw;
+                    const v = calcV(key, lw);
+                    const levelEl = document.getElementById('level-' + key);
+                    const valEl = document.getElementById('val-' + key);
+                    if (levelEl) levelEl.textContent = 'Lv ' + lw;
+                    if (valEl) valEl.textContent = v >= 10 ? Math.round(v).toLocaleString('es-ES') : v.toFixed(2);
+                    return v;
+                });
+
+                document.getElementById('nivel-total').textContent = totalLevels;
+
+                if (radarChart) {
+                    radarChart.data.datasets[0].data = newData;
+                    radarChart.update('none');
+                }
+            }
+
+            function getAccentColor() {
+                return getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#00ffcc';
+            }
+
+            function getAccentRgb() {
+                return getComputedStyle(document.body).getPropertyValue('--accent-rgb').trim() || '0,255,204';
+            }
+
+            function initRadar() {
+                if (window.radarInitialized) return;
+                const ctx = document.getElementById('statsRadar').getContext('2d');
+                const accentRgb = getAccentRgb();
+                radarChart = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: STAT_LABELS,
+                        datasets: [{
+                            label: '<?php echo addslashes($dino["nombre"]); ?>',
+                            data: STAT_KEYS.map(k => BASE_STATS[k]),
+                            backgroundColor: `rgba(${accentRgb},0.10)`,
+                            borderColor: `rgba(${accentRgb},0.85)`,
+                            pointBackgroundColor: STAT_COLORS,
+                            pointBorderColor: '#fff',
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            borderWidth: 2,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        animation: { duration: 150 },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: ctx => ' ' + Math.round(ctx.raw).toLocaleString('es-ES')
+                                }
+                            }
+                        },
+                        scales: {
+                            r: {
+                                angleLines: { color: 'rgba(255,255,255,0.08)' },
+                                grid: { color: 'rgba(255,255,255,0.08)' },
+                                pointLabels: { color: '#aaa', font: { size: 11, family: 'inherit' } },
+                                ticks: { display: false, backdropColor: 'transparent' },
+                                suggestedMin: 0,
+                            }
+                        }
+                    }
+                });
+                window.radarInitialized = true;
+                window.radarChart = radarChart;
+
+                // Estilo dinámico para los thumbs de los sliders de stats
+                document.querySelectorAll('.stat-slider-input').forEach(s => {
+                    if (s.id === 'imprint-slider' || s.id === 'taming-slider') return;
+                    const color = s.style.getPropertyValue('--thumb-color') || getAccentColor();
+                    const max = parseInt(s.max) || 150;
+                    s.style.setProperty('background', `linear-gradient(to right, ${color} 0%, ${color} ${(s.value / max * 100)}%, rgba(255,255,255,0.1) ${(s.value / max * 100)}%, rgba(255,255,255,0.1) 100%)`);
+                    s.addEventListener('input', function () {
+                        const pct = (this.value / max * 100);
+                        this.style.setProperty('background', `linear-gradient(to right, ${color} 0%, ${color} ${pct}%, rgba(255,255,255,0.1) ${pct}%, rgba(255,255,255,0.1) 100%)`);
+                    });
+                });
+
+                // Inicializar sliders de Impronta y Taming con el color del acento
+                const accent = getAccentColor();
+                const impSlider = document.getElementById('imprint-slider');
+                const tamSlider = document.getElementById('taming-slider');
+                if (impSlider) {
+                    impSlider.style.setProperty('--thumb-color', accent);
+                    const pct = (impSlider.value / 100 * 100);
+                    impSlider.style.background = `linear-gradient(to right, ${accent} 0%, ${accent} ${pct}%, rgba(255,255,255,0.1) ${pct}%, rgba(255,255,255,0.1) 100%)`;
+                    impSlider.addEventListener('input', function() {
+                        const c = getAccentColor();
+                        const p = (this.value / 100 * 100);
+                        this.style.background = `linear-gradient(to right, ${c} 0%, ${c} ${p}%, rgba(255,255,255,0.1) ${p}%, rgba(255,255,255,0.1) 100%)`;
+                    });
+                }
+                if (tamSlider) {
+                    tamSlider.style.setProperty('--thumb-color', accent);
+                    const pct = (tamSlider.value / 100 * 100);
+                    tamSlider.style.background = `linear-gradient(to right, ${accent} 0%, ${accent} ${pct}%, rgba(255,255,255,0.1) ${pct}%, rgba(255,255,255,0.1) 100%)`;
+                    tamSlider.addEventListener('input', function() {
+                        const c = getAccentColor();
+                        const p = (this.value / 100 * 100);
+                        this.style.background = `linear-gradient(to right, ${c} 0%, ${c} ${p}%, rgba(255,255,255,0.1) ${p}%, rgba(255,255,255,0.1) 100%)`;
+                    });
+                }
+
+                if (!document.getElementById('slider-thumb-style')) {
+                    const style = document.createElement('style');
+                    style.id = 'slider-thumb-style';
+                    style.textContent = STAT_COLORS.map((c, i) =>
+                        `#slider-${STAT_KEYS[i]}::-webkit-slider-thumb { background: ${c}; } #slider-${STAT_KEYS[i]}::-moz-range-thumb { background: ${c}; border: 2px solid #fff; width:16px; height:16px; border-radius:50%; cursor:pointer; }`
+                    ).join('\n');
+                    document.head.appendChild(style);
+                }
+            }
+
+            function rollWildStats() {
+                const targetLevel = parseInt(document.getElementById('gen-level').value);
+                if(isNaN(targetLevel) || targetLevel < 1) return;
+                
+                // (Lv 150 -> 149 puntos base salvajes a repartir).
+                const pointsToSpend = targetLevel - 1;
+                
+                const activeKeys = STAT_KEYS.filter(k => {
+                    const slider = document.getElementById('slider-' + k);
+                    return slider && !slider.disabled;
+                });
+                
+                let rolls = {};
+                activeKeys.forEach(k => rolls[k] = 0);
+                
+                // Distribución pseudoaleatoria al estilo del juego vanilla
+                for (let i = 0; i < pointsToSpend; i++) {
+                    const randomKey = activeKeys[Math.floor(Math.random() * activeKeys.length)];
+                    rolls[randomKey]++;
+                }
+                
+                // Aplicar a los selectores y forzar visual
+                activeKeys.forEach(k => {
+                    const slider = document.getElementById('slider-' + k);
+                    if(slider) {
+                        slider.value = rolls[k];
+                        slider.dispatchEvent(new Event('input')); // Dispara la actualización del fondo del input
+                    }
+                });
+                
+                updateStats(); // Actualización final del radar
+            }
+
+            function resetSliders() {
+                document.querySelectorAll('.stat-slider-input').forEach(s => { s.value = s.id === 'taming-slider' ? 100 : 0; s.dispatchEvent(new Event('input')); });
+                updateStats();
+            }
+
+            // Si el hash apunta a stats, abrir esa tab
+            if (window.location.hash === '#stats') {
+                const btn = [...document.querySelectorAll('.dino-tab-btn')].find(b => b.textContent.includes('Stats'));
+                if (btn) switchDinoTab('stats', btn);
+            }
+        <?php endif; ?>
+
+        // Ir a comentarios si hay hash
+        if (window.location.hash === '#comentarios') {
+            const btn = [...document.querySelectorAll('.dino-tab-btn')].find(b => b.textContent.includes('Foro'));
+            if (btn) switchDinoTab('comentarios', btn);
+        }
     </script>
+
     <?php include 'includes/footer.php'; ?>
+</body>
+
+</html>
