@@ -65,14 +65,65 @@ CREATE TABLE `dinosaurios` (
   `dieta` varchar(50) DEFAULT NULL,
   `imagen` varchar(255) DEFAULT 'default_dino.jpg',
   `descripcion` text DEFAULT NULL,
+  -- Stats base (nivel 1 salvaje)
+  `stat_health` decimal(10,2) DEFAULT 0,
+  `stat_stamina` decimal(10,2) DEFAULT 0,
+  `stat_oxygen` decimal(10,2) DEFAULT 0,
+  `stat_food` decimal(10,2) DEFAULT 0,
+  `stat_weight` decimal(10,2) DEFAULT 0,
+  `stat_melee` decimal(10,2) DEFAULT 0,
+  `stat_speed` decimal(10,2) DEFAULT 0,
+  `stat_torpidity` decimal(10,2) DEFAULT 0,
+  -- Stats de incremento salvaje (Iw)
+  `iw_health` decimal(5,3) DEFAULT 0.2,
+  `iw_stamina` decimal(5,3) DEFAULT 0.1,
+  `iw_oxygen` decimal(5,3) DEFAULT 0.1,
+  `iw_food` decimal(5,3) DEFAULT 0.15,
+  `iw_weight` decimal(5,3) DEFAULT 0.02,
+  `iw_melee` decimal(5,3) DEFAULT 0.05,
+  `iw_speed` decimal(5,3) DEFAULT 0.0,
+  `iw_torpidity` decimal(5,3) DEFAULT 0.06,
+  -- Características especiales
+  `es_tanque` tinyint(1) DEFAULT 0,
+  `es_buff` tinyint(1) DEFAULT 0,
+  `es_recolector` tinyint(1) DEFAULT 0,
+  `es_montura` tinyint(1) DEFAULT 0,
+  `es_volador` tinyint(1) DEFAULT 0,
+  `es_acuatico` tinyint(1) DEFAULT 0,
+  `es_subterraneo` tinyint(1) DEFAULT 0,
+  -- Buffs y habilidades especiales
+  `buff_descripcion` text DEFAULT NULL,
+  `buff_damage` decimal(5,2) DEFAULT 0,
+  `buff_armor` decimal(5,2) DEFAULT 0,
+  `buff_speed` decimal(5,2) DEFAULT 0,
+  `buff_otro` text DEFAULT NULL,
+  -- Formas especiales (Stego, etc.)
+  `tiene_formas` tinyint(1) DEFAULT 0,
+  `formas_descripcion` text DEFAULT NULL,
+  -- Utilidad de recolección
+  `recolecta_carne` tinyint(1) DEFAULT 0,
+  `recolecta_pescado` tinyint(1) DEFAULT 0,
+  `recolecta_madera` tinyint(1) DEFAULT 0,
+  `recolecta_piedra` tinyint(1) DEFAULT 0,
+  `recolecta_metal` tinyint(1) DEFAULT 0,
+  `recolecta_bayas` tinyint(1) DEFAULT 0,
+  `recolecta_paja` tinyint(1) DEFAULT 0,
+  `recolecta_fibra` tinyint(1) DEFAULT 0,
+  `recolecta_texugo` tinyint(1) DEFAULT 0,
+  -- Información de domesticación
+  `nivel_max_salvaje` int(11) DEFAULT 150,
+  `domable` tinyint(1) DEFAULT 1,
+  `metodo_domado` varchar(50) DEFAULT NULL,
+  `comida_favorita` varchar(50) DEFAULT NULL,
+  -- Información de reproducción
+  `tiempo_incubacion` int(11) DEFAULT 0,
+  `tiempo_madurez` int(11) DEFAULT 0,
+  `espacio_necesario` int(11) DEFAULT 0,
+  `ayuda_cria` tinyint(1) DEFAULT 0,
+  `ayuda_cria_descripcion` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nombre` (`nombre`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-
-INSERT INTO `dinosaurios` (`id`, `nombre`, `especie`, `dieta`, `descripcion`) VALUES
-(1, 'Tyrannosaurus Rex', 'T. Dominum', 'Carnívoro', 'El depredador ápex de la isla, indispensable para asaltar puestos enemigos.'),
-(2, 'Velociraptor', 'V. Primus', 'Carnívoro', 'Pequeño pero letal, capaz de inmovilizar a sus objetivos en segundos.'),
-(3, 'Stegosaurus', 'S. Regium', 'Herbívoro', 'Sus placas defensivas lo convierten en el tanque móvil perfecto.');
 
 -- 4. Tabla: dino_mapas
 DROP TABLE IF EXISTS `dino_mapas`;
