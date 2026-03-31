@@ -365,6 +365,64 @@ $cats_seleccionadas = $stmt_dc->fetchAll(PDO::FETCH_COLUMN);
                 </div>
             </div>
 
+            <!-- Regiones de Color -->
+            <div class="campo">
+                <label style="font-size:1rem; font-weight:bold; color:var(--accent); margin-bottom:15px; display:block;">
+                    <span class="material-symbols-outlined" style="vertical-align:middle; font-size:1.2rem;">palette</span>
+                    Regiones de Color
+                </label>
+                <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:20px;">
+                    Colores en formato HEX separados por coma. Deja vacío si la región no existe.
+                </p>
+                <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:16px;">
+                    <?php
+                    $region_labels = ['Cuerpo principal','Secundario','Terciario','Acentos','Detalles','Extras'];
+                    for ($r = 0; $r < 6; $r++):
+                        $rn_key = "region_{$r}_nombre";
+                        $rc_key = "region_{$r}_colores";
+                    ?>
+                    <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:10px; padding:15px;">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                            <span style="background:rgba(var(--accent-rgb),0.15); color:var(--accent); font-size:0.75rem; font-weight:800; padding:3px 8px; border-radius:20px;">Región <?php echo $r; ?></span>
+                            <span style="font-size:0.8rem; color:var(--text-muted);"><?php echo $region_labels[$r]; ?></span>
+                        </div>
+                        <label style="font-size:0.78rem; color:var(--text-muted); display:block; margin-bottom:5px;">Nombre de la región</label>
+                        <input type="text" name="<?php echo $rn_key; ?>" value="<?php echo htmlspecialchars($dino[$rn_key] ?? ''); ?>" placeholder="Ej: Cuerpo, Aletas..." maxlength="60" style="margin-bottom:8px;">
+                        <label style="font-size:0.78rem; color:var(--text-muted); display:block; margin-bottom:5px;">Colores disponibles (HEX separados por coma)</label>
+                        <input type="text" name="<?php echo $rc_key; ?>" value="<?php echo htmlspecialchars($dino[$rc_key] ?? ''); ?>" placeholder="#1a1a1a, #ff4444..."
+                            class="region-colores-input" data-region="<?php echo $r; ?>">
+                        <div id="preview-region-<?php echo $r; ?>" style="display:flex; flex-wrap:wrap; gap:4px; margin-top:8px; min-height:20px;">
+                            <?php
+                            $colores_guardados = array_filter(array_map('trim', explode(',', $dino[$rc_key] ?? '')));
+                            foreach ($colores_guardados as $hex):
+                                if (preg_match('/^#[0-9A-Fa-f]{3,6}$/', $hex)): ?>
+                                <span style="display:inline-block;width:20px;height:20px;border-radius:50%;background:<?php echo htmlspecialchars($hex); ?>;border:2px solid rgba(255,255,255,0.2);" title="<?php echo htmlspecialchars($hex); ?>"></span>
+                            <?php endif; endforeach; ?>
+                        </div>
+                    </div>
+                    <?php endfor; ?>
+                </div>
+            </div>
+
             <button type="submit" class="boton-insertar">Guardar Cambios</button>
+
+            <script>
+            document.querySelectorAll('.region-colores-input').forEach(input => {
+                input.addEventListener('input', function() {
+                    const r = this.dataset.region;
+                    const preview = document.getElementById('preview-region-' + r);
+                    preview.innerHTML = '';
+                    this.value.split(',').forEach(c => {
+                        const hex = c.trim();
+                        if (/^#[0-9A-Fa-f]{3,6}$/.test(hex)) {
+                            const dot = document.createElement('span');
+                            dot.style.cssText = `display:inline-block;width:20px;height:20px;border-radius:50%;background:${hex};border:2px solid rgba(255,255,255,0.2);`;
+                            dot.title = hex;
+                            preview.appendChild(dot);
+                        }
+                    });
+                });
+            });
+            </script>
         </form>
     <?php include '../includes/footer.php'; ?>

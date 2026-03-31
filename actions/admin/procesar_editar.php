@@ -67,7 +67,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             recolecta_piedra = :rpi, recolecta_metal = :rme, recolecta_bayas = :rba, 
             recolecta_paja = :rpa, recolecta_fibra = :rfi, recolecta_texugo = :rte,
             domable = :dom, metodo_domado = :mdom, comida_favorita = :cf, nivel_max_salvaje = :nms,
-            tiempo_incubacion = :ti, tiempo_madurez = :tma, ayuda_cria = :ac, ayuda_cria_descripcion = :acd
+            tiempo_incubacion = :ti, tiempo_madurez = :tma, ayuda_cria = :ac, ayuda_cria_descripcion = :acd,
+            region_0_nombre = :r0n, region_0_colores = :r0c,
+            region_1_nombre = :r1n, region_1_colores = :r1c,
+            region_2_nombre = :r2n, region_2_colores = :r2c,
+            region_3_nombre = :r3n, region_3_colores = :r3c,
+            region_4_nombre = :r4n, region_4_colores = :r4c,
+            region_5_nombre = :r5n, region_5_colores = :r5c
             WHERE id = :id";
         $stmtUpdate = $conexion->prepare($sqlUpdate);
         $stmtUpdate->execute([
@@ -119,6 +125,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ':tma' => (int)($_POST['tiempo_madurez'] ?? 0),
             ':ac' => isset($_POST['ayuda_cria']) ? 1 : 0,
             ':acd' => $_POST['ayuda_cria_descripcion'] ?? '',
+            ':r0n' => $_POST['region_0_nombre']  ?? null, ':r0c' => $_POST['region_0_colores'] ?? null,
+            ':r1n' => $_POST['region_1_nombre']  ?? null, ':r1c' => $_POST['region_1_colores'] ?? null,
+            ':r2n' => $_POST['region_2_nombre']  ?? null, ':r2c' => $_POST['region_2_colores'] ?? null,
+            ':r3n' => $_POST['region_3_nombre']  ?? null, ':r3c' => $_POST['region_3_colores'] ?? null,
+            ':r4n' => $_POST['region_4_nombre']  ?? null, ':r4c' => $_POST['region_4_colores'] ?? null,
+            ':r5n' => $_POST['region_5_nombre']  ?? null, ':r5c' => $_POST['region_5_colores'] ?? null,
         ]);
 
         // Actualizar tabla intermedia 'dino_mapas'

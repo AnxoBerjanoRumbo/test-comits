@@ -52,12 +52,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             recolecta_carne, recolecta_pescado, recolecta_madera, recolecta_piedra, recolecta_metal, 
             recolecta_bayas, recolecta_paja, recolecta_fibra, recolecta_texugo,
             domable, metodo_domado, comida_favorita, nivel_max_salvaje,
-            tiempo_incubacion, tiempo_madurez, ayuda_cria, ayuda_cria_descripcion
+            tiempo_incubacion, tiempo_madurez, ayuda_cria, ayuda_cria_descripcion,
+            region_0_nombre, region_0_colores, region_1_nombre, region_1_colores,
+            region_2_nombre, region_2_colores, region_3_nombre, region_3_colores,
+            region_4_nombre, region_4_colores, region_5_nombre, region_5_colores
             ) VALUES (:n, :e, :d, :desc, :img, :sh, :ss, :so, :sf, :sw, :sm, :sp, :st,
             :iwh, :iws, :iwo, :iwf, :iww, :iwm, :iwsp, :iwt,
             :et, :eb, :er, :em, :ev, :ea, :es, :bd, :bda, :bar, :bs, :bo, :tf, :fd,
             :rc, :rpe, :rma, :rpi, :rme, :rba, :rpa, :rfi, :rte,
-            :dom, :mdom, :cf, :nms, :ti, :tma, :ac, :acd)";
+            :dom, :mdom, :cf, :nms, :ti, :tma, :ac, :acd,
+            :r0n, :r0c, :r1n, :r1c, :r2n, :r2c, :r3n, :r3c, :r4n, :r4c, :r5n, :r5c)";
         $stmtDino = $conexion->prepare($sqlDino);
         $stmtDino->execute([
             ':n' => $nombre, ':e' => $especie, ':d' => $dieta, ':desc' => $descripcion, ':img' => $imagen,
@@ -108,6 +112,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ':tma' => (int)($_POST['tiempo_madurez'] ?? 0),
             ':ac' => isset($_POST['ayuda_cria']) ? 1 : 0,
             ':acd' => $_POST['ayuda_cria_descripcion'] ?? '',
+            ':r0n' => $_POST['region_0_nombre']  ?? null, ':r0c' => $_POST['region_0_colores'] ?? null,
+            ':r1n' => $_POST['region_1_nombre']  ?? null, ':r1c' => $_POST['region_1_colores'] ?? null,
+            ':r2n' => $_POST['region_2_nombre']  ?? null, ':r2c' => $_POST['region_2_colores'] ?? null,
+            ':r3n' => $_POST['region_3_nombre']  ?? null, ':r3c' => $_POST['region_3_colores'] ?? null,
+            ':r4n' => $_POST['region_4_nombre']  ?? null, ':r4c' => $_POST['region_4_colores'] ?? null,
+            ':r5n' => $_POST['region_5_nombre']  ?? null, ':r5c' => $_POST['region_5_colores'] ?? null,
         ]);
 
         // Obtener el ID del dinosaurio que acabamos de crear
