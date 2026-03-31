@@ -116,51 +116,102 @@ $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <?php include 'includes/header.php'; ?>
     <section class="buscador">
-        <form action="index.php" method="GET">
-            <input type="text" name="buscar" placeholder="Busca tu criatura..." 
-                value="<?php echo isset($_GET['buscar']) ? htmlspecialchars($_GET['buscar']) : ''; ?>">
+        <form action="index.php" method="GET" id="form-buscador">
 
-            <select name="dieta">
-                <option value="">Todas las dietas</option>
-                <option value="Carnívoro" <?php echo(isset($_GET['dieta']) && $_GET['dieta'] == 'Carnívoro') ? 'selected' : ''; ?>>Carnívoro</option>
-                <option value="Herbívoro" <?php echo(isset($_GET['dieta']) && $_GET['dieta'] == 'Herbívoro') ? 'selected' : ''; ?>>Herbívoro</option>
-                <option value="Omnívoro" <?php echo(isset($_GET['dieta']) && $_GET['dieta'] == 'Omnívoro') ? 'selected' : ''; ?>>Omnívoro</option>
-            </select>
+            <!-- Fila 1: búsqueda principal -->
+            <div class="buscador-principal">
+                <div class="buscador-input-wrap">
+                    <span class="material-symbols-outlined buscador-icon">search</span>
+                    <input type="text" name="buscar" placeholder="Busca una criatura por nombre o especie..."
+                        value="<?php echo isset($_GET['buscar']) ? htmlspecialchars($_GET['buscar']) : ''; ?>">
+                    <?php if (!empty($_GET['buscar'])): ?>
+                        <a href="index.php?<?php echo http_build_query(array_diff_key($_GET, ['buscar'=>'','p'=>''])); ?>" class="buscador-clear-input" title="Limpiar búsqueda">
+                            <span class="material-symbols-outlined">close</span>
+                        </a>
+                    <?php endif; ?>
+                </div>
+                <button type="submit" class="buscador-btn-submit">
+                    <span class="material-symbols-outlined">search</span> Buscar
+                </button>
+            </div>
 
-            <select name="mapa">
-                <option value="">Todos los mapas</option>
-                <?php foreach ($todos_mapas as $m): ?>
-                    <option value="<?php echo $m['id']; ?>" <?php echo ($mapa_id == $m['id']) ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($m['nombre_mapa']); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+            <!-- Fila 2: filtros -->
+            <div class="buscador-filtros">
+                <div class="filtro-grupo">
+                    <label class="filtro-label">
+                        <span class="material-symbols-outlined">restaurant</span> Dieta
+                    </label>
+                    <div class="filtro-chips">
+                        <?php
+                        $dietas = ['Carnívoro'=>'🥩','Herbívoro'=>'🌿','Omnívoro'=>'🍽️','Piscívoro'=>'🐟'];
+                        foreach ($dietas as $d => $emoji): ?>
+                        <a href="index.php?<?php echo http_build_query(array_merge(array_diff_key($_GET,['dieta'=>'','p'=>'']), $dieta===$d?[]:['dieta'=>$d])); ?>"
+                           class="filtro-chip <?php echo $dieta===$d ? 'active' : ''; ?>">
+                            <?php echo $emoji.' '.$d; ?>
+                        </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
 
-            <select name="cat">
-                <option value="">Todas las categorías</option>
-                <?php foreach ($todos_cats as $c): ?>
-                    <option value="<?php echo $c['id']; ?>" <?php echo ($cat_id == $c['id']) ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($c['nombre']); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+                <div class="filtro-grupo">
+                    <label class="filtro-label">
+                        <span class="material-symbols-outlined">category</span> Rol
+                    </label>
+                    <div class="filtro-chips">
+                        <?php
+                        $roles = [
+                            'es_tanque'      => ['🛡️','Tanque'],
+                            'es_buff'        => ['📈','Buff'],
+                            'es_recolector'  => ['📦','Recolector'],
+                            'es_montura'     => ['🐴','Montura'],
+                            'es_volador'     => ['🦅','Volador'],
+                            'es_acuatico'    => ['🐳','Acuático'],
+                            'es_subterraneo' => ['🦇','Cueva'],
+                        ];
+                        foreach ($roles as $r => [$emoji, $nombre]): ?>
+                        <a href="index.php?<?php echo http_build_query(array_merge(array_diff_key($_GET,['rol'=>'','p'=>'']), $rol_filtro===$r?[]:['rol'=>$r])); ?>"
+                           class="filtro-chip <?php echo $rol_filtro===$r ? 'active' : ''; ?>">
+                            <?php echo $emoji.' '.$nombre; ?>
+                        </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
 
-            <select name="rol">
-                <option value="">Todos los roles</option>
-                <option value="es_tanque"      <?php echo $rol_filtro === 'es_tanque'      ? 'selected' : ''; ?>>🛡️ Tanque / Defensa</option>
-                <option value="es_buff"        <?php echo $rol_filtro === 'es_buff'        ? 'selected' : ''; ?>>📈 Buff / Soporte</option>
-                <option value="es_recolector"  <?php echo $rol_filtro === 'es_recolector'  ? 'selected' : ''; ?>>📦 Recolección</option>
-                <option value="es_montura"     <?php echo $rol_filtro === 'es_montura'     ? 'selected' : ''; ?>>🐴 Montura / Transporte</option>
-                <option value="es_volador"     <?php echo $rol_filtro === 'es_volador'     ? 'selected' : ''; ?>>🦅 Volador</option>
-                <option value="es_acuatico"    <?php echo $rol_filtro === 'es_acuatico'    ? 'selected' : ''; ?>>🐳 Acuático</option>
-                <option value="es_subterraneo" <?php echo $rol_filtro === 'es_subterraneo' ? 'selected' : ''; ?>>🦇 Subterráneo / Cueva</option>
-            </select>
+                <div class="filtro-grupo">
+                    <label class="filtro-label">
+                        <span class="material-symbols-outlined">map</span> Mapa
+                    </label>
+                    <div class="filtro-chips">
+                        <?php foreach ($todos_mapas as $m): ?>
+                        <a href="index.php?<?php echo http_build_query(array_merge(array_diff_key($_GET,['mapa'=>'','p'=>'']), $mapa_id==$m['id']?[]:['mapa'=>$m['id']])); ?>"
+                           class="filtro-chip <?php echo $mapa_id==$m['id'] ? 'active' : ''; ?>">
+                            <?php echo htmlspecialchars($m['nombre_mapa']); ?>
+                        </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
 
-            <button type="submit">Filtrar</button>
-            
-            <?php if ($busqueda != '' || $dieta != '' || $mapa_id > 0 || $cat_id > 0 || $rol_filtro != ''): ?>
-                <a href="index.php" class="boton-limpiar">Limpiar</a>
-            <?php endif; ?>
+                <div class="filtro-grupo">
+                    <label class="filtro-label">
+                        <span class="material-symbols-outlined">label</span> Categoría
+                    </label>
+                    <div class="filtro-chips">
+                        <?php foreach ($todos_cats as $c): ?>
+                        <a href="index.php?<?php echo http_build_query(array_merge(array_diff_key($_GET,['cat'=>'','p'=>'']), $cat_id==$c['id']?[]:['cat'=>$c['id']])); ?>"
+                           class="filtro-chip <?php echo $cat_id==$c['id'] ? 'active' : ''; ?>">
+                            <?php echo htmlspecialchars($c['nombre']); ?>
+                        </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+                <?php if ($busqueda!='' || $dieta!='' || $mapa_id>0 || $cat_id>0 || $rol_filtro!=''): ?>
+                <a href="index.php" class="buscador-limpiar-todo">
+                    <span class="material-symbols-outlined">filter_alt_off</span> Limpiar filtros
+                </a>
+                <?php endif; ?>
+            </div>
+
         </form>
     </section>
     <main>

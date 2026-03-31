@@ -467,7 +467,18 @@ if (count($comentarios) > 0) {
         <!-- ══════════════════════════════════════════
          TAB: STATS (solo si tiene datos)
     ══════════════════════════════════════════ -->
-        <?php if ($tiene_stats): ?>
+        <?php if ($tiene_stats):
+        $stat_defs = [
+            'health'    => ['Vida',      'favorite',   '#e74c3c', (float)($dino['iw_health']    ?? 0.2),  $stats_data['health']],
+            'stamina'   => ['Energía',   'bolt',       '#f39c12', (float)($dino['iw_stamina']   ?? 0.1),  $stats_data['stamina']],
+            'oxygen'    => ['Oxígeno',   'water_drop', '#3498db', (float)($dino['iw_oxygen']    ?? 0.1),  $stats_data['oxygen']],
+            'food'      => ['Comida',    'restaurant', '#2ecc71', (float)($dino['iw_food']      ?? 0.15), $stats_data['food']],
+            'weight'    => ['Peso',      'weight',     '#9b59b6', (float)($dino['iw_weight']    ?? 0.02), $stats_data['weight']],
+            'melee'     => ['Melée',     'swords',     '#e67e22', (float)($dino['iw_melee']     ?? 0.05), $stats_data['melee']],
+            'speed'     => ['Velocidad', 'speed',      '#1abc9c', (float)($dino['iw_speed']     ?? 0.0),  $stats_data['speed']],
+            'torpidity' => ['Torpor',    'bedtime',    '#95a5a6', (float)($dino['iw_torpidity'] ?? 0.06), $stats_data['torpidity']],
+        ];
+        ?>
             <div id="tab-stats" class="dino-tab-panel">
 
                 <!-- Aviso disclaimer -->
@@ -750,6 +761,23 @@ if (count($comentarios) > 0) {
 
                 <!-- INFORMACIÓN DE DOMESTICACIÓN -->
                 <?php if ($features['domable']): ?>
+                <?php
+                // Calcular tiempos de taming estimados para niveles clave
+                // Fórmula ARK vanilla: tiempo_base = nivel * 50 segundos (aprox. para Knockout)
+                // Para Pasivo es diferente pero usamos una aproximación general
+                $nivel_max = (int)($features['nivel_max_salvaje'] ?? 150);
+                $metodo = $features['metodo_domado'] ?? 'Knockout';
+                // Segundos por nivel según método (aproximación vanilla)
+                $segs_por_nivel = ($metodo === 'Pasivo') ? 30 : 50;
+                $niveles_ejemplo = [30, 75, 120, $nivel_max];
+                $niveles_ejemplo = array_unique(array_filter($niveles_ejemplo, fn($n) => $n <= $nivel_max));
+                sort($niveles_ejemplo);
+                function formatTiempo($segs) {
+                    if ($segs < 60) return $segs . 's';
+                    if ($segs < 3600) return round($segs/60) . ' min';
+                    return round($segs/3600, 1) . ' h';
+                }
+                ?>
                 <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; overflow:hidden; transition:transform 0.3s; box-shadow:0 8px 30px rgba(0,0,0,0.3);">
                     <div style="height:5px; background:linear-gradient(90deg, #9b59b6, #e91e63);"></div>
                     <div style="padding:28px;">
@@ -761,13 +789,41 @@ if (count($comentarios) > 0) {
                         </div>
                         <ul style="padding:0; margin:0; list-style:none; display:flex; flex-direction:column; gap:8px; font-size:0.9rem; color:var(--text-muted);">
                             <?php if (!empty($features['metodo_domado'])): ?>
-                            <li style="display:flex; justify-content:space-between;"><span>Método</span> <strong style="color:var(--text-main);"><?php echo htmlspecialchars($features['metodo_domado']); ?></strong></li>
+                            <li style="display:flex; justify-content:space-between; align-items:center;">
+                                <span>Método</span>
+                                <strong style="color:var(--text-main); background:rgba(155,89,182,0.15); padding:3px 10px; border-radius:20px; font-size:0.85rem;">
+                                    <?php echo htmlspecialchars($features['metodo_domado']); ?>
+                                </strong>
+                            </li>
                             <?php endif; ?>
                             <?php if (!empty($features['comida_favorita'])): ?>
-                            <li style="display:flex; justify-content:space-between;"><span>Comida favorita</span> <strong style="color:var(--text-main);"><?php echo htmlspecialchars($features['comida_favorita']); ?></strong></li>
+                            <li style="display:flex; justify-content:space-between; align-items:center;">
+                                <span>Comida favorita</span>
+                                <strong style="color:var(--text-main);"><?php echo htmlspecialchars($features['comida_favorita']); ?></strong>
+                            </li>
                             <?php endif; ?>
-                            <li style="display:flex; justify-content:space-between;"><span>Nivel máx. salvaje</span> <strong style="color:var(--accent);"><?php echo $features['nivel_max_salvaje']; ?></strong></li>
+                            <li style="display:flex; justify-content:space-between; align-items:center;">
+                                <span>Nivel máx. salvaje</span>
+                                <strong style="color:var(--accent);"><?php echo $nivel_max; ?></strong>
+                            </li>
                         </ul>
+
+                        <!-- Tiempos de taming estimados -->
+                        <div style="margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.06);">
+                            <p style="margin:0 0 10px; font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:5px;">
+                                <span class="material-symbols-outlined" style="font-size:0.95rem;">schedule</span>
+                                Tiempo estimado de taming (vanilla)
+                            </p>
+                            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(80px, 1fr)); gap:8px;">
+                                <?php foreach ($niveles_ejemplo as $nv): ?>
+                                <div style="background:rgba(155,89,182,0.08); border:1px solid rgba(155,89,182,0.2); border-radius:8px; padding:8px; text-align:center;">
+                                    <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:3px;">Lv <?php echo $nv; ?></div>
+                                    <div style="font-size:0.9rem; font-weight:800; color:#9b59b6;"><?php echo formatTiempo($nv * $segs_por_nivel); ?></div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <p style="margin:8px 0 0; font-size:0.7rem; color:var(--text-muted);">* Estimación para servidores vanilla sin multiplicadores. Con eficiencia 100% (sin daño).</p>
+                        </div>
                     </div>
                 </div>
                 <?php endif; ?>
