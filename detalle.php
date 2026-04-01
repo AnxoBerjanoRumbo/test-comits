@@ -1957,13 +1957,25 @@ if (count($comentarios) > 0) {
                     canvas.height = h;
 
                     const accentRgb = getComputedStyle(document.body).getPropertyValue('--accent-rgb').trim() || '0,255,204';
-                    const srcData   = JSON.parse(JSON.stringify(srcChart.data));
 
-                    if (srcData.datasets[0]) {
-                        srcData.datasets[0].backgroundColor      = 'rgba(' + accentRgb + ',0.15)';
-                        srcData.datasets[0].borderColor          = 'rgba(' + accentRgb + ',1)';
-                        srcData.datasets[0].pointBackgroundColor = 'rgba(' + accentRgb + ',1)';
-                    }
+                    // Copiar solo los datos numéricos, no el objeto completo (tiene funciones no serializables)
+                    const srcData = {
+                        labels: srcChart.data.labels.slice(),
+                        datasets: srcChart.data.datasets.map(function(ds, i) {
+                            return {
+                                label: ds.label || '',
+                                data: ds.data ? ds.data.slice() : [],
+                                backgroundColor: i === 0 ? 'rgba(' + accentRgb + ',0.15)' : ds.backgroundColor,
+                                borderColor:     i === 0 ? 'rgba(' + accentRgb + ',1)'    : ds.borderColor,
+                                pointBackgroundColor: i === 0 ? 'rgba(' + accentRgb + ',1)' : ds.pointBackgroundColor,
+                                pointBorderColor: '#fff',
+                                pointBorderWidth: 2,
+                                pointRadius: 5,
+                                borderWidth: i === 0 ? 3 : 3,
+                                borderDash: ds.borderDash || [],
+                            };
+                        })
+                    };
 
                     modalChart = new Chart(canvas.getContext('2d'), {
                         type: 'radar',

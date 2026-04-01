@@ -66,12 +66,12 @@ document.addEventListener('DOMContentLoaded', function () {
             'daltonico':  '255,255,0',
         };
         const accentRgb = TEMA_COLORES[themeName] || '0,255,204';
-        if (window.radarChart) {
+        if (window.radarChart && window.radarChart.data && window.radarChart.data.datasets && window.radarChart.data.datasets[0]) {
             window.radarChart.data.datasets[0].backgroundColor = `rgba(${accentRgb},0.10)`;
             window.radarChart.data.datasets[0].borderColor     = `rgba(${accentRgb},0.85)`;
             window.radarChart.update('none');
         }
-        if (window.radarComparar) {
+        if (window.radarComparar && window.radarComparar.data && window.radarComparar.data.datasets && window.radarComparar.data.datasets[0]) {
             window.radarComparar.data.datasets[0].backgroundColor      = `rgba(${accentRgb},0.15)`;
             window.radarComparar.data.datasets[0].borderColor          = `rgba(${accentRgb},1)`;
             window.radarComparar.data.datasets[0].pointBackgroundColor = `rgba(${accentRgb},1)`;
