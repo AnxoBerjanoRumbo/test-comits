@@ -2683,3 +2683,45 @@ body.theme-daltonico ::-webkit-scrollbar-thumb:hover { background-color: #e6e600
     min-width: 40px;
     text-align: right;
 }
+
+/* ==========================================================================
+   ESTILOS DE IMPRESIÓN (Exportar ficha)
+   ========================================================================== */
+@media print {
+    /* Ocultar elementos de navegación */
+    .header-principal,
+    .footer-principal,
+    .dino-tabs-nav,
+    .accessibility-panel,
+    .scroll-container,
+    #btn-favorito,
+    .btn-nav,
+    .boton-volver,
+    #tab-stats,
+    #tab-habilidades,
+    #tab-comentarios,
+    #tab-comparar,
+    button[onclick="window.print()"] { display: none !important; }
+
+    /* Mostrar solo el tab info */
+    #tab-info { display: block !important; }
+
+    /* Fondo blanco para impresión */
+    body { background: #fff !important; color: #111 !important; padding: 0 !important; max-width: 100% !important; }
+    .contenedor-detalle { box-shadow: none !important; border: none !important; padding: 0 !important; max-width: 100% !important; }
+
+    /* Hero compacto */
+    .dino-hero { min-height: 200px !important; }
+    .dino-hero-nombre { font-size: 2rem !important; color: #111 !important; }
+    .dino-hero-especie { color: #555 !important; }
+
+    /* Descripción legible */
+    .dino-hero-bg { filter: brightness(0.6) !important; }
+
+    /* Regiones de color */
+    .notif-card, .alerta-info { display: none !important; }
+
+    /* Forzar colores de texto */
+    * { color: #111 !important; background: transparent !important; border-color: #ccc !important; }
+    a { text-decoration: none !important; }
+}

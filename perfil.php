@@ -11,6 +11,17 @@ $sql = "SELECT * FROM usuarios WHERE id = :id";
 $stmt = $conexion->prepare($sql);
 $stmt->execute([':id' => $usuario_id]);
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Cargar favoritos del usuario
+$stmt_favs = $conexion->prepare(
+    "SELECT d.id, d.nombre, d.imagen, d.dieta, f.fecha
+     FROM favoritos f
+     JOIN dinosaurios d ON f.dino_id = d.id
+     WHERE f.usuario_id = :u
+     ORDER BY f.fecha DESC"
+);
+$stmt_favs->execute([':u' => $usuario_id]);
+$favoritos = $stmt_favs->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -155,4 +166,36 @@ $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
         <?php endif; ?>
 
         <script src="assets/js/perfil.js"></script>
+
+        <!-- SECCIÓN FAVORITOS -->
+        <?php if (!empty($favoritos)): ?>
+        <div style="margin-top:40px;">
+            <h3 style="margin:0 0 20px; font-size:1.2rem; color:var(--accent); display:flex; align-items:center; gap:8px;">
+                <span class="material-symbols-outlined">favorite</span>
+                Mis Criaturas Favoritas
+                <span style="background:rgba(var(--accent-rgb),0.15); color:var(--accent); font-size:0.75rem; font-weight:800; padding:3px 8px; border-radius:20px;"><?php echo count($favoritos); ?></span>
+            </h3>
+            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:14px;">
+                <?php foreach ($favoritos as $fav):
+                    $src_fav = (strpos($fav['imagen'] ?? '', 'http') === 0) ? $fav['imagen'] : "assets/img/dinos/" . ($fav['imagen'] ?? 'default_dino.jpg');
+                    if (strpos($src_fav, 'res.cloudinary.com') !== false) {
+                        $src_fav = str_replace('/upload/', '/upload/w_200,c_fill,g_auto,f_auto,q_auto/', $src_fav);
+                    }
+                ?>
+                <a href="detalle.php?id=<?php echo (int)$fav['id']; ?>" style="text-decoration:none; display:block; background:var(--bg-card); border:1px solid var(--border-color); border-radius:10px; overflow:hidden; transition:all 0.25s;" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--border-color)';this.style.transform='none'">
+                    <div style="height:100px; overflow:hidden;">
+                        <img src="<?php echo htmlspecialchars($src_fav); ?>" alt="<?php echo htmlspecialchars($fav['nombre']); ?>"
+                            style="width:100%; height:100%; object-fit:cover;"
+                            onerror="this.src='assets/img/dinos/default_dino.jpg'">
+                    </div>
+                    <div style="padding:8px 10px;">
+                        <p style="margin:0; font-size:0.82rem; font-weight:700; color:var(--text-main); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><?php echo htmlspecialchars($fav['nombre']); ?></p>
+                        <p style="margin:2px 0 0; font-size:0.7rem; color:var(--text-muted);"><?php echo htmlspecialchars($fav['dieta'] ?? ''); ?></p>
+                    </div>
+                </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+
     <?php include 'includes/footer.php'; ?>

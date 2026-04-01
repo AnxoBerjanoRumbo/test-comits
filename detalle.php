@@ -374,6 +374,14 @@ if (count($comentarios) > 0) {
     ];
     $tiene_stats = array_sum($stats_data) > 0;
 
+    // Verificar si el dino es favorito del usuario actual
+    $es_favorito = false;
+    if (isset($_SESSION['usuario_id'])) {
+        $stmt_fav = $conexion->prepare("SELECT id FROM favoritos WHERE usuario_id = :u AND dino_id = :d");
+        $stmt_fav->execute([':u' => $_SESSION['usuario_id'], ':d' => $id]);
+        $es_favorito = (bool)$stmt_fav->fetch();
+    }
+
     // Dieta para tips contextuales
     $esCarnivoro = in_array($dino['dieta'], ['Carnívoro', 'Piscívoro']);
     $esHerbivoro = $dino['dieta'] === 'Herbívoro';
@@ -395,6 +403,15 @@ if (count($comentarios) > 0) {
 
             <h1 class="dino-hero-nombre"><?php echo htmlspecialchars($dino['nombre']); ?></h1>
             <p class="dino-hero-especie"><?php echo htmlspecialchars($dino['especie']); ?></p>
+
+            <?php if (isset($_SESSION['usuario_id'])): ?>
+            <button id="btn-favorito" onclick="toggleFavorito()"
+                title="<?php echo $es_favorito ? 'Quitar de favoritos' : 'Añadir a favoritos'; ?>"
+                style="margin-top:12px; background:<?php echo $es_favorito ? 'rgba(255,68,68,0.2)' : 'rgba(255,255,255,0.1)'; ?>; border:1px solid <?php echo $es_favorito ? '#ff4444' : 'rgba(255,255,255,0.2)'; ?>; color:<?php echo $es_favorito ? '#ff4444' : '#fff'; ?>; border-radius:30px; padding:8px 18px; cursor:pointer; font-family:inherit; font-size:0.85rem; font-weight:700; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s; backdrop-filter:blur(6px);">
+                <span class="material-symbols-outlined" style="font-size:1.1rem;" id="fav-icon"><?php echo $es_favorito ? 'favorite' : 'favorite_border'; ?></span>
+                <span id="fav-label"><?php echo $es_favorito ? 'En favoritos' : 'Añadir a favoritos'; ?></span>
+            </button>
+            <?php endif; ?>
 
             <div class="dino-hero-tags">
                 <span class="hero-tag hero-tag-dieta">
@@ -453,7 +470,13 @@ if (count($comentarios) > 0) {
 
             <?php if (!empty($dino['descripcion'])): ?>
                 <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_insertar'] ?? 0) == 1): ?>
-                <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+                <div style="display:flex; justify-content:flex-end; gap:8px; margin-bottom:10px;">
+                    <button onclick="window.print()" title="Imprimir / Exportar ficha"
+                        style="display:inline-flex; align-items:center; gap:6px; padding:7px 16px; background:rgba(255,255,255,0.05); color:var(--text-muted); font-weight:700; border-radius:8px; border:1px solid var(--border-color); font-size:0.82rem; cursor:pointer; font-family:inherit; transition:all 0.2s;"
+                        onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='var(--text-main)'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='var(--text-muted)'">
+                        <span class="material-symbols-outlined" style="font-size:0.95rem;">print</span>
+                        Exportar
+                    </button>
                     <a href="admin/editar.php?id=<?php echo $dino['id']; ?>"
                         style="display:inline-flex; align-items:center; gap:6px; padding:7px 16px; background:rgba(var(--accent-rgb),0.1); color:var(--accent); font-weight:700; border-radius:8px; border:1px solid rgba(var(--accent-rgb),0.3); text-decoration:none; font-size:0.82rem; transition:all 0.2s;"
                         onmouseover="this.style.background='rgba(var(--accent-rgb),0.2)'" onmouseout="this.style.background='rgba(var(--accent-rgb),0.1)'">
@@ -461,6 +484,16 @@ if (count($comentarios) > 0) {
                         Editar Criatura
                     </a>
                 </div>
+                <?php else: ?>
+                <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+                    <button onclick="window.print()" title="Imprimir / Exportar ficha"
+                        style="display:inline-flex; align-items:center; gap:6px; padding:7px 16px; background:rgba(255,255,255,0.05); color:var(--text-muted); font-weight:700; border-radius:8px; border:1px solid var(--border-color); font-size:0.82rem; cursor:pointer; font-family:inherit; transition:all 0.2s;"
+                        onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='var(--text-main)'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='var(--text-muted)'">
+                        <span class="material-symbols-outlined" style="font-size:0.95rem;">print</span>
+                        Exportar ficha
+                    </button>
+                </div>
+                <?php endif; ?>
                 <?php endif; ?>
                 <!-- CARD DE DESCRIPCIÓN -->
                 <div style="background:linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.85) 100%); border:1px solid rgba(255,255,255,0.06); border-radius:18px; padding:35px; margin-bottom:30px; box-shadow:0 15px 40px rgba(0,0,0,0.5); position:relative; overflow:hidden;">
@@ -1718,6 +1751,41 @@ if (count($comentarios) > 0) {
             const btn = [...document.querySelectorAll('.dino-tab-btn')].find(b => b.textContent.includes('Foro'));
             if (btn) switchDinoTab('comentarios', btn);
         }
+
+        // ── FAVORITOS ─────────────────────────────────────
+        window.toggleFavorito = function() {
+            const btn   = document.getElementById('btn-favorito');
+            const icon  = document.getElementById('fav-icon');
+            const label = document.getElementById('fav-label');
+            if (!btn) return;
+
+            btn.disabled = true;
+            const fd = new FormData();
+            fd.append('dino_id', '<?php echo (int)$id; ?>');
+            fd.append('csrf_token', '<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? ''); ?>');
+
+            fetch('actions/toggle_favorito.php', { method: 'POST', body: fd })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.status === 'added') {
+                        icon.textContent  = 'favorite';
+                        label.textContent = 'En favoritos';
+                        btn.style.background   = 'rgba(255,68,68,0.2)';
+                        btn.style.borderColor  = '#ff4444';
+                        btn.style.color        = '#ff4444';
+                        btn.title = 'Quitar de favoritos';
+                    } else if (data.status === 'removed') {
+                        icon.textContent  = 'favorite_border';
+                        label.textContent = 'Añadir a favoritos';
+                        btn.style.background   = 'rgba(255,255,255,0.1)';
+                        btn.style.borderColor  = 'rgba(255,255,255,0.2)';
+                        btn.style.color        = '#fff';
+                        btn.title = 'Añadir a favoritos';
+                    }
+                    btn.disabled = false;
+                })
+                .catch(() => { btn.disabled = false; });
+        };
 
         <?php if ($tiene_stats): ?>
         // ── COMPARADOR ────────────────────────────────────
