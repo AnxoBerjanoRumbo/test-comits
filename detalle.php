@@ -987,7 +987,7 @@ if (count($comentarios) > 0) {
                 <?php endif; ?>
 
                 <!-- Calculadora de taming -->
-                <div style="background:rgba(var(--accent-rgb),0.05); border:1px solid rgba(var(--accent-rgb),0.15); border-radius:10px; padding:16px;">
+                <div style="background:rgba(var(--accent-rgb),0.05); border:1px solid rgba(var(--accent-rgb),0.15); border-radius:10px; padding:16px; margin-top:16px;">
                     <p style="margin:0 0 12px; font-size:0.75rem; font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:0.5px; display:flex; align-items:center; gap:5px;">
                         <span class="material-symbols-outlined" style="font-size:0.95rem;">calculate</span>
                         Calculadora de Taming
@@ -1287,13 +1287,12 @@ if (count($comentarios) > 0) {
                 <div>
                     <h4 style="margin:0 0 10px; color:var(--text-muted); font-size:0.78rem; text-transform:uppercase; letter-spacing:1px;">Diferencia de Stats Base</h4>
                     <!-- Fila 1: nombres de columnas -->
-                    <div style="display:grid; grid-template-columns:1fr 72px 72px 52px; gap:6px; padding-bottom:4px;">
-                        <span></span>
-                        <span style="font-size:0.72rem; color:var(--accent); font-weight:800; text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" id="th-a"><?php echo mb_strimwidth(htmlspecialchars($dino['nombre']), 0, 9, '…'); ?></span>
-                        <span style="font-size:0.72rem; color:#ff9800; font-weight:800; text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" id="th-b">—</span>
+                    <div style="display:grid; grid-template-columns:1fr 72px 72px 52px; gap:6px; padding:8px 10px; background:rgba(255,255,255,0.03); border-radius:8px; margin-bottom:10px;">
+                        <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Stat</span>
+                        <span style="font-size:0.75rem; color:var(--accent); font-weight:800; text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" id="th-a"><?php echo mb_strimwidth(htmlspecialchars($dino['nombre']), 0, 9, '…'); ?></span>
+                        <span style="font-size:0.75rem; color:#ff9800; font-weight:800; text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" id="th-b">—</span>
                         <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-align:right;">Δ</span>
                     </div>
-                    <div style="border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:8px;"></div>
                     <div id="comparar-tabla" style="display:flex; flex-direction:column; gap:10px;">
                         <?php
                         $stat_compare = [
