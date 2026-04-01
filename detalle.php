@@ -563,7 +563,14 @@ if (count($comentarios) > 0) {
 
                     <!-- Radar Chart -->
                     <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-color); border-radius:var(--radius); padding:25px; position:sticky; top:80px;">
-                        <h4 style="margin:0 0 20px; color:var(--text-muted); font-size:0.8rem; text-transform:uppercase; letter-spacing:1px;">Gráfico Radar · Valores calculados</h4>
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+                            <h4 style="margin:0; color:var(--text-muted); font-size:0.8rem; text-transform:uppercase; letter-spacing:1px;">Gráfico Radar · Valores calculados</h4>
+                            <button onclick="abrirRadarModal('statsRadar')" title="Ampliar gráfico"
+                                style="background:rgba(var(--accent-rgb),0.1); border:1px solid rgba(var(--accent-rgb),0.3); color:var(--accent); border-radius:6px; padding:5px 8px; cursor:pointer; display:flex; align-items:center; transition:0.2s;"
+                                onmouseover="this.style.background='rgba(var(--accent-rgb),0.2)'" onmouseout="this.style.background='rgba(var(--accent-rgb),0.1)'">
+                                <span class="material-symbols-outlined" style="font-size:1.1rem;">zoom_in</span>
+                            </button>
+                        </div>
                         <canvas id="statsRadar" style="max-height:320px;"></canvas>
                         <div style="text-align:center; margin-top:16px;">
                             <span id="radar-mode-label" style="font-size:0.78rem; color:var(--accent); font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Nivel Salvaje (Wild)</span>
@@ -1312,7 +1319,14 @@ if (count($comentarios) > 0) {
 
                 <!-- COLUMNA CENTRAL: radar -->
                 <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-color); border-radius:12px; padding:18px; position:sticky; top:80px;">
-                    <h4 style="margin:0 0 12px; color:var(--text-muted); font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; text-align:center;">Radar Comparativo</h4>
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                        <h4 style="margin:0; color:var(--text-muted); font-size:0.75rem; text-transform:uppercase; letter-spacing:1px;">Radar Comparativo</h4>
+                        <button onclick="abrirRadarModal('radarComparar')" title="Ampliar gráfico"
+                            style="background:rgba(var(--accent-rgb),0.1); border:1px solid rgba(var(--accent-rgb),0.3); color:var(--accent); border-radius:6px; padding:5px 8px; cursor:pointer; display:flex; align-items:center; transition:0.2s;"
+                            onmouseover="this.style.background='rgba(var(--accent-rgb),0.2)'" onmouseout="this.style.background='rgba(var(--accent-rgb),0.1)'">
+                            <span class="material-symbols-outlined" style="font-size:1.1rem;">zoom_in</span>
+                        </button>
+                    </div>
                     <canvas id="radarComparar" style="max-height:280px;"></canvas>
                     <div style="display:flex; gap:12px; justify-content:center; margin-top:12px; flex-wrap:wrap;">
                         <div style="display:flex; align-items:center; gap:5px; font-size:0.75rem; color:var(--text-muted);">
@@ -1898,6 +1912,83 @@ if (count($comentarios) > 0) {
             if (name === 'comparar' && !radarComparar) initRadarComparar();
         };
         <?php endif; ?>
+
+        // ── MODAL RADAR ───────────────────────────────────
+        (function() {
+            // Crear modal una sola vez
+            const modal = document.createElement('div');
+            modal.id = 'radar-modal';
+            modal.style.cssText = 'display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px;';
+            modal.innerHTML = `
+                <div style="background:var(--bg-card,#1e1e1e);border:1px solid var(--border-color,#333);border-radius:16px;padding:28px;max-width:700px;width:100%;position:relative;box-shadow:0 30px 80px rgba(0,0,0,0.8);">
+                    <button id="radar-modal-close" style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.08);border:none;color:var(--text-muted,#aaa);border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;transition:0.2s;"
+                        onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
+                        <span class="material-symbols-outlined" style="font-size:1.2rem;">close</span>
+                    </button>
+                    <h4 id="radar-modal-title" style="margin:0 0 20px;font-size:0.85rem;color:var(--text-muted,#aaa);text-transform:uppercase;letter-spacing:1px;font-weight:700;"></h4>
+                    <canvas id="radar-modal-canvas" style="width:100%;max-height:500px;"></canvas>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            let modalChart = null;
+
+            document.getElementById('radar-modal-close').addEventListener('click', () => {
+                modal.style.display = 'none';
+                if (modalChart) { modalChart.destroy(); modalChart = null; }
+            });
+            modal.addEventListener('click', e => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    if (modalChart) { modalChart.destroy(); modalChart = null; }
+                }
+            });
+
+            window.abrirRadarModal = function(canvasId) {
+                const srcChart = canvasId === 'statsRadar' ? window.radarChart : window.radarComparar;
+                if (!srcChart) return;
+
+                modal.style.display = 'flex';
+                const title = document.getElementById('radar-modal-title');
+                title.textContent = canvasId === 'statsRadar' ? 'Gráfico Radar · Valores calculados' : 'Radar Comparativo';
+
+                if (modalChart) { modalChart.destroy(); modalChart = null; }
+
+                const ctx = document.getElementById('radar-modal-canvas').getContext('2d');
+                // Clonar config del chart original
+                const srcData = JSON.parse(JSON.stringify(srcChart.data));
+                modalChart = new Chart(ctx, {
+                    type: 'radar',
+                    data: srcData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        animation: { duration: 300 },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'bottom',
+                                labels: { color: '#ccc', font: { size: 12, family: 'inherit' }, padding: 16 }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: ctx => ` ${ctx.dataset.label}: ${Math.round(ctx.raw).toLocaleString('es-ES')}`
+                                }
+                            }
+                        },
+                        scales: {
+                            r: {
+                                angleLines: { color: 'rgba(255,255,255,0.1)' },
+                                grid: { color: 'rgba(255,255,255,0.1)' },
+                                pointLabels: { color: '#ddd', font: { size: 13, family: 'inherit', weight: '600' } },
+                                ticks: { display: false, backdropColor: 'transparent' },
+                                suggestedMin: 0,
+                            }
+                        }
+                    }
+                });
+            };
+        })();
     </script>
 
     <?php include 'includes/footer.php'; ?>
