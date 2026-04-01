@@ -1,10 +1,10 @@
-{
-  "_info": "Datos de referencia ARK. Fuente: ARK Wiki / ARKBreedingStats. Edita para añadir criaturas.",
+﻿{
+  "_info": "Datos de referencia ARK. Fuente: ARK Wiki / ARKBreedingStats. Edita para aÃ±adir criaturas.",
   "criaturas": [
     {
       "nombre": "Allosaurus",
       "especie": "Allosaurus fragilis",
-      "dieta": "Carnívoro",
+      "dieta": "CarnÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 2400, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
@@ -16,7 +16,7 @@
         "es_tanque": 0, "es_buff": 1, "es_recolector": 1, "es_montura": 1,
         "es_volador": 0, "es_acuatico": 0, "es_subterraneo": 0
       },
-      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "Pack boost: +15% daño y resistencia con 3+ Allos" },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "Pack boost: +15% daÃ±o y resistencia con 3+ Allos" },
       "formas": { "tiene_formas": 0 },
       "recoleccion": {
         "recolecta_carne": 1, "recolecta_pescado": 0, "recolecta_madera": 0,
@@ -32,7 +32,7 @@
     {
       "nombre": "Ankylosaurus",
       "especie": "Ankylosaurus magniventris",
-      "dieta": "Herbívoro",
+      "dieta": "HerbÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 700, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 8000,
@@ -60,7 +60,7 @@
     {
       "nombre": "Argentavis",
       "especie": "Argentavis magnificens",
-      "dieta": "Carnívoro",
+      "dieta": "CarnÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 1175, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
@@ -88,7 +88,7 @@
     {
       "nombre": "Baryonyx",
       "especie": "Baryonyx walkeri",
-      "dieta": "Piscívoro",
+      "dieta": "PiscÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 700, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
@@ -116,7 +116,7 @@
     {
       "nombre": "Brontosaurus",
       "especie": "Brontosaurus excelsus",
-      "dieta": "Herbívoro",
+      "dieta": "HerbÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island"],
       "stats": {
         "stat_health": 4500, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 12000,
@@ -144,7 +144,7 @@
     {
       "nombre": "Carnotaurus",
       "especie": "Carnotaurus sastrei",
-      "dieta": "Carnívoro",
+      "dieta": "CarnÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 700, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
@@ -172,7 +172,7 @@
     {
       "nombre": "Castoroides",
       "especie": "Castoroides ohioensis",
-      "dieta": "Herbívoro",
+      "dieta": "HerbÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 475, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 8000,
@@ -200,7 +200,7 @@
     {
       "nombre": "Daeodon",
       "especie": "Daeodon shoshonensis",
-      "dieta": "Omnívoro",
+      "dieta": "OmnÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 700, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 8000,
@@ -212,7 +212,7 @@
         "es_tanque": 0, "es_buff": 1, "es_recolector": 0, "es_montura": 1,
         "es_volador": 0, "es_acuatico": 0, "es_subterraneo": 0
       },
-      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "Curación pasiva de aliados cercanos consumiendo comida" },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "CuraciÃ³n pasiva de aliados cercanos consumiendo comida" },
       "formas": { "tiene_formas": 0 },
       "recoleccion": {
         "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
@@ -228,7 +228,7 @@
     {
       "nombre": "Doedicurus",
       "especie": "Doedicurus clavicaudatus",
-      "dieta": "Herbívoro",
+      "dieta": "HerbÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 700, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 8000,
@@ -256,7 +256,7 @@
     {
       "nombre": "Giganotosaurus",
       "especie": "Giganotosaurus carolinii",
-      "dieta": "Carnívoro",
+      "dieta": "CarnÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 80000, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 40000,
@@ -284,7 +284,7 @@
     {
       "nombre": "Iguanodon",
       "especie": "Iguanodon bernissartensis",
-      "dieta": "Herbívoro",
+      "dieta": "HerbÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 350, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 5000,
@@ -312,7 +312,7 @@
     {
       "nombre": "Mammoth",
       "especie": "Mammuthus primigenius",
-      "dieta": "Herbívoro",
+      "dieta": "HerbÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 700, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 8000,
@@ -340,7 +340,7 @@
     {
       "nombre": "Megalosaurus",
       "especie": "Megalosaurus bucklandii",
-      "dieta": "Carnívoro",
+      "dieta": "CarnÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 1200, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
@@ -352,7 +352,7 @@
         "es_tanque": 0, "es_buff": 0, "es_recolector": 1, "es_montura": 1,
         "es_volador": 0, "es_acuatico": 0, "es_subterraneo": 1
       },
-      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "Más efectivo de noche; penalización de día" },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "MÃ¡s efectivo de noche; penalizaciÃ³n de dÃ­a" },
       "formas": { "tiene_formas": 0 },
       "recoleccion": {
         "recolecta_carne": 1, "recolecta_pescado": 0, "recolecta_madera": 0,
@@ -368,7 +368,7 @@
     {
       "nombre": "Mosasaurus",
       "especie": "Mosasaurus hoffmannii",
-      "dieta": "Carnívoro",
+      "dieta": "CarnÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 4500, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 10000,
@@ -396,7 +396,7 @@
     {
       "nombre": "Pachycephalosaurus",
       "especie": "Pachycephalosaurus wyomingensis",
-      "dieta": "Herbívoro",
+      "dieta": "HerbÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 350, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 5000,
@@ -424,7 +424,7 @@
     {
       "nombre": "Parasaur",
       "especie": "Parasaurolophus walkeri",
-      "dieta": "Herbívoro",
+      "dieta": "HerbÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 250, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 5000,
@@ -452,7 +452,7 @@
     {
       "nombre": "Pteranodon",
       "especie": "Pteranodon longiceps",
-      "dieta": "Carnívoro",
+      "dieta": "CarnÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 325, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
@@ -480,7 +480,7 @@
     {
       "nombre": "Quetzal",
       "especie": "Quetzalcoatlus northropi",
-      "dieta": "Carnívoro",
+      "dieta": "CarnÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 1200, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
@@ -508,7 +508,7 @@
     {
       "nombre": "Raptor",
       "especie": "Utahraptor ostrommaysorum",
-      "dieta": "Carnívoro",
+      "dieta": "CarnÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 350, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
@@ -536,7 +536,7 @@
     {
       "nombre": "Rex",
       "especie": "Tyrannosaurus rex",
-      "dieta": "Carnívoro",
+      "dieta": "CarnÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 3000, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 10000,
@@ -564,7 +564,7 @@
     {
       "nombre": "Rock Drake",
       "especie": "Draconis obscurum",
-      "dieta": "Carnívoro",
+      "dieta": "CarnÃ­voro",
       "mapas": ["Aberration", "Valguero", "Crystal Isles", "Fjordur"],
       "stats": {
         "stat_health": 1200, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
@@ -592,7 +592,7 @@
     {
       "nombre": "Sarco",
       "especie": "Sarcosuchus imperator",
-      "dieta": "Carnívoro",
+      "dieta": "CarnÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 700, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
@@ -620,7 +620,7 @@
     {
       "nombre": "Spino",
       "especie": "Spinosaurus aegyptiacus",
-      "dieta": "Carnívoro",
+      "dieta": "CarnÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 2400, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 5000,
@@ -632,7 +632,7 @@
         "es_tanque": 0, "es_buff": 0, "es_recolector": 1, "es_montura": 1,
         "es_volador": 0, "es_acuatico": 1, "es_subterraneo": 0
       },
-      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "Modo hidratado: +15% velocidad y daño en agua" },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "Modo hidratado: +15% velocidad y daÃ±o en agua" },
       "formas": { "tiene_formas": 0 },
       "recoleccion": {
         "recolecta_carne": 1, "recolecta_pescado": 1, "recolecta_madera": 0,
@@ -648,7 +648,7 @@
     {
       "nombre": "Stegosaurus",
       "especie": "Stegosaurus ungulatus",
-      "dieta": "Herbívoro",
+      "dieta": "HerbÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 700, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 8000,
@@ -676,7 +676,7 @@
     {
       "nombre": "Tapejara",
       "especie": "Tapejara wellnhoferi",
-      "dieta": "Carnívoro",
+      "dieta": "CarnÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 700, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
@@ -704,7 +704,7 @@
     {
       "nombre": "Therizinosaur",
       "especie": "Therizinosaurus cheloniformis",
-      "dieta": "Herbívoro",
+      "dieta": "HerbÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 1200, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 8000,
@@ -732,7 +732,7 @@
     {
       "nombre": "Thylacoleo",
       "especie": "Thylacoleo carnifex",
-      "dieta": "Carnívoro",
+      "dieta": "CarnÃ­voro",
       "mapas": ["Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 700, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
@@ -744,7 +744,7 @@
         "es_tanque": 0, "es_buff": 0, "es_recolector": 1, "es_montura": 1,
         "es_volador": 0, "es_acuatico": 0, "es_subterraneo": 1
       },
-      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "Escala árboles y paredes; puede saltar" },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "Escala Ã¡rboles y paredes; puede saltar" },
       "formas": { "tiene_formas": 0 },
       "recoleccion": {
         "recolecta_carne": 1, "recolecta_pescado": 0, "recolecta_madera": 0,
@@ -760,7 +760,7 @@
     {
       "nombre": "Trike",
       "especie": "Triceratops horridus",
-      "dieta": "Herbívoro",
+      "dieta": "HerbÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 700, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 8000,
@@ -788,7 +788,7 @@
     {
       "nombre": "Wyvern (Fire)",
       "especie": "Draconis vipera",
-      "dieta": "Carnívoro",
+      "dieta": "CarnÃ­voro",
       "mapas": ["Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 1200, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
@@ -800,7 +800,7 @@
         "es_tanque": 0, "es_buff": 0, "es_recolector": 0, "es_montura": 1,
         "es_volador": 1, "es_acuatico": 0, "es_subterraneo": 0
       },
-      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "Ataque de fuego en área; no puede ser domado directamente" },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "Ataque de fuego en Ã¡rea; no puede ser domado directamente" },
       "formas": { "tiene_formas": 0 },
       "recoleccion": {
         "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
@@ -816,7 +816,7 @@
     {
       "nombre": "Yutyrannus",
       "especie": "Yutyrannus huali",
-      "dieta": "Carnívoro",
+      "dieta": "CarnÃ­voro",
       "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
       "stats": {
         "stat_health": 2400, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 10000,
@@ -828,7 +828,7 @@
         "es_tanque": 0, "es_buff": 1, "es_recolector": 1, "es_montura": 1,
         "es_volador": 0, "es_acuatico": 0, "es_subterraneo": 0
       },
-      "buffs": { "buff_damage": 25, "buff_armor": 25, "buff_speed": 0, "buff_otro": "Rugido de coraje: +25% daño y +25% armadura a aliados cercanos" },
+      "buffs": { "buff_damage": 25, "buff_armor": 25, "buff_speed": 0, "buff_otro": "Rugido de coraje: +25% daÃ±o y +25% armadura a aliados cercanos" },
       "formas": { "tiene_formas": 0 },
       "recoleccion": {
         "recolecta_carne": 1, "recolecta_pescado": 0, "recolecta_madera": 0,
@@ -840,6 +840,557 @@
         "nivel_max_salvaje": 150
       },
       "cria": { "tiempo_incubacion": 300, "tiempo_madurez": 7200, "ayuda_cria": 0 }
+    },
+    {
+      "nombre": "Dodo",
+      "especie": "Raphus cucullatus",
+      "dieta": "Herbívoro",
+      "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
+      "stats": {
+        "stat_health": 35, "stat_stamina": 150, "stat_oxygen": 150, "stat_food": 450,
+        "stat_weight": 15, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 40,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 0, "es_buff": 0, "es_recolector": 1, "es_montura": 0,
+        "es_volador": 0, "es_acuatico": 0, "es_subterraneo": 0
+      },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
+        "recolecta_piedra": 0, "recolecta_metal": 0, "recolecta_bayas": 1,
+        "recolecta_paja": 0, "recolecta_fibra": 0, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 1, "metodo_domado": "Knockout", "comida_favorita": "Mejobayas",
+        "nivel_max_salvaje": 150
+      },
+      "cria": { "tiempo_incubacion": 0, "tiempo_madurez": 480, "ayuda_cria": 0 }
+    },
+    {
+      "nombre": "Equus",
+      "especie": "Equus ferus",
+      "dieta": "Herbívoro",
+      "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
+      "stats": {
+        "stat_health": 425, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
+        "stat_weight": 300, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 350,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 0, "es_buff": 0, "es_recolector": 0, "es_montura": 1,
+        "es_volador": 0, "es_acuatico": 0, "es_subterraneo": 0
+      },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
+        "recolecta_piedra": 0, "recolecta_metal": 0, "recolecta_bayas": 0,
+        "recolecta_paja": 0, "recolecta_fibra": 0, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 1, "metodo_domado": "Pasivo", "comida_favorita": "Azúcar",
+        "nivel_max_salvaje": 150
+      },
+      "cria": { "tiempo_incubacion": 0, "tiempo_madurez": 2880, "ayuda_cria": 0 }},
+    {
+      "nombre": "Karkinos",
+      "especie": "Karkinos brutalis",
+      "dieta": "Carnívoro",
+      "mapas": ["Aberration", "Valguero", "Crystal Isles"],
+      "stats": {
+        "stat_health": 1200, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
+        "stat_weight": 500, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 1000,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 1, "es_buff": 0, "es_recolector": 0, "es_montura": 1,
+        "es_volador": 0, "es_acuatico": 1, "es_subterraneo": 0
+      },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
+        "recolecta_piedra": 0, "recolecta_metal": 0, "recolecta_bayas": 0,
+        "recolecta_paja": 0, "recolecta_fibra": 0, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 1, "metodo_domado": "Knockout", "comida_favorita": "Carne Prima",
+        "nivel_max_salvaje": 150
+      },
+      "cria": { "tiempo_incubacion": 0, "tiempo_madurez": 0, "ayuda_cria": 0 }
+    },
+    {
+      "nombre": "Managarmr",
+      "especie": "Managarmr",
+      "dieta": "Carnívoro",
+      "mapas": ["Extinction", "Genesis", "Crystal Isles", "Fjordur"],
+      "stats": {
+        "stat_health": 1200, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
+        "stat_weight": 300, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 1000,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 0, "es_buff": 0, "es_recolector": 0, "es_montura": 1,
+        "es_volador": 1, "es_acuatico": 0, "es_subterraneo": 0
+      },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
+        "recolecta_piedra": 0, "recolecta_metal": 0, "recolecta_bayas": 0,
+        "recolecta_paja": 0, "recolecta_fibra": 0, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 1, "metodo_domado": "Knockout", "comida_favorita": "Kibble Excepcional",
+        "nivel_max_salvaje": 150
+      },
+      "cria": { "tiempo_incubacion": 300, "tiempo_madurez": 7200, "ayuda_cria": 0 }},
+    {
+      "nombre": "Megalodon",
+      "especie": "Carcharodon megalodon",
+      "dieta": "Carnívoro",
+      "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
+      "stats": {
+        "stat_health": 1000, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
+        "stat_weight": 300, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 1000,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 0, "es_buff": 0, "es_recolector": 1, "es_montura": 1,
+        "es_volador": 0, "es_acuatico": 1, "es_subterraneo": 0
+      },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 1, "recolecta_pescado": 1, "recolecta_madera": 0,
+        "recolecta_piedra": 0, "recolecta_metal": 0, "recolecta_bayas": 0,
+        "recolecta_paja": 0, "recolecta_fibra": 0, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 1, "metodo_domado": "Knockout", "comida_favorita": "Regular Kibble",
+        "nivel_max_salvaje": 150
+      },
+      "cria": { "tiempo_incubacion": 0, "tiempo_madurez": 5760, "ayuda_cria": 0 }
+    },
+    {
+      "nombre": "Paraceratherium",
+      "especie": "Paraceratherium transouralicum",
+      "dieta": "Herbívoro",
+      "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
+      "stats": {
+        "stat_health": 2100, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
+        "stat_weight": 1000, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 1800,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 1, "es_buff": 0, "es_recolector": 0, "es_montura": 1,
+        "es_volador": 0, "es_acuatico": 0, "es_subterraneo": 0
+      },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
+        "recolecta_piedra": 0, "recolecta_metal": 0, "recolecta_bayas": 0,
+        "recolecta_paja": 0, "recolecta_fibra": 0, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 1, "metodo_domado": "Knockout", "comida_favorita": "Kibble Excepcional",
+        "nivel_max_salvaje": 150
+      },
+      "cria": { "tiempo_incubacion": 0, "tiempo_madurez": 14400, "ayuda_cria": 0 }},
+    {
+      "nombre": "Pulmonoscorpius",
+      "especie": "Pulmonoscorpius kirktonensis",
+      "dieta": "Carnívoro",
+      "mapas": ["The Island", "Scorched Earth", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
+      "stats": {
+        "stat_health": 350, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
+        "stat_weight": 200, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 350,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 0, "es_buff": 0, "es_recolector": 0, "es_montura": 1,
+        "es_volador": 0, "es_acuatico": 0, "es_subterraneo": 1
+      },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
+        "recolecta_piedra": 0, "recolecta_metal": 0, "recolecta_bayas": 0,
+        "recolecta_paja": 0, "recolecta_fibra": 0, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 1, "metodo_domado": "Knockout", "comida_favorita": "Carne Cruda",
+        "nivel_max_salvaje": 150
+      },
+      "cria": { "tiempo_incubacion": 0, "tiempo_madurez": 0, "ayuda_cria": 0 }
+    },
+    {
+      "nombre": "Tusoteuthis",
+      "especie": "Tusoteuthis longa",
+      "dieta": "Carnívoro",
+      "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
+      "stats": {
+        "stat_health": 4500, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
+        "stat_weight": 800, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 3500,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 1, "es_buff": 0, "es_recolector": 1, "es_montura": 0,
+        "es_volador": 0, "es_acuatico": 1, "es_subterraneo": 0
+      },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 1, "recolecta_pescado": 1, "recolecta_madera": 0,
+        "recolecta_piedra": 0, "recolecta_metal": 0, "recolecta_bayas": 0,
+        "recolecta_paja": 0, "recolecta_fibra": 0, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 1, "metodo_domado": "Pasivo", "comida_favorita": "Carne Prima",
+        "nivel_max_salvaje": 150
+      },
+      "cria": { "tiempo_incubacion": 0, "tiempo_madurez": 14400, "ayuda_cria": 0 }},
+    {
+      "nombre": "Wyvern (Lightning)",
+      "especie": "Draconis vipera",
+      "dieta": "Carnívoro",
+      "mapas": ["Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
+      "stats": {
+        "stat_health": 1200, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
+        "stat_weight": 500, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 1200,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 0, "es_buff": 0, "es_recolector": 0, "es_montura": 1,
+        "es_volador": 1, "es_acuatico": 0, "es_subterraneo": 0
+      },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "Ataque de rayo que paraliza" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
+        "recolecta_piedra": 0, "recolecta_metal": 0, "recolecta_bayas": 0,
+        "recolecta_paja": 0, "recolecta_fibra": 0, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 0, "metodo_domado": "Robo de huevo", "comida_favorita": "Wyvern Milk",
+        "nivel_max_salvaje": 190
+      },
+      "cria": { "tiempo_incubacion": 300, "tiempo_madurez": 7200, "ayuda_cria": 0 }
+    },
+    {
+      "nombre": "Wyvern (Poison)",
+      "especie": "Draconis vipera",
+      "dieta": "Carnívoro",
+      "mapas": ["Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
+      "stats": {
+        "stat_health": 1200, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
+        "stat_weight": 500, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 1200,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 0, "es_buff": 0, "es_recolector": 0, "es_montura": 1,
+        "es_volador": 1, "es_acuatico": 0, "es_subterraneo": 0
+      },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "Proyectil de veneno en área" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
+        "recolecta_piedra": 0, "recolecta_metal": 0, "recolecta_bayas": 0,
+        "recolecta_paja": 0, "recolecta_fibra": 0, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 0, "metodo_domado": "Robo de huevo", "comida_favorita": "Wyvern Milk",
+        "nivel_max_salvaje": 190
+      },
+      "cria": { "tiempo_incubacion": 300, "tiempo_madurez": 7200, "ayuda_cria": 0 }},
+    {
+      "nombre": "Diplodocus",
+      "especie": "Diplodocus longus",
+      "dieta": "Herbívoro",
+      "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island"],
+      "stats": {
+        "stat_health": 2400, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
+        "stat_weight": 1000, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 2000,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 1, "es_buff": 0, "es_recolector": 1, "es_montura": 1,
+        "es_volador": 0, "es_acuatico": 0, "es_subterraneo": 0
+      },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
+        "recolecta_piedra": 0, "recolecta_metal": 0, "recolecta_bayas": 1,
+        "recolecta_paja": 1, "recolecta_fibra": 1, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 1, "metodo_domado": "Knockout", "comida_favorita": "Kibble Excepcional",
+        "nivel_max_salvaje": 150
+      },
+      "cria": { "tiempo_incubacion": 0, "tiempo_madurez": 21600, "ayuda_cria": 0 }
+    },
+    {
+      "nombre": "Pachyrhinosaurus",
+      "especie": "Pachyrhinosaurus canadensis",
+      "dieta": "Herbívoro",
+      "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
+      "stats": {
+        "stat_health": 700, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
+        "stat_weight": 400, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 700,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 0, "es_buff": 1, "es_recolector": 0, "es_montura": 1,
+        "es_volador": 0, "es_acuatico": 0, "es_subterraneo": 0
+      },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "Repele insectos y reduce agresividad de dinos cercanos" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
+        "recolecta_piedra": 0, "recolecta_metal": 0, "recolecta_bayas": 0,
+        "recolecta_paja": 0, "recolecta_fibra": 0, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 1, "metodo_domado": "Knockout", "comida_favorita": "Kibble Regular",
+        "nivel_max_salvaje": 150
+      },
+      "cria": { "tiempo_incubacion": 0, "tiempo_madurez": 0, "ayuda_cria": 0 }},
+    {
+      "nombre": "Procoptodon",
+      "especie": "Procoptodon goliah",
+      "dieta": "Herbívoro",
+      "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
+      "stats": {
+        "stat_health": 475, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
+        "stat_weight": 300, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 400,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 0, "es_buff": 1, "es_recolector": 0, "es_montura": 1,
+        "es_volador": 0, "es_acuatico": 0, "es_subterraneo": 0
+      },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "Reduce peso de crías en inventario" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
+        "recolecta_piedra": 0, "recolecta_metal": 0, "recolecta_bayas": 0,
+        "recolecta_paja": 0, "recolecta_fibra": 0, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 1, "metodo_domado": "Knockout", "comida_favorita": "Kibble Simple",
+        "nivel_max_salvaje": 150
+      },
+      "cria": { "tiempo_incubacion": 0, "tiempo_madurez": 0, "ayuda_cria": 1 }
+    },
+    {
+      "nombre": "Ovis",
+      "especie": "Ovis aries",
+      "dieta": "Herbívoro",
+      "mapas": ["The Island", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
+      "stats": {
+        "stat_health": 200, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
+        "stat_weight": 150, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 200,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 0, "es_buff": 0, "es_recolector": 0, "es_montura": 0,
+        "es_volador": 0, "es_acuatico": 0, "es_subterraneo": 0
+      },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
+        "recolecta_piedra": 0, "recolecta_metal": 0, "recolecta_bayas": 0,
+        "recolecta_paja": 0, "recolecta_fibra": 0, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 1, "metodo_domado": "Pasivo", "comida_favorita": "Azúcar",
+        "nivel_max_salvaje": 150
+      },
+      "cria": { "tiempo_incubacion": 0, "tiempo_madurez": 0, "ayuda_cria": 0 }},
+    {
+      "nombre": "Lymantria",
+      "especie": "Lymantria grandis",
+      "dieta": "Herbívoro",
+      "mapas": ["Scorched Earth", "Ragnarok", "Valguero", "Crystal Isles", "Lost Island", "Fjordur"],
+      "stats": {
+        "stat_health": 325, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
+        "stat_weight": 150, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 300,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 0, "es_buff": 1, "es_recolector": 0, "es_montura": 1,
+        "es_volador": 1, "es_acuatico": 0, "es_subterraneo": 0
+      },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "Esparce esporas que ralentizan enemigos" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
+        "recolecta_piedra": 0, "recolecta_metal": 0, "recolecta_bayas": 0,
+        "recolecta_paja": 0, "recolecta_fibra": 0, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 1, "metodo_domado": "Knockout", "comida_favorita": "Kibble Simple",
+        "nivel_max_salvaje": 150
+      },
+      "cria": { "tiempo_incubacion": 0, "tiempo_madurez": 0, "ayuda_cria": 0 }
+    },
+    {
+      "nombre": "Basilisk",
+      "especie": "Basiliscus alexos",
+      "dieta": "Carnívoro",
+      "mapas": ["Aberration", "Valguero", "Crystal Isles", "Fjordur"],
+      "stats": {
+        "stat_health": 2500, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
+        "stat_weight": 500, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 2000,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 1, "es_buff": 0, "es_recolector": 0, "es_montura": 0,
+        "es_volador": 0, "es_acuatico": 0, "es_subterraneo": 1
+      },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
+        "recolecta_piedra": 0, "recolecta_metal": 0, "recolecta_bayas": 0,
+        "recolecta_paja": 0, "recolecta_fibra": 0, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 1, "metodo_domado": "Pasivo", "comida_favorita": "Huevo de Magmasaur",
+        "nivel_max_salvaje": 150
+      },
+      "cria": { "tiempo_incubacion": 0, "tiempo_madurez": 0, "ayuda_cria": 0 }},
+    {
+      "nombre": "Gasbags",
+      "especie": "Gasbags",
+      "dieta": "Herbívoro",
+      "mapas": ["Extinction", "Genesis"],
+      "stats": {
+        "stat_health": 700, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
+        "stat_weight": 600, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 700,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 0, "es_buff": 1, "es_recolector": 0, "es_montura": 1,
+        "es_volador": 1, "es_acuatico": 0, "es_subterraneo": 0
+      },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "Puede inflar y flotar; gran capacidad de carga" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
+        "recolecta_piedra": 0, "recolecta_metal": 0, "recolecta_bayas": 0,
+        "recolecta_paja": 0, "recolecta_fibra": 0, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 1, "metodo_domado": "Knockout", "comida_favorita": "Kibble Regular",
+        "nivel_max_salvaje": 150
+      },
+      "cria": { "tiempo_incubacion": 0, "tiempo_madurez": 0, "ayuda_cria": 0 }
+    },
+    {
+      "nombre": "Snow Owl",
+      "especie": "Bubo blizardius",
+      "dieta": "Carnívoro",
+      "mapas": ["Extinction", "Genesis", "Crystal Isles", "Fjordur"],
+      "stats": {
+        "stat_health": 700, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
+        "stat_weight": 300, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 700,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 0, "es_buff": 1, "es_recolector": 0, "es_montura": 1,
+        "es_volador": 1, "es_acuatico": 0, "es_subterraneo": 0
+      },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "Puede congelar criaturas y curar aliados" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
+        "recolecta_piedra": 0, "recolecta_metal": 0, "recolecta_bayas": 0,
+        "recolecta_paja": 0, "recolecta_fibra": 0, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 1, "metodo_domado": "Knockout", "comida_favorita": "Kibble Superior",
+        "nivel_max_salvaje": 150
+      },
+      "cria": { "tiempo_incubacion": 120, "tiempo_madurez": 3360, "ayuda_cria": 0 }},
+    {
+      "nombre": "Magmasaur",
+      "especie": "Cherufe incendia",
+      "dieta": "Carnívoro",
+      "mapas": ["Genesis", "Lost Island"],
+      "stats": {
+        "stat_health": 1200, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
+        "stat_weight": 400, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 1200,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 1, "es_buff": 0, "es_recolector": 1, "es_montura": 0,
+        "es_volador": 0, "es_acuatico": 0, "es_subterraneo": 0
+      },
+      "buffs": { "buff_damage": 0, "buff_armor": 0, "buff_speed": 0, "buff_otro": "Ataque de lava; puede fundir metal" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
+        "recolecta_piedra": 1, "recolecta_metal": 1, "recolecta_bayas": 0,
+        "recolecta_paja": 0, "recolecta_fibra": 0, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 0, "metodo_domado": "Robo de huevo", "comida_favorita": "Sulfur",
+        "nivel_max_salvaje": 190
+      },
+      "cria": { "tiempo_incubacion": 300, "tiempo_madurez": 7200, "ayuda_cria": 0 }
+    },
+    {
+      "nombre": "Shadowmane",
+      "especie": "Shadowmane",
+      "dieta": "Carnívoro",
+      "mapas": ["Genesis Part 2", "Fjordur"],
+      "stats": {
+        "stat_health": 1200, "stat_stamina": 420, "stat_oxygen": 150, "stat_food": 3000,
+        "stat_weight": 400, "stat_melee": 100, "stat_speed": 100, "stat_torpidity": 1200,
+        "iw_health": 0.2, "iw_stamina": 0.1, "iw_oxygen": 0.1, "iw_food": 0.15,
+        "iw_weight": 0.02, "iw_melee": 0.05, "iw_speed": 0.0, "iw_torpidity": 0.06
+      },
+      "roles": {
+        "es_tanque": 1, "es_buff": 1, "es_recolector": 0, "es_montura": 1,
+        "es_volador": 0, "es_acuatico": 0, "es_subterraneo": 0
+      },
+      "buffs": { "buff_damage": 20, "buff_armor": 0, "buff_speed": 0, "buff_otro": "Camuflaje activo; buff de manada" },
+      "formas": { "tiene_formas": 0 },
+      "recoleccion": {
+        "recolecta_carne": 0, "recolecta_pescado": 0, "recolecta_madera": 0,
+        "recolecta_piedra": 0, "recolecta_metal": 0, "recolecta_bayas": 0,
+        "recolecta_paja": 0, "recolecta_fibra": 0, "recolecta_texugo": 0
+      },
+      "domesticacion": {
+        "domable": 1, "metodo_domado": "Pasivo", "comida_favorita": "Pez Variopinto",
+        "nivel_max_salvaje": 150
+      },
+      "cria": { "tiempo_incubacion": 0, "tiempo_madurez": 7200, "ayuda_cria": 0 }
     }
   ]
 }
