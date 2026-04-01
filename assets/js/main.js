@@ -77,6 +77,8 @@ document.addEventListener('DOMContentLoaded', function () {
             window.radarComparar.data.datasets[0].pointBackgroundColor = `rgba(${accentRgb},1)`;
             window.radarComparar.update('none');
         }
+        // Guardar el accentRgb para aplicarlo cuando el comparador se inicialice
+        window._pendingAccentRgb = accentRgb;
 
         // Actualizar sliders de Impronta y Taming con el color del acento
         const accent = getComputedStyle(document.body).getPropertyValue('--accent').trim();

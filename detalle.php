@@ -1735,7 +1735,9 @@ if (count($comentarios) > 0) {
         function initRadarComparar() {
             if (radarComparar) return;
             const ctx = document.getElementById('radarComparar').getContext('2d');
-            const accentRgb = getComputedStyle(document.body).getPropertyValue('--accent-rgb').trim() || '0,255,204';
+            // Usar color pendiente si se cambió el tema antes de abrir este tab
+            const pendingRgb = window._pendingAccentRgb;
+            const accentRgb = pendingRgb || getComputedStyle(document.body).getPropertyValue('--accent-rgb').trim() || '0,255,204';
             radarComparar = new Chart(ctx, {
                 type: 'radar',
                 data: {
@@ -1790,6 +1792,7 @@ if (count($comentarios) > 0) {
                     }
                 }
             });
+            window.radarComparar = radarComparar;
         }
 
         function buscarParaComparar(q) {
@@ -1933,8 +1936,20 @@ if (count($comentarios) > 0) {
             document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarModal(); });
 
             window.abrirRadarModal = function(canvasId) {
+                // Para el comparador, inicializarlo si no existe aún
+                if (canvasId === 'radarComparar' && !window.radarComparar) {
+                    if (typeof initRadarComparar === 'function') initRadarComparar();
+                }
+
                 const srcChart = canvasId === 'statsRadar' ? window.radarChart : window.radarComparar;
-                if (!srcChart) return;
+                if (!srcChart) {
+                    // Chart aún no disponible — mostrar mensaje
+                    document.getElementById('radar-modal-title').textContent = 'Radar Comparativo';
+                    modal.style.display = 'flex';
+                    document.getElementById('radar-modal-canvas').parentElement.innerHTML =
+                        '<p style="color:#aaa;text-align:center;padding:40px;font-size:0.9rem;">Abre el tab Comparar primero para inicializar el gráfico.</p>';
+                    return;
+                }
 
                 document.getElementById('radar-modal-title').textContent =
                     canvasId === 'statsRadar' ? 'Grafico Radar - Valores calculados' : 'Radar Comparativo';
