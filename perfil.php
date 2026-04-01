@@ -12,16 +12,21 @@ $stmt = $conexion->prepare($sql);
 $stmt->execute([':id' => $usuario_id]);
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Cargar favoritos del usuario
-$stmt_favs = $conexion->prepare(
-    "SELECT d.id, d.nombre, d.imagen, d.dieta, f.fecha
-     FROM favoritos f
-     JOIN dinosaurios d ON f.dino_id = d.id
-     WHERE f.usuario_id = :u
-     ORDER BY f.fecha DESC"
-);
-$stmt_favs->execute([':u' => $usuario_id]);
-$favoritos = $stmt_favs->fetchAll(PDO::FETCH_ASSOC);
+// Cargar favoritos del usuario (con try/catch por si la tabla no existe aún)
+$favoritos = [];
+try {
+    $stmt_favs = $conexion->prepare(
+        "SELECT d.id, d.nombre, d.imagen, d.dieta, f.fecha
+         FROM favoritos f
+         JOIN dinosaurios d ON f.dino_id = d.id
+         WHERE f.usuario_id = :u
+         ORDER BY f.fecha DESC"
+    );
+    $stmt_favs->execute([':u' => $usuario_id]);
+    $favoritos = $stmt_favs->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    // Tabla favoritos no existe aún — ignorar silenciosamente
+}
 ?>
 
 <!DOCTYPE html>

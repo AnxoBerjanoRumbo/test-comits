@@ -29,17 +29,20 @@ try {
     $existe = $stmt->fetch();
 
     if ($existe) {
-        // Quitar favorito
         $conexion->prepare("DELETE FROM favoritos WHERE usuario_id = :u AND dino_id = :d")
                  ->execute([':u' => $usuario_id, ':d' => $dino_id]);
         echo json_encode(['status' => 'removed']);
     } else {
-        // Añadir favorito
         $conexion->prepare("INSERT INTO favoritos (usuario_id, dino_id) VALUES (:u, :d)")
                  ->execute([':u' => $usuario_id, ':d' => $dino_id]);
         echo json_encode(['status' => 'added']);
     }
 } catch (PDOException $e) {
     error_log("Error en favoritos: " . $e->getMessage());
-    echo json_encode(['error' => 'Error interno']);
+    // Si la tabla no existe, dar instrucciones claras
+    if (strpos($e->getMessage(), "doesn't exist") !== false || strpos($e->getMessage(), "no existe") !== false) {
+        echo json_encode(['error' => 'Ejecuta database/migracion_favoritos.sql en phpMyAdmin primero']);
+    } else {
+        echo json_encode(['error' => 'Error interno']);
+    }
 }

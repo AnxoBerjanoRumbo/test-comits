@@ -377,9 +377,13 @@ if (count($comentarios) > 0) {
     // Verificar si el dino es favorito del usuario actual
     $es_favorito = false;
     if (isset($_SESSION['usuario_id'])) {
-        $stmt_fav = $conexion->prepare("SELECT id FROM favoritos WHERE usuario_id = :u AND dino_id = :d");
-        $stmt_fav->execute([':u' => $_SESSION['usuario_id'], ':d' => $id]);
-        $es_favorito = (bool)$stmt_fav->fetch();
+        try {
+            $stmt_fav = $conexion->prepare("SELECT id FROM favoritos WHERE usuario_id = :u AND dino_id = :d");
+            $stmt_fav->execute([':u' => $_SESSION['usuario_id'], ':d' => $id]);
+            $es_favorito = (bool)$stmt_fav->fetch();
+        } catch (PDOException $e) {
+            // Tabla favoritos no existe aún
+        }
     }
 
     // Dieta para tips contextuales
