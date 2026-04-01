@@ -241,6 +241,9 @@ $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 btn.querySelector('span:last-child') && (btn.lastChild.textContent = visible ? ' Filtrar por stat base' : ' Ocultar filtro por stat');
             }
             </script>
+
+            <?php
+            // Mostrar chips de filtros activos
             $filtros_activos = [];
             if ($busqueda != '') $filtros_activos[] = ['Búsqueda: "'.htmlspecialchars($busqueda).'"', 'buscar'];
             if ($dieta != '') $filtros_activos[] = [$dieta, 'dieta'];
