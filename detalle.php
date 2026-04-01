@@ -1272,72 +1272,77 @@ if (count($comentarios) > 0) {
                 </div>
             </div>
 
-            <!-- Radar comparativo -->
-            <div style="display:grid; grid-template-columns:1fr 1.4fr; gap:32px; align-items:start;">
-                <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-color); border-radius:var(--radius); padding:24px; position:sticky; top:80px;">
-                    <h4 style="margin:0 0 16px; color:var(--text-muted); font-size:0.78rem; text-transform:uppercase; letter-spacing:1px;">Radar Comparativo</h4>
-                    <canvas id="radarComparar" style="max-height:320px;"></canvas>
-                    <div style="display:flex; gap:16px; justify-content:center; margin-top:14px; flex-wrap:wrap;">
-                        <div style="display:flex; align-items:center; gap:6px; font-size:0.78rem; color:var(--text-muted);">
-                            <span style="width:12px;height:12px;border-radius:50%;background:rgba(var(--accent-rgb),0.85);display:inline-block;"></span>
+            <!-- Layout 3 columnas: stats A | radar | stats B -->
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; align-items:start;">
+
+                <!-- COLUMNA IZQUIERDA: stats dino actual -->
+                <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-color); border-radius:12px; padding:18px;">
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.06);">
+                        <span style="width:10px;height:10px;border-radius:50%;background:var(--accent);display:inline-block;flex-shrink:0;"></span>
+                        <span style="font-size:0.85rem; font-weight:800; color:var(--accent); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><?php echo htmlspecialchars($dino['nombre']); ?></span>
+                    </div>
+                    <?php foreach ($stat_compare as $key => [$label, $icon, $color]):
+                        $val_a = (float)($stats_data[$key] ?? 0);
+                        if ($val_a <= 0) continue; ?>
+                    <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;">
+                        <div style="display:flex; align-items:center; gap:5px;">
+                            <span class="material-symbols-outlined" style="font-size:0.85rem; color:<?php echo $color; ?>;"><?php echo $icon; ?></span>
+                            <span style="font-size:0.8rem; color:var(--text-muted);"><?php echo $label; ?></span>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:0.88rem; font-weight:800; color:var(--text-main);"><?php echo number_format($val_a); ?></div>
+                            <div style="height:4px; background:rgba(255,255,255,0.06); border-radius:2px; margin-top:3px; width:80px;">
+                                <div style="height:100%; background:<?php echo $color; ?>; border-radius:2px; width:100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- COLUMNA CENTRAL: radar -->
+                <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-color); border-radius:12px; padding:18px; position:sticky; top:80px;">
+                    <h4 style="margin:0 0 12px; color:var(--text-muted); font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; text-align:center;">Radar Comparativo</h4>
+                    <canvas id="radarComparar" style="max-height:280px;"></canvas>
+                    <div style="display:flex; gap:12px; justify-content:center; margin-top:12px; flex-wrap:wrap;">
+                        <div style="display:flex; align-items:center; gap:5px; font-size:0.75rem; color:var(--text-muted);">
+                            <span style="width:10px;height:3px;background:var(--accent);display:inline-block;border-radius:2px;"></span>
                             <?php echo htmlspecialchars($dino['nombre']); ?>
                         </div>
-                        <div id="comparar-leyenda-b" style="display:flex; align-items:center; gap:6px; font-size:0.78rem; color:var(--text-muted);">
-                            <span style="width:12px;height:12px;border-radius:50%;background:rgba(255,152,0,0.85);display:inline-block;"></span>
-                            <span id="comparar-leyenda-nombre">Selecciona una criatura</span>
+                        <div id="comparar-leyenda-b" style="display:flex; align-items:center; gap:5px; font-size:0.75rem; color:var(--text-muted);">
+                            <span style="width:10px;height:3px;background:#ff9800;display:inline-block;border-radius:2px; border-top:2px dashed #ff9800; height:0;"></span>
+                            <span id="comparar-leyenda-nombre">—</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Tabla de diferencias -->
-                <div>
-                    <h4 style="margin:0 0 10px; color:var(--text-muted); font-size:0.78rem; text-transform:uppercase; letter-spacing:1px;">Diferencia de Stats Base</h4>
-                    <!-- Fila 1: nombres de columnas -->
-                    <div style="display:grid; grid-template-columns:1fr 72px 72px 52px; gap:6px; padding:8px 10px; background:rgba(255,255,255,0.03); border-radius:8px; margin-bottom:10px;">
-                        <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Stat</span>
-                        <span style="font-size:0.75rem; color:var(--accent); font-weight:800; text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" id="th-a"><?php echo mb_strimwidth(htmlspecialchars($dino['nombre']), 0, 9, '…'); ?></span>
-                        <span style="font-size:0.75rem; color:#ff9800; font-weight:800; text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" id="th-b">—</span>
-                        <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-align:right;">Δ</span>
+                <!-- COLUMNA DERECHA: stats dino comparado -->
+                <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border-color); border-radius:12px; padding:18px;">
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.06);">
+                        <span style="width:10px;height:10px;border-radius:50%;background:#ff9800;display:inline-block;flex-shrink:0;"></span>
+                        <span id="col-b-nombre" style="font-size:0.85rem; font-weight:800; color:#ff9800; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Selecciona una criatura</span>
                     </div>
-                    <div id="comparar-tabla" style="display:flex; flex-direction:column; gap:10px;">
-                        <?php
-                        $stat_compare = [
-                            'health'    => ['Vida',      'favorite',   '#e74c3c'],
-                            'stamina'   => ['Energía',   'bolt',       '#f39c12'],
-                            'oxygen'    => ['Oxígeno',   'water_drop', '#3498db'],
-                            'food'      => ['Comida',    'restaurant', '#2ecc71'],
-                            'weight'    => ['Peso',      'weight',     '#9b59b6'],
-                            'melee'     => ['Melée',     'swords',     '#e67e22'],
-                            'torpidity' => ['Torpor',    'bedtime',    '#95a5a6'],
-                        ];
-                        foreach ($stat_compare as $key => [$label, $icon, $color]):
-                            $val_a = (float)($stats_data[$key] ?? 0);
-                            if ($val_a <= 0) continue;
-                        ?>
-                        <div class="comparar-stat-row" data-stat="<?php echo $key; ?>" data-val-a="<?php echo $val_a; ?>">
-                            <div style="display:grid; grid-template-columns:1fr 72px 72px 52px; align-items:center; gap:6px; margin-bottom:6px;">
-                                <div style="display:flex; align-items:center; gap:6px;">
-                                    <span class="material-symbols-outlined" style="font-size:0.9rem; color:<?php echo $color; ?>; flex-shrink:0;"><?php echo $icon; ?></span>
-                                    <span style="font-size:0.82rem; font-weight:700; color:<?php echo $color; ?>;"><?php echo $label; ?></span>
-                                </div>
-                                <span style="font-size:0.82rem; color:var(--text-muted); text-align:right;"><?php echo number_format($val_a); ?></span>
-                                <span class="comparar-val-b" style="font-size:0.82rem; color:var(--text-muted); text-align:right;">—</span>
-                                <span class="comparar-diff" style="font-size:0.78rem; font-weight:800; text-align:right;">—</span>
+                    <?php foreach ($stat_compare as $key => [$label, $icon, $color]):
+                        $val_a = (float)($stats_data[$key] ?? 0);
+                        if ($val_a <= 0) continue; ?>
+                    <div class="comparar-stat-row" data-stat="<?php echo $key; ?>" data-val-a="<?php echo $val_a; ?>" style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;">
+                        <div style="display:flex; align-items:center; gap:5px;">
+                            <span class="material-symbols-outlined" style="font-size:0.85rem; color:<?php echo $color; ?>;"><?php echo $icon; ?></span>
+                            <span style="font-size:0.8rem; color:var(--text-muted);"><?php echo $label; ?></span>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="display:flex; align-items:center; gap:6px; justify-content:flex-end;">
+                                <span class="comparar-diff" style="font-size:0.72rem; font-weight:800;">—</span>
+                                <span class="comparar-val-b" style="font-size:0.88rem; font-weight:800; color:var(--text-muted);">—</span>
                             </div>
-                            <!-- Barras en fila completa, una encima de la otra -->
-                            <div style="display:flex; flex-direction:column; gap:3px;">
-                                <div style="height:5px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
-                                    <div class="comparar-bar-a" style="height:100%; background:<?php echo $color; ?>; border-radius:3px; width:100%; transition:width 0.5s;"></div>
-                                </div>
-                                <div style="height:5px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
-                                    <div class="comparar-bar-b" style="height:100%; background:rgba(255,152,0,0.8); border-radius:3px; width:0%; transition:width 0.5s;"></div>
-                                </div>
+                            <div style="height:4px; background:rgba(255,255,255,0.06); border-radius:2px; margin-top:3px; width:80px;">
+                                <div class="comparar-bar-b" style="height:100%; background:rgba(255,152,0,0.8); border-radius:2px; width:0%; transition:width 0.5s;"></div>
                             </div>
                         </div>
-                        <?php endforeach; ?>
                     </div>
-                    <p id="comparar-hint" style="margin:20px 0 0; font-size:0.78rem; color:var(--text-muted); text-align:center; font-style:italic;">Busca una criatura arriba para ver la comparación</p>
+                    <?php endforeach; ?>
+                    <p id="comparar-hint" style="margin:10px 0 0; font-size:0.75rem; color:var(--text-muted); text-align:center; font-style:italic;">Busca arriba para comparar</p>
                 </div>
+
             </div>
         </div><!-- /tab-comparar -->
         <?php endif; ?>
@@ -1820,29 +1825,32 @@ if (count($comentarios) > 0) {
             radarComparar.data.datasets[1].label = nombre;
             radarComparar.update();
 
-            // Leyenda y cabeceras
+            // Actualizar nombre columna derecha
             document.getElementById('comparar-leyenda-nombre').textContent = nombre;
-            const nombreCorto = nombre.length > 9 ? nombre.substring(0, 9) + '…' : nombre;
-            const thB = document.getElementById('th-b');
-            if (thB) thB.textContent = nombreCorto;
+            const colBNombre = document.getElementById('col-b-nombre');
+            if (colBNombre) colBNombre.textContent = nombre;
 
-            // Tabla de diferencias
-            const maxVals = STAT_KEYS_C.map(k => Math.max(BASE_A[k] || 0, statsB[k] || 0));
+            // Actualizar stats columna derecha
+            const maxVals = {};
+            STAT_KEYS_C.forEach(k => maxVals[k] = Math.max(BASE_A[k] || 0, statsB[k] || 0));
+
             document.querySelectorAll('.comparar-stat-row').forEach(row => {
                 const k   = row.dataset.stat;
                 const vA  = BASE_A[k] || 0;
                 const vB  = statsB[k] || 0;
-                const max = Math.max(vA, vB) || 1;
+                const max = maxVals[k] || 1;
                 const diff = vB - vA;
-                const pct  = diff / vA * 100;
 
-                row.querySelector('.comparar-val-b').textContent = vB >= 10 ? Math.round(vB).toLocaleString('es-ES') : vB.toFixed(1);
+                const valB = row.querySelector('.comparar-val-b');
                 const diffEl = row.querySelector('.comparar-diff');
-                diffEl.textContent = (diff >= 0 ? '+' : '') + Math.round(diff).toLocaleString('es-ES');
-                diffEl.style.color = diff > 0 ? '#2ecc71' : diff < 0 ? '#e74c3c' : 'var(--text-muted)';
+                const barB = row.querySelector('.comparar-bar-b');
 
-                row.querySelector('.comparar-bar-a').style.width = (vA / max * 100) + '%';
-                row.querySelector('.comparar-bar-b').style.width = (vB / max * 100) + '%';
+                if (valB) valB.textContent = vB >= 10 ? Math.round(vB).toLocaleString('es-ES') : vB.toFixed(1);
+                if (diffEl) {
+                    diffEl.textContent = (diff >= 0 ? '+' : '') + Math.round(diff).toLocaleString('es-ES');
+                    diffEl.style.color = diff > 0 ? '#2ecc71' : diff < 0 ? '#e74c3c' : 'var(--text-muted)';
+                }
+                if (barB) barB.style.width = (vB / max * 100) + '%';
             });
 
             document.getElementById('comparar-hint').style.display = 'none';
@@ -1853,6 +1861,9 @@ if (count($comentarios) > 0) {
             document.getElementById('comparar-sugerencias').style.display = 'none';
             document.getElementById('comparar-seleccionado').style.display = 'none';
             document.getElementById('comparar-hint').style.display = 'block';
+            document.getElementById('comparar-leyenda-nombre').textContent = '—';
+            const colBNombre = document.getElementById('col-b-nombre');
+            if (colBNombre) colBNombre.textContent = 'Selecciona una criatura';
             if (radarComparar) {
                 radarComparar.data.datasets[1].data = STAT_KEYS_C.map(() => 0);
                 radarComparar.update();
