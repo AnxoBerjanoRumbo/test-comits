@@ -1273,6 +1273,17 @@ if (count($comentarios) > 0) {
             </div>
 
             <!-- Layout 3 columnas: stats A | radar | stats B -->
+            <?php
+            $stat_compare = [
+                'health'    => ['Vida',      'favorite',   '#e74c3c'],
+                'stamina'   => ['Energía',   'bolt',       '#f39c12'],
+                'oxygen'    => ['Oxígeno',   'water_drop', '#3498db'],
+                'food'      => ['Comida',    'restaurant', '#2ecc71'],
+                'weight'    => ['Peso',      'weight',     '#9b59b6'],
+                'melee'     => ['Melée',     'swords',     '#e67e22'],
+                'torpidity' => ['Torpor',    'bedtime',    '#95a5a6'],
+            ];
+            ?>
             <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; align-items:start;">
 
                 <!-- COLUMNA IZQUIERDA: stats dino actual -->
