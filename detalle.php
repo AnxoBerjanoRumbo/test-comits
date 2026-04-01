@@ -893,10 +893,22 @@ if (count($comentarios) > 0) {
 
             <?php if ($features['domable']): ?>
             <?php
-            $nivel_max = (int)($features['nivel_max_salvaje'] ?? 150);
-            $metodo    = $features['metodo_domado'] ?? 'Knockout';
+            $nivel_max   = (int)($features['nivel_max_salvaje'] ?? 150);
+            $metodo      = $features['metodo_domado'] ?? 'Knockout';
             $torpor_base = (int)($stats_data['torpidity'] ?? 500);
             $iw_torpor   = (float)($dino['iw_torpidity'] ?? 0.06);
+            $t_incubacion = (int)($features['tiempo_incubacion'] ?? 0);
+            $t_madurez    = (int)($features['tiempo_madurez']    ?? 0);
+
+            // Formatear minutos a texto legible
+            function formatMinutos($min) {
+                if ($min <= 0) return null;
+                if ($min < 60)   return $min . ' min';
+                if ($min < 1440) return round($min / 60, 1) . ' h';
+                return round($min / 1440, 1) . ' días';
+            }
+            $str_incubacion = formatMinutos($t_incubacion);
+            $str_madurez    = formatMinutos($t_madurez);
             ?>
             <div style="margin-top:20px; background:rgba(155,89,182,0.04); border:1px solid rgba(155,89,182,0.2); border-radius:14px; padding:22px;">
                 <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
@@ -910,6 +922,33 @@ if (count($comentarios) > 0) {
                         · Nivel máx: <strong style="color:var(--accent);"><?php echo $nivel_max; ?></strong></p>
                     </div>
                 </div>
+
+                <?php if ($str_incubacion || $str_madurez): ?>
+                <!-- Tiempos de cría -->
+                <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:10px; margin-bottom:16px;">
+                    <?php if ($str_incubacion): ?>
+                    <div style="background:rgba(241,196,15,0.07); border:1px solid rgba(241,196,15,0.2); border-radius:10px; padding:12px; text-align:center;">
+                        <span class="material-symbols-outlined" style="color:#f1c40f; font-size:1.3rem; display:block; margin-bottom:4px;">egg</span>
+                        <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:3px; text-transform:uppercase; letter-spacing:0.5px;">Incubación</div>
+                        <div style="font-size:1.1rem; font-weight:800; color:#f1c40f;"><?php echo $str_incubacion; ?></div>
+                    </div>
+                    <?php endif; ?>
+                    <?php if ($str_madurez): ?>
+                    <div style="background:rgba(230,126,34,0.07); border:1px solid rgba(230,126,34,0.2); border-radius:10px; padding:12px; text-align:center;">
+                        <span class="material-symbols-outlined" style="color:#e67e22; font-size:1.3rem; display:block; margin-bottom:4px;">child_care</span>
+                        <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:3px; text-transform:uppercase; letter-spacing:0.5px;">Madurez</div>
+                        <div style="font-size:1.1rem; font-weight:800; color:#e67e22;"><?php echo $str_madurez; ?></div>
+                    </div>
+                    <?php endif; ?>
+                    <?php if ($str_incubacion && $str_madurez): ?>
+                    <div style="background:rgba(46,204,113,0.07); border:1px solid rgba(46,204,113,0.2); border-radius:10px; padding:12px; text-align:center;">
+                        <span class="material-symbols-outlined" style="color:#2ecc71; font-size:1.3rem; display:block; margin-bottom:4px;">timer</span>
+                        <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:3px; text-transform:uppercase; letter-spacing:0.5px;">Total cría</div>
+                        <div style="font-size:1.1rem; font-weight:800; color:#2ecc71;"><?php echo formatMinutos($t_incubacion + $t_madurez); ?></div>
+                    </div>
+                    <?php endif; ?>
+                </div>
+                <?php endif; ?>
 
                 <!-- Calculadora de taming -->
                 <div style="background:rgba(var(--accent-rgb),0.05); border:1px solid rgba(var(--accent-rgb),0.15); border-radius:10px; padding:16px;">
