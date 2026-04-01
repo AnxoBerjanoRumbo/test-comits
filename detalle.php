@@ -457,10 +457,11 @@ if (count($comentarios) > 0) {
             <?php endif; ?>
 
             <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_insertar'] ?? 0) == 1): ?>
-                <div style="text-align:center; padding:10px 0 25px;">
-                    <a href="admin/editar.php?id=<?php echo $dino['id']; ?>" class="btn-nav btn-registro"
-                        style="display:inline-flex; align-items:center; gap:8px; padding:12px 28px; background:var(--accent); color:var(--accent-text); font-weight:800; border-radius:30px; box-shadow:0 5px 20px rgba(var(--accent-rgb),0.3); text-decoration:none;">
-                        <span class="material-symbols-outlined" style="font-size:1.1rem;">edit</span>
+                <div style="text-align:right; padding:0 0 20px;">
+                    <a href="admin/editar.php?id=<?php echo $dino['id']; ?>"
+                        style="display:inline-flex; align-items:center; gap:6px; padding:8px 18px; background:rgba(var(--accent-rgb),0.1); color:var(--accent); font-weight:700; border-radius:8px; border:1px solid rgba(var(--accent-rgb),0.3); text-decoration:none; font-size:0.85rem; transition:all 0.2s;"
+                        onmouseover="this.style.background='rgba(var(--accent-rgb),0.2)'" onmouseout="this.style.background='rgba(var(--accent-rgb),0.1)'">
+                        <span class="material-symbols-outlined" style="font-size:1rem;">edit</span>
                         Editar Criatura
                     </a>
                 </div>
@@ -925,26 +926,40 @@ if (count($comentarios) > 0) {
 
                 <?php if ($str_incubacion || $str_madurez): ?>
                 <!-- Tiempos de cría -->
-                <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); gap:10px; margin-bottom:16px;">
+                <div style="margin-bottom:16px;">
+                    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:10px; margin-bottom:10px;">
+                        <?php if ($str_incubacion): ?>
+                        <div style="background:rgba(241,196,15,0.07); border:1px solid rgba(241,196,15,0.2); border-radius:10px; padding:12px; text-align:center;">
+                            <span class="material-symbols-outlined" style="color:#f1c40f; font-size:1.3rem; display:block; margin-bottom:4px;">egg</span>
+                            <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:3px; text-transform:uppercase; letter-spacing:0.5px;">Incubación</div>
+                            <div style="font-size:1.1rem; font-weight:800; color:#f1c40f;"><?php echo $str_incubacion; ?></div>
+                        </div>
+                        <?php endif; ?>
+                        <?php if ($str_madurez): ?>
+                        <div style="background:rgba(230,126,34,0.07); border:1px solid rgba(230,126,34,0.2); border-radius:10px; padding:12px; text-align:center;">
+                            <span class="material-symbols-outlined" style="color:#e67e22; font-size:1.3rem; display:block; margin-bottom:4px;">child_care</span>
+                            <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:3px; text-transform:uppercase; letter-spacing:0.5px;">Madurez</div>
+                            <div style="font-size:1.1rem; font-weight:800; color:#e67e22;"><?php echo $str_madurez; ?></div>
+                        </div>
+                        <?php endif; ?>
+                        <?php if ($str_incubacion && $str_madurez): ?>
+                        <div style="background:rgba(46,204,113,0.07); border:1px solid rgba(46,204,113,0.2); border-radius:10px; padding:12px; text-align:center;">
+                            <span class="material-symbols-outlined" style="color:#2ecc71; font-size:1.3rem; display:block; margin-bottom:4px;">timer</span>
+                            <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:3px; text-transform:uppercase; letter-spacing:0.5px;">Total cría</div>
+                            <div style="font-size:1.1rem; font-weight:800; color:#2ecc71;"><?php echo formatMinutos($t_incubacion + $t_madurez); ?></div>
+                        </div>
+                        <?php endif; ?>
+                    </div>
                     <?php if ($str_incubacion): ?>
-                    <div style="background:rgba(241,196,15,0.07); border:1px solid rgba(241,196,15,0.2); border-radius:10px; padding:12px; text-align:center;">
-                        <span class="material-symbols-outlined" style="color:#f1c40f; font-size:1.3rem; display:block; margin-bottom:4px;">egg</span>
-                        <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:3px; text-transform:uppercase; letter-spacing:0.5px;">Incubación</div>
-                        <div style="font-size:1.1rem; font-weight:800; color:#f1c40f;"><?php echo $str_incubacion; ?></div>
-                    </div>
-                    <?php endif; ?>
-                    <?php if ($str_madurez): ?>
-                    <div style="background:rgba(230,126,34,0.07); border:1px solid rgba(230,126,34,0.2); border-radius:10px; padding:12px; text-align:center;">
-                        <span class="material-symbols-outlined" style="color:#e67e22; font-size:1.3rem; display:block; margin-bottom:4px;">child_care</span>
-                        <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:3px; text-transform:uppercase; letter-spacing:0.5px;">Madurez</div>
-                        <div style="font-size:1.1rem; font-weight:800; color:#e67e22;"><?php echo $str_madurez; ?></div>
-                    </div>
-                    <?php endif; ?>
-                    <?php if ($str_incubacion && $str_madurez): ?>
-                    <div style="background:rgba(46,204,113,0.07); border:1px solid rgba(46,204,113,0.2); border-radius:10px; padding:12px; text-align:center;">
-                        <span class="material-symbols-outlined" style="color:#2ecc71; font-size:1.3rem; display:block; margin-bottom:4px;">timer</span>
-                        <div style="font-size:0.7rem; color:var(--text-muted); margin-bottom:3px; text-transform:uppercase; letter-spacing:0.5px;">Total cría</div>
-                        <div style="font-size:1.1rem; font-weight:800; color:#2ecc71;"><?php echo formatMinutos($t_incubacion + $t_madurez); ?></div>
+                    <!-- Info incubación -->
+                    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:10px 14px; display:flex; gap:10px; align-items:flex-start;">
+                        <span class="material-symbols-outlined" style="color:#f1c40f; font-size:1rem; flex-shrink:0; margin-top:1px;">info</span>
+                        <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.6;">
+                            <strong style="color:var(--text-main);">Consejo de incubación:</strong>
+                            Usa una <strong style="color:#f1c40f;">Incubadora de Huevos</strong> para controlar la temperatura exacta sin consumo de recursos.
+                            Sin incubadora necesitas <strong style="color:#3498db;">Aires Acondicionados</strong> (AC) o <strong style="color:#e74c3c;">Antorchas/Fogatas</strong> según la especie.
+                            Cada AC reduce ~18°C · Cada antorcha sube ~3°C. Mantén la temperatura en el rango indicado en el huevo.
+                        </div>
                     </div>
                     <?php endif; ?>
                 </div>
@@ -1249,7 +1264,26 @@ if (count($comentarios) > 0) {
 
                 <!-- Tabla de diferencias -->
                 <div>
-                    <h4 style="margin:0 0 16px; color:var(--text-muted); font-size:0.78rem; text-transform:uppercase; letter-spacing:1px;">Diferencia de Stats Base</h4>
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+                        <h4 style="margin:0; color:var(--text-muted); font-size:0.78rem; text-transform:uppercase; letter-spacing:1px;">Diferencia de Stats Base</h4>
+                        <div style="display:flex; gap:16px; font-size:0.75rem; font-weight:700;">
+                            <span style="display:flex; align-items:center; gap:5px;">
+                                <span style="width:10px;height:10px;border-radius:50%;background:rgba(var(--accent-rgb),0.85);display:inline-block;flex-shrink:0;"></span>
+                                <span style="color:var(--accent);" id="col-a-label"><?php echo htmlspecialchars($dino['nombre']); ?></span>
+                            </span>
+                            <span style="display:flex; align-items:center; gap:5px;">
+                                <span style="width:10px;height:10px;border-radius:50%;background:rgba(255,152,0,0.85);display:inline-block;flex-shrink:0;"></span>
+                                <span style="color:#ff9800;" id="col-b-label">Selecciona una criatura</span>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- Cabecera de columnas -->
+                    <div style="display:flex; align-items:center; gap:8px; padding:0 0 6px; border-bottom:1px solid rgba(255,255,255,0.06); margin-bottom:8px;">
+                        <span style="flex:1; font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Stat</span>
+                        <span style="font-size:0.72rem; color:var(--accent); font-weight:700; min-width:60px; text-align:right;" id="th-a"><?php echo mb_strimwidth(htmlspecialchars($dino['nombre']), 0, 10, '…'); ?></span>
+                        <span style="font-size:0.72rem; color:#ff9800; font-weight:700; min-width:60px; text-align:right;" id="th-b">—</span>
+                        <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700; min-width:50px; text-align:right;">Δ</span>
+                    </div>
                     <div id="comparar-tabla" style="display:flex; flex-direction:column; gap:10px;">
                         <?php
                         $stat_compare = [
@@ -1754,8 +1788,13 @@ if (count($comentarios) > 0) {
             radarComparar.data.datasets[1].label = nombre;
             radarComparar.update();
 
-            // Leyenda
+            // Leyenda y cabeceras
             document.getElementById('comparar-leyenda-nombre').textContent = nombre;
+            const nombreCorto = nombre.length > 10 ? nombre.substring(0, 10) + '…' : nombre;
+            const thB = document.getElementById('th-b');
+            const colB = document.getElementById('col-b-label');
+            if (thB) thB.textContent = nombreCorto;
+            if (colB) colB.textContent = nombre;
 
             // Tabla de diferencias
             const maxVals = STAT_KEYS_C.map(k => Math.max(BASE_A[k] || 0, statsB[k] || 0));
