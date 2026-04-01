@@ -56,12 +56,18 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.classList.add('theme-' + themeName);
         localStorage.setItem('ark_hub_theme', themeName);
 
-        // Actualizar gráfico radar si existe
+        // Actualizar radares si existen
+        const accentRgb = getComputedStyle(document.body).getPropertyValue('--accent-rgb').trim() || '0,255,204';
         if (window.radarChart) {
-            const accentRgb = getComputedStyle(document.body).getPropertyValue('--accent-rgb').trim() || '0,255,204';
             window.radarChart.data.datasets[0].backgroundColor = `rgba(${accentRgb},0.10)`;
-            window.radarChart.data.datasets[0].borderColor = `rgba(${accentRgb},0.85)`;
+            window.radarChart.data.datasets[0].borderColor     = `rgba(${accentRgb},0.85)`;
             window.radarChart.update('none');
+        }
+        if (window.radarComparar) {
+            window.radarComparar.data.datasets[0].backgroundColor      = `rgba(${accentRgb},0.15)`;
+            window.radarComparar.data.datasets[0].borderColor          = `rgba(${accentRgb},1)`;
+            window.radarComparar.data.datasets[0].pointBackgroundColor = `rgba(${accentRgb},1)`;
+            window.radarComparar.update('none');
         }
 
         // Actualizar sliders de Impronta y Taming con el color del acento
