@@ -57,7 +57,15 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('ark_hub_theme', themeName);
 
         // Actualizar radares si existen
-        const accentRgb = getComputedStyle(document.body).getPropertyValue('--accent-rgb').trim() || '0,255,204';
+        // Mapa de colores por tema para no depender de getComputedStyle (puede no actualizarse a tiempo)
+        const TEMA_COLORES = {
+            'ragnarok':   '0,255,204',
+            'aberration': '179,0,255',
+            'extinction': '255,204,0',
+            'scorched':   '255,102,0',
+            'daltonico':  '255,255,0',
+        };
+        const accentRgb = TEMA_COLORES[themeName] || '0,255,204';
         if (window.radarChart) {
             window.radarChart.data.datasets[0].backgroundColor = `rgba(${accentRgb},0.10)`;
             window.radarChart.data.datasets[0].borderColor     = `rgba(${accentRgb},0.85)`;

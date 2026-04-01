@@ -1943,18 +1943,25 @@ if (count($comentarios) > 0) {
 
                 modal.style.display = 'flex';
 
-                requestAnimationFrame(() => {
+                // Doble rAF: primer frame pinta el modal, segundo frame tiene dimensiones reales
+                requestAnimationFrame(() => requestAnimationFrame(() => {
                     const canvas = document.getElementById('radar-modal-canvas');
                     const container = canvas.parentElement;
-                    canvas.width  = container.offsetWidth;
-                    canvas.height = container.offsetHeight;
+
+                    // Forzar dimensiones explícitas
+                    const w = container.offsetWidth  || 600;
+                    const h = container.offsetHeight || 440;
+                    canvas.style.width  = w + 'px';
+                    canvas.style.height = h + 'px';
+                    canvas.width  = w;
+                    canvas.height = h;
 
                     const accentRgb = getComputedStyle(document.body).getPropertyValue('--accent-rgb').trim() || '0,255,204';
                     const srcData   = JSON.parse(JSON.stringify(srcChart.data));
 
                     if (srcData.datasets[0]) {
-                        srcData.datasets[0].backgroundColor     = 'rgba(' + accentRgb + ',0.15)';
-                        srcData.datasets[0].borderColor         = 'rgba(' + accentRgb + ',1)';
+                        srcData.datasets[0].backgroundColor      = 'rgba(' + accentRgb + ',0.15)';
+                        srcData.datasets[0].borderColor          = 'rgba(' + accentRgb + ',1)';
                         srcData.datasets[0].pointBackgroundColor = 'rgba(' + accentRgb + ',1)';
                     }
 
@@ -1987,7 +1994,7 @@ if (count($comentarios) > 0) {
                             }
                         }
                     });
-                });
+                }));
             };
         })();
     </script>
