@@ -919,40 +919,16 @@ if (count($comentarios) > 0) {
             $str_incubacion = formatMinutos($t_incubacion);
             $str_madurez    = formatMinutos($t_madurez);
             ?>
-            <div style="margin-top:20px; background:rgba(155,89,182,0.04); border:1px solid rgba(155,89,182,0.2); border-radius:14px; padding:22px;">
-                <!-- Header -->
+            <?php if ($str_incubacion || $str_madurez): ?>
+            <!-- BLOQUE CRIANZA -->
+            <div style="margin-top:20px; background:rgba(241,196,15,0.04); border:1px solid rgba(241,196,15,0.2); border-radius:14px; padding:22px;">
                 <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
-                    <div style="background:rgba(155,89,182,0.15); border-radius:10px; padding:10px; display:flex; flex-shrink:0;">
-                        <span class="material-symbols-outlined" style="color:#9b59b6; font-size:1.3rem;">pets</span>
+                    <div style="background:rgba(241,196,15,0.15); border-radius:10px; padding:10px; display:flex; flex-shrink:0;">
+                        <span class="material-symbols-outlined" style="color:#f1c40f; font-size:1.3rem;">egg</span>
                     </div>
-                    <h4 style="margin:0; font-size:1rem; font-weight:800; color:#fff;">Domesticación</h4>
+                    <h4 style="margin:0; font-size:1rem; font-weight:800; color:#fff;">Crianza</h4>
                 </div>
-
-                <!-- Info básica en pills -->
-                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; padding:12px 16px; background:rgba(255,255,255,0.03); border-radius:10px; border:1px solid rgba(255,255,255,0.06);">
-                    <?php if (!empty($metodo)): ?>
-                    <span style="display:inline-flex; align-items:center; gap:5px; font-size:0.82rem; color:var(--text-muted);">
-                        <span class="material-symbols-outlined" style="font-size:0.9rem; color:#9b59b6;">sports_kabaddi</span>
-                        Método: <strong style="color:#9b59b6;"><?php echo htmlspecialchars($metodo); ?></strong>
-                    </span>
-                    <?php endif; ?>
-                    <?php if (!empty($features['comida_favorita'])): ?>
-                    <span style="color:rgba(255,255,255,0.2);">·</span>
-                    <span style="display:inline-flex; align-items:center; gap:5px; font-size:0.82rem; color:var(--text-muted);">
-                        <span class="material-symbols-outlined" style="font-size:0.9rem; color:#2ecc71;">restaurant</span>
-                        Comida: <strong style="color:var(--text-main);"><?php echo htmlspecialchars($features['comida_favorita']); ?></strong>
-                    </span>
-                    <?php endif; ?>
-                    <span style="color:rgba(255,255,255,0.2);">·</span>
-                    <span style="display:inline-flex; align-items:center; gap:5px; font-size:0.82rem; color:var(--text-muted);">
-                        <span class="material-symbols-outlined" style="font-size:0.9rem; color:var(--accent);">trending_up</span>
-                        Nivel máx: <strong style="color:var(--accent);"><?php echo $nivel_max; ?></strong>
-                    </span>
-                </div>
-
-                <?php if ($str_incubacion || $str_madurez): ?>
-                <!-- Tiempos de cría en 3 columnas iguales -->
-                <div style="display:grid; grid-template-columns:repeat(<?php echo ($str_incubacion && $str_madurez) ? '3' : ($str_incubacion || $str_madurez ? '2' : '1'); ?>, 1fr); gap:10px; margin-bottom:12px;">
+                <div style="display:grid; grid-template-columns:repeat(<?php echo ($str_incubacion && $str_madurez) ? '3' : '2'; ?>, 1fr); gap:10px; margin-bottom:12px;">
                     <?php if ($str_incubacion): ?>
                     <div style="background:rgba(241,196,15,0.07); border:1px solid rgba(241,196,15,0.2); border-radius:10px; padding:14px; text-align:center;">
                         <span class="material-symbols-outlined" style="color:#f1c40f; font-size:1.4rem; display:block; margin-bottom:5px;">egg</span>
@@ -984,7 +960,37 @@ if (count($comentarios) > 0) {
                     </p>
                 </div>
                 <?php endif; ?>
-                <?php endif; ?>
+            </div>
+            <?php endif; ?>
+
+            <!-- BLOQUE DOMESTICACIÓN -->
+            <div style="margin-top:20px; background:rgba(155,89,182,0.04); border:1px solid rgba(155,89,182,0.2); border-radius:14px; padding:22px;">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+                    <div style="background:rgba(155,89,182,0.15); border-radius:10px; padding:10px; display:flex; flex-shrink:0;">
+                        <span class="material-symbols-outlined" style="color:#9b59b6; font-size:1.3rem;">pets</span>
+                    </div>
+                    <h4 style="margin:0; font-size:1rem; font-weight:800; color:#fff;">Domesticación</h4>
+                </div>
+                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; padding:12px 16px; background:rgba(255,255,255,0.03); border-radius:10px; border:1px solid rgba(255,255,255,0.06);">
+                    <?php if (!empty($metodo)): ?>
+                    <span style="display:inline-flex; align-items:center; gap:5px; font-size:0.82rem; color:var(--text-muted);">
+                        <span class="material-symbols-outlined" style="font-size:0.9rem; color:#9b59b6;">sports_kabaddi</span>
+                        Método: <strong style="color:#9b59b6;"><?php echo htmlspecialchars($metodo); ?></strong>
+                    </span>
+                    <?php endif; ?>
+                    <?php if (!empty($features['comida_favorita'])): ?>
+                    <span style="color:rgba(255,255,255,0.2);">·</span>
+                    <span style="display:inline-flex; align-items:center; gap:5px; font-size:0.82rem; color:var(--text-muted);">
+                        <span class="material-symbols-outlined" style="font-size:0.9rem; color:#2ecc71;">restaurant</span>
+                        Comida: <strong style="color:var(--text-main);"><?php echo htmlspecialchars($features['comida_favorita']); ?></strong>
+                    </span>
+                    <?php endif; ?>
+                    <span style="color:rgba(255,255,255,0.2);">·</span>
+                    <span style="display:inline-flex; align-items:center; gap:5px; font-size:0.82rem; color:var(--text-muted);">
+                        <span class="material-symbols-outlined" style="font-size:0.9rem; color:var(--accent);">trending_up</span>
+                        Nivel máx: <strong style="color:var(--accent);"><?php echo $nivel_max; ?></strong>
+                    </span>
+                </div>
 
                 <!-- Calculadora de taming -->
                 <div style="background:rgba(var(--accent-rgb),0.05); border:1px solid rgba(var(--accent-rgb),0.15); border-radius:10px; padding:16px; margin-top:16px;">
@@ -1309,7 +1315,7 @@ if (count($comentarios) > 0) {
                             if ($val_a <= 0) continue;
                         ?>
                         <div class="comparar-stat-row" data-stat="<?php echo $key; ?>" data-val-a="<?php echo $val_a; ?>">
-                            <div style="display:grid; grid-template-columns:1fr 72px 72px 52px; align-items:center; gap:6px; margin-bottom:5px;">
+                            <div style="display:grid; grid-template-columns:1fr 72px 72px 52px; align-items:center; gap:6px; margin-bottom:6px;">
                                 <div style="display:flex; align-items:center; gap:6px;">
                                     <span class="material-symbols-outlined" style="font-size:0.9rem; color:<?php echo $color; ?>; flex-shrink:0;"><?php echo $icon; ?></span>
                                     <span style="font-size:0.82rem; font-weight:700; color:<?php echo $color; ?>;"><?php echo $label; ?></span>
@@ -1318,12 +1324,13 @@ if (count($comentarios) > 0) {
                                 <span class="comparar-val-b" style="font-size:0.82rem; color:var(--text-muted); text-align:right;">—</span>
                                 <span class="comparar-diff" style="font-size:0.78rem; font-weight:800; text-align:right;">—</span>
                             </div>
-                            <div style="display:flex; gap:3px; height:5px;">
-                                <div style="flex:1; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+                            <!-- Barras en fila completa, una encima de la otra -->
+                            <div style="display:flex; flex-direction:column; gap:3px;">
+                                <div style="height:5px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
                                     <div class="comparar-bar-a" style="height:100%; background:<?php echo $color; ?>; border-radius:3px; width:100%; transition:width 0.5s;"></div>
                                 </div>
-                                <div style="flex:1; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
-                                    <div class="comparar-bar-b" style="height:100%; background:rgba(255,152,0,0.7); border-radius:3px; width:0%; transition:width 0.5s;"></div>
+                                <div style="height:5px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
+                                    <div class="comparar-bar-b" style="height:100%; background:rgba(255,152,0,0.8); border-radius:3px; width:0%; transition:width 0.5s;"></div>
                                 </div>
                             </div>
                         </div>
@@ -1707,32 +1714,46 @@ if (count($comentarios) > 0) {
                         {
                             label: '<?php echo addslashes($dino["nombre"]); ?>',
                             data: STAT_KEYS_C.map(k => BASE_A[k]),
-                            backgroundColor: `rgba(${accentRgb},0.12)`,
-                            borderColor: `rgba(${accentRgb},0.9)`,
+                            backgroundColor: `rgba(${accentRgb},0.15)`,
+                            borderColor: `rgba(${accentRgb},1)`,
                             pointBackgroundColor: `rgba(${accentRgb},1)`,
                             pointBorderColor: '#fff',
-                            pointRadius: 4, borderWidth: 2,
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            borderWidth: 3,
                         },
                         {
                             label: 'Comparar',
                             data: STAT_KEYS_C.map(() => 0),
-                            backgroundColor: 'rgba(255,152,0,0.12)',
-                            borderColor: 'rgba(255,152,0,0.9)',
+                            backgroundColor: 'rgba(255,152,0,0.15)',
+                            borderColor: 'rgba(255,152,0,1)',
                             pointBackgroundColor: 'rgba(255,152,0,1)',
                             pointBorderColor: '#fff',
-                            pointRadius: 4, borderWidth: 2,
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            borderWidth: 3,
+                            borderDash: [5, 3],
                         }
                     ]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: true,
-                    animation: { duration: 300 },
-                    plugins: { legend: { display: false } },
+                    animation: { duration: 400 },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => ` ${ctx.dataset.label}: ${Math.round(ctx.raw).toLocaleString('es-ES')}`
+                            }
+                        }
+                    },
                     scales: {
                         r: {
-                            angleLines: { color: 'rgba(255,255,255,0.08)' },
-                            grid: { color: 'rgba(255,255,255,0.08)' },
-                            pointLabels: { color: '#aaa', font: { size: 10, family: 'inherit' } },
+                            angleLines: { color: 'rgba(255,255,255,0.1)' },
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            pointLabels: { color: '#ccc', font: { size: 11, family: 'inherit', weight: '600' } },
                             ticks: { display: false, backdropColor: 'transparent' },
                             suggestedMin: 0,
                         }
