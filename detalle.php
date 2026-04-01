@@ -446,22 +446,32 @@ if (count($comentarios) > 0) {
                     <!-- Aureola Decorativa -->
                     <div style="position:absolute; top:-60px; right:-60px; width:180px; height:180px; background:var(--accent); filter:blur(110px); opacity:0.15; z-index:0; border-radius:50%;"></div>
                     
-                    <h3 style="margin:0 0 22px; font-size:1.6rem; color:#fff; display:flex; align-items:center; gap:12px; position:relative; z-index:1; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:18px;">
-                        <span class="material-symbols-outlined" style="font-size:1.9rem; color:var(--accent);">auto_stories</span>
-                        Ficha Técnica y Descripción
-                    </h3>
+                    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; position:relative; z-index:1; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:18px; margin-bottom:22px; flex-wrap:wrap;">
+                        <h3 style="margin:0; font-size:1.6rem; color:#fff; display:flex; align-items:center; gap:12px;">
+                            <span class="material-symbols-outlined" style="font-size:1.9rem; color:var(--accent);">auto_stories</span>
+                            Ficha Técnica y Descripción
+                        </h3>
+                        <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_insertar'] ?? 0) == 1): ?>
+                        <a href="admin/editar.php?id=<?php echo $dino['id']; ?>"
+                            style="display:inline-flex; align-items:center; gap:6px; padding:7px 16px; background:rgba(var(--accent-rgb),0.1); color:var(--accent); font-weight:700; border-radius:8px; border:1px solid rgba(var(--accent-rgb),0.3); text-decoration:none; font-size:0.82rem; transition:all 0.2s; flex-shrink:0;"
+                            onmouseover="this.style.background='rgba(var(--accent-rgb),0.2)'" onmouseout="this.style.background='rgba(var(--accent-rgb),0.1)'">
+                            <span class="material-symbols-outlined" style="font-size:0.95rem;">edit</span>
+                            Editar
+                        </a>
+                        <?php endif; ?>
+                    </div>
                     <div style="font-size:1.05rem; line-height:1.75; color:rgba(255,255,255,0.78); position:relative; z-index:1; text-align:justify; font-weight:400;">
                         <?php echo nl2br(htmlspecialchars($dino['descripcion'])); ?>
                     </div>
                 </div>
             <?php endif; ?>
 
-            <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_insertar'] ?? 0) == 1): ?>
+            <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_insertar'] ?? 0) == 1 && empty($dino['descripcion'])): ?>
                 <div style="text-align:right; padding:0 0 20px;">
                     <a href="admin/editar.php?id=<?php echo $dino['id']; ?>"
-                        style="display:inline-flex; align-items:center; gap:6px; padding:8px 18px; background:rgba(var(--accent-rgb),0.1); color:var(--accent); font-weight:700; border-radius:8px; border:1px solid rgba(var(--accent-rgb),0.3); text-decoration:none; font-size:0.85rem; transition:all 0.2s;"
+                        style="display:inline-flex; align-items:center; gap:6px; padding:7px 16px; background:rgba(var(--accent-rgb),0.1); color:var(--accent); font-weight:700; border-radius:8px; border:1px solid rgba(var(--accent-rgb),0.3); text-decoration:none; font-size:0.82rem; transition:all 0.2s;"
                         onmouseover="this.style.background='rgba(var(--accent-rgb),0.2)'" onmouseout="this.style.background='rgba(var(--accent-rgb),0.1)'">
-                        <span class="material-symbols-outlined" style="font-size:1rem;">edit</span>
+                        <span class="material-symbols-outlined" style="font-size:0.95rem;">edit</span>
                         Editar Criatura
                     </a>
                 </div>
@@ -1264,25 +1274,15 @@ if (count($comentarios) > 0) {
 
                 <!-- Tabla de diferencias -->
                 <div>
-                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
                         <h4 style="margin:0; color:var(--text-muted); font-size:0.78rem; text-transform:uppercase; letter-spacing:1px;">Diferencia de Stats Base</h4>
-                        <div style="display:flex; gap:16px; font-size:0.75rem; font-weight:700;">
-                            <span style="display:flex; align-items:center; gap:5px;">
-                                <span style="width:10px;height:10px;border-radius:50%;background:rgba(var(--accent-rgb),0.85);display:inline-block;flex-shrink:0;"></span>
-                                <span style="color:var(--accent);" id="col-a-label"><?php echo htmlspecialchars($dino['nombre']); ?></span>
-                            </span>
-                            <span style="display:flex; align-items:center; gap:5px;">
-                                <span style="width:10px;height:10px;border-radius:50%;background:rgba(255,152,0,0.85);display:inline-block;flex-shrink:0;"></span>
-                                <span style="color:#ff9800;" id="col-b-label">Selecciona una criatura</span>
-                            </span>
-                        </div>
                     </div>
-                    <!-- Cabecera de columnas -->
-                    <div style="display:flex; align-items:center; gap:8px; padding:0 0 6px; border-bottom:1px solid rgba(255,255,255,0.06); margin-bottom:8px;">
-                        <span style="flex:1; font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Stat</span>
-                        <span style="font-size:0.72rem; color:var(--accent); font-weight:700; min-width:60px; text-align:right;" id="th-a"><?php echo mb_strimwidth(htmlspecialchars($dino['nombre']), 0, 10, '…'); ?></span>
-                        <span style="font-size:0.72rem; color:#ff9800; font-weight:700; min-width:60px; text-align:right;" id="th-b">—</span>
-                        <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700; min-width:50px; text-align:right;">Δ</span>
+                    <!-- Cabecera de columnas con nombres -->
+                    <div style="display:grid; grid-template-columns:1fr 72px 72px 52px; align-items:center; padding:0 0 8px; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:8px; gap:6px;">
+                        <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Stat</span>
+                        <span style="font-size:0.72rem; color:var(--accent); font-weight:800; text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" id="th-a"><?php echo mb_strimwidth(htmlspecialchars($dino['nombre']), 0, 9, '…'); ?></span>
+                        <span style="font-size:0.72rem; color:#ff9800; font-weight:800; text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" id="th-b">—</span>
+                        <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-align:right;">Δ</span>
                     </div>
                     <div id="comparar-tabla" style="display:flex; flex-direction:column; gap:10px;">
                         <?php
@@ -1300,14 +1300,16 @@ if (count($comentarios) > 0) {
                             if ($val_a <= 0) continue;
                         ?>
                         <div class="comparar-stat-row" data-stat="<?php echo $key; ?>" data-val-a="<?php echo $val_a; ?>">
-                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;">
-                                <span class="material-symbols-outlined" style="font-size:0.95rem; color:<?php echo $color; ?>;"><?php echo $icon; ?></span>
-                                <span style="font-size:0.82rem; font-weight:700; color:<?php echo $color; ?>; flex:1;"><?php echo $label; ?></span>
-                                <span style="font-size:0.82rem; color:var(--text-muted);"><?php echo number_format($val_a); ?></span>
-                                <span class="comparar-val-b" style="font-size:0.82rem; color:var(--text-muted); min-width:60px; text-align:right;">—</span>
-                                <span class="comparar-diff" style="font-size:0.75rem; font-weight:700; min-width:50px; text-align:right;">—</span>
+                            <div style="display:grid; grid-template-columns:1fr 72px 72px 52px; align-items:center; gap:6px; margin-bottom:5px;">
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span class="material-symbols-outlined" style="font-size:0.9rem; color:<?php echo $color; ?>; flex-shrink:0;"><?php echo $icon; ?></span>
+                                    <span style="font-size:0.82rem; font-weight:700; color:<?php echo $color; ?>;"><?php echo $label; ?></span>
+                                </div>
+                                <span style="font-size:0.82rem; color:var(--text-muted); text-align:right;"><?php echo number_format($val_a); ?></span>
+                                <span class="comparar-val-b" style="font-size:0.82rem; color:var(--text-muted); text-align:right;">—</span>
+                                <span class="comparar-diff" style="font-size:0.78rem; font-weight:800; text-align:right;">—</span>
                             </div>
-                            <div style="display:flex; gap:3px; height:6px;">
+                            <div style="display:flex; gap:3px; height:5px;">
                                 <div style="flex:1; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden;">
                                     <div class="comparar-bar-a" style="height:100%; background:<?php echo $color; ?>; border-radius:3px; width:100%; transition:width 0.5s;"></div>
                                 </div>
@@ -1790,11 +1792,9 @@ if (count($comentarios) > 0) {
 
             // Leyenda y cabeceras
             document.getElementById('comparar-leyenda-nombre').textContent = nombre;
-            const nombreCorto = nombre.length > 10 ? nombre.substring(0, 10) + '…' : nombre;
+            const nombreCorto = nombre.length > 9 ? nombre.substring(0, 9) + '…' : nombre;
             const thB = document.getElementById('th-b');
-            const colB = document.getElementById('col-b-label');
             if (thB) thB.textContent = nombreCorto;
-            if (colB) colB.textContent = nombre;
 
             // Tabla de diferencias
             const maxVals = STAT_KEYS_C.map(k => Math.max(BASE_A[k] || 0, statsB[k] || 0));

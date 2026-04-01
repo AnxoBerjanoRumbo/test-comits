@@ -411,13 +411,28 @@ if (isset($_GET['tab_blacklist'])) $tab_activa = 'blacklist';
         <div id="buscador-usuarios" class="tab-content <?php echo $tab_activa == 'usuarios' ? 'active' : ''; ?>">
             <div class="busqueda-header mb-40">
                 <h2 class="accent-text mb-15">Registro Civil de Supervivientes</h2>
-                <form action="panel_superadmin.php#buscador-usuarios" method="GET" class="buscador" style="margin-bottom: 0; padding: 0; background: transparent; border: none; box-shadow: none;">
+                <form action="panel_superadmin.php#buscador-usuarios" method="GET" style="margin-bottom:0;">
                     <input type="hidden" name="tab_usuarios" value="1">
-                    <div style="display: flex; gap: 15px; width: 100%;">
-                        <input type="text" name="buscar_usuario" placeholder="Introduce Nick o Email completo..." value="<?php echo htmlspecialchars($busqueda); ?>" style="flex: 1;">
-                        <button type="submit">Localizar Sujeto</button>
+                    <div style="display:flex; gap:12px; width:100%; align-items:center;">
+                        <div style="flex:1; position:relative; display:flex; align-items:center;">
+                            <span class="material-symbols-outlined" style="position:absolute; left:12px; color:var(--text-muted); font-size:1.1rem; pointer-events:none;">search</span>
+                            <input type="text" name="buscar_usuario" placeholder="Introduce Nick o Email completo..."
+                                value="<?php echo htmlspecialchars($busqueda); ?>"
+                                style="width:100%; padding:12px 14px 12px 40px; background:var(--input-bg); border:1px solid var(--border-color); color:var(--input-text); border-radius:8px; font-family:inherit; font-size:0.95rem; outline:none; transition:border-color 0.2s;"
+                                onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-color)'">
+                        </div>
+                        <button type="submit" style="background:var(--accent); color:var(--accent-text); border:none; padding:12px 22px; border-radius:8px; font-weight:700; font-size:0.9rem; font-family:inherit; cursor:pointer; transition:all 0.2s; white-space:nowrap; display:flex; align-items:center; gap:6px;"
+                            onmouseover="this.style.background='var(--accent-hover)'" onmouseout="this.style.background='var(--accent)'">
+                            <span class="material-symbols-outlined" style="font-size:1rem;">manage_search</span>
+                            Localizar Sujeto
+                        </button>
                         <?php if (!empty($busqueda)): ?>
-                            <a href="panel_superadmin.php?tab_usuarios=1" class="boton-limpiar">Nueva Búsqueda</a>
+                            <a href="panel_superadmin.php?tab_usuarios=1"
+                                style="display:inline-flex; align-items:center; gap:5px; padding:12px 16px; background:rgba(255,255,255,0.05); border:1px solid var(--border-color); color:var(--text-muted); border-radius:8px; text-decoration:none; font-size:0.88rem; transition:all 0.2s; white-space:nowrap;"
+                                onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                                <span class="material-symbols-outlined" style="font-size:0.95rem;">close</span>
+                                Limpiar
+                            </a>
                         <?php endif; ?>
                     </div>
                 </form>
