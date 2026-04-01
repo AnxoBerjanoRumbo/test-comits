@@ -3,7 +3,8 @@ session_start();
 include 'config/db.php';
 
 // 1. Recogemos el ID del dinosaurio desde la URL (con validación básica)
-$id = isset($_GET['id']) ? $_GET['id'] : 1;
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 1;
+if ($id <= 0) $id = 1;
 
 // 2. Consulta del dinosaurio
 $sql_dino = "SELECT * FROM dinosaurios WHERE id = :id";
@@ -51,6 +52,16 @@ $stmt_features = $conexion->prepare($sql_features);
 $stmt_features->bindParam(':id', $id);
 $stmt_features->execute();
 $features = $stmt_features->fetch(PDO::FETCH_ASSOC);
+
+// Función helper para formatear minutos (definida aquí para evitar redeclaración)
+if (!function_exists('formatMinutos')) {
+    function formatMinutos($min) {
+        if ($min <= 0) return null;
+        if ($min < 60)   return $min . ' min';
+        if ($min < 1440) return round($min / 60, 1) . ' h';
+        return round($min / 1440, 1) . ' días';
+    }
+}
 
 // 4. Paginación de Comentarios
 $comentarios_por_pagina = 10;
@@ -916,13 +927,6 @@ if (count($comentarios) > 0) {
             $t_incubacion = (int)($features['tiempo_incubacion'] ?? 0);
             $t_madurez    = (int)($features['tiempo_madurez']    ?? 0);
 
-            // Formatear minutos a texto legible
-            function formatMinutos($min) {
-                if ($min <= 0) return null;
-                if ($min < 60)   return $min . ' min';
-                if ($min < 1440) return round($min / 60, 1) . ' h';
-                return round($min / 1440, 1) . ' días';
-            }
             $str_incubacion = formatMinutos($t_incubacion);
             $str_madurez    = formatMinutos($t_madurez);
             ?>

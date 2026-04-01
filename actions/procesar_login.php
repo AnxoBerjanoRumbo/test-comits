@@ -58,13 +58,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit();
             }
 
+            // 3. Regenerar ID de sesión ANTES de asignar datos (previene Session Fixation)
+            session_regenerate_id(true);
+
             $_SESSION['usuario_id'] = $user['id'];
             $_SESSION['nick'] = $user['nick'];
             $_SESSION['rol'] = $user['rol'];
             $_SESSION['foto_perfil'] = $user['foto_perfil'] ?? 'default.png';
-
-            // 3. Regenerar ID de sesión para evitar "Session Fixation"
-            session_regenerate_id(true);
 
             if ($user['rol'] === 'admin' || $user['rol'] === 'superadmin') {
                 $_SESSION['is_admin'] = true;

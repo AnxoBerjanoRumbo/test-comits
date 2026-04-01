@@ -451,30 +451,6 @@ body {
     color: var(--accent-text);
 }
 
-.boton-insertar {
-    width: 100%;
-    padding: 16px;
-    background-color: var(--accent);
-    color: var(--accent-text);
-    border: none;
-    border-radius: 8px;
-    font-weight: 800;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-family: inherit;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-@media (hover: hover) {
-    .boton-insertar:hover {
-        background-color: var(--accent-hover);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(var(--accent-rgb), 0.3);
-    }
-}
-
 .boton-eliminar {
     background-color: var(--error-color);
     color: #fff;
@@ -2466,6 +2442,103 @@ body.theme-daltonico {
     
     .form-ark .campo {
         padding: 15px;
+    }
+}
+
+/* ==========================================================================
+   RESPONSIVE DETALLE — FIXES MOBILE/TABLET
+   ========================================================================== */
+
+/* Hero: altura fija demasiado grande en móvil */
+.dino-hero { min-height: clamp(260px, 50vh, 420px); }
+
+/* Tabs: evitar desbordamiento en móvil */
+@media (max-width: 600px) {
+    .dino-tabs-nav {
+        justify-content: flex-start;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding: 6px 8px;
+        border-radius: 12px;
+        margin: -20px auto 30px;
+        max-width: 100%;
+    }
+    .dino-tab-btn {
+        padding: 8px 14px;
+        font-size: 0.78rem;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+}
+
+/* Calculadora de stats: grid de 2 columnas → 1 columna en móvil */
+@media (max-width: 680px) {
+    .stats-grid-calc {
+        grid-template-columns: 1fr !important;
+    }
+    .stat-slider-row {
+        grid-template-columns: 90px 1fr 70px 50px !important;
+        gap: 6px !important;
+    }
+}
+
+/* Comparador 3 columnas → apilado en tablet/móvil */
+@media (max-width: 900px) {
+    #tab-comparar > div[style*="grid-template-columns:1fr 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Formularios admin: grids de stats → 1 columna en móvil */
+@media (max-width: 600px) {
+    .form-ark .campo > div[style*="grid-template-columns:repeat(auto-fill, minmax(280px"] {
+        grid-template-columns: 1fr !important;
+    }
+    .form-ark .campo > div[style*="grid-template-columns:repeat(auto-fill, minmax(320px"] {
+        grid-template-columns: 1fr !important;
+    }
+    .form-ark .campo > div[style*="grid-template-columns:repeat(auto-fill, minmax(250px"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Panel superadmin: grid de admins */
+@media (max-width: 600px) {
+    .lista-admins {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Tablón de referencia: scroll horizontal forzado */
+.stats-ref-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Buscador: botón filtrar visible en móvil */
+@media (max-width: 500px) {
+    .buscador-btn-submit {
+        padding: 11px 14px;
+        font-size: 0.82rem;
+    }
+    .buscador-select {
+        font-size: 0.82rem;
+        padding: 10px 10px;
+    }
+}
+
+/* Regiones de color: 1 columna en móvil */
+@media (max-width: 600px) {
+    div[style*="minmax(260px, 1fr)"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Contenedor detalle: padding reducido en móvil */
+@media (max-width: 600px) {
+    .contenedor-detalle {
+        padding: 0 12px 40px !important;
     }
 }
 

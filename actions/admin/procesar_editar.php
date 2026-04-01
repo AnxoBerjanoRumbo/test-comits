@@ -5,6 +5,8 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true || ($_SESSIO
     exit();
 }
 include '../../config/db.php';
+include_once '../../config/verificar_sesion.php';
+check_user_active_status($conexion, '../../login.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {

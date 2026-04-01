@@ -280,10 +280,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         item.innerHTML = `
                             <div class="notificacion-mensaje">
                                 <span class="material-symbols-outlined f-09" style="vertical-align:middle;margin-right:5px;color:var(--accent);">${icon}</span>
-                                ${msgMostrar}
+                                <span class="notif-msg-text"></span>
                             </div>
                             <div class="notificacion-fecha">${formatearFecha(notif.fecha)}</div>
                         `;
+                        // Usar textContent para el mensaje para evitar XSS
+                        item.querySelector('.notif-msg-text').textContent = msgMostrar;
 
                         item.addEventListener('click', function(e) {
                             if (linkHref !== '#') {
@@ -389,7 +391,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Polling cada 5s para actualizar el badge (más rápido)
-        setInterval(function () {
+        const _notifPollingId = setInterval(function () {
             if (!dropdownNotif.classList.contains('active')) {
                 fetch(basePath + 'actions/contar_notificaciones_no_leidas.php')
                     .then(res => res.json())
@@ -413,6 +415,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     .catch(err => console.error('Polling error:', err));
             }
         }, 5000);
+
+        // Limpiar polling al salir de la página para evitar memory leaks
+        window.addEventListener('beforeunload', function() {
+            clearInterval(_notifPollingId);
+        });
     }
     // 7. Envío de Comunicados vía AJAX (Panel Superadmin)
     const formComunicado = document.getElementById('formulario-comunicado');

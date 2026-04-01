@@ -3,6 +3,13 @@
 session_start();
 include '../config/db.php';
 
+// Solo usuarios autenticados pueden buscar
+if (!isset($_SESSION['usuario_id'])) {
+    header('Content-Type: application/json');
+    echo json_encode([]);
+    exit();
+}
+
 header('Content-Type: application/json; charset=utf-8');
 
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';

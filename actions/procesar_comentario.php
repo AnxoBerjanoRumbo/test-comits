@@ -23,6 +23,15 @@ $dino_id = (int)$_POST['dino_id'];
 $texto = trim($_POST['texto']);
 $usuario_id = $_SESSION['usuario_id'];
 
+// Rate limiting: máximo 1 comentario cada 5 segundos por usuario
+$ahora = time();
+$ultimo = $_SESSION['last_comment_time'] ?? 0;
+if (($ahora - $ultimo) < 5) {
+    header("Location: ../detalle.php?id=$dino_id&error=spam_comentario");
+    exit();
+}
+$_SESSION['last_comment_time'] = $ahora;
+
 $respuesta_a = (!empty($_POST['respuesta_a'])) ? (int)$_POST['respuesta_a'] : null;
 $texto = mb_substr($texto, 0, 10000);
 
