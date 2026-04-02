@@ -6,12 +6,12 @@
  * para máxima seguridad y rendimiento. No depende de Youtube.
  */
 
-let TRACKS      = [];
+let TRACKS = [];
 let audioPlayer = new Audio();
 let currentTrack = parseInt(localStorage.getItem('ark_music_track_index')) || 0;
-let isPlaying    = localStorage.getItem('ark_music_playing') === 'true';
-let isMuted      = localStorage.getItem('ark_music_muted') === 'true';
-let rawVol       = parseInt(localStorage.getItem('ark_music_vol'));
+let isPlaying = localStorage.getItem('ark_music_playing') === 'true';
+let isMuted = localStorage.getItem('ark_music_muted') === 'true';
+let rawVol = parseInt(localStorage.getItem('ark_music_vol'));
 let currentVolume = isNaN(rawVol) ? 40 : rawVol;
 
 // ── Cargar tracks desde la base de datos y construir playlist ────────────────
@@ -20,23 +20,23 @@ async function initMusicPlayer() {
         const basePath = window.location.pathname.includes('/ark-survival-hub-main/') ? '/ark-survival-hub-main' : '';
         const response = await fetch(basePath + '/actions/get_music.php');
         const result = await response.json();
-        
+
         if (result.status === 'success' && result.data.length > 0) {
             TRACKS = result.data.map(track => ({
                 title: track.title,
                 url: basePath + '/assets/music/' + track.file
             }));
-            
+
             buildPlaylist();
             setupAudioEvents();
-            
+
             // Cargar track guardado o el primero
             if (currentTrack >= TRACKS.length) currentTrack = 0;
-            
+
             audioPlayer.src = TRACKS[currentTrack].url;
             audioPlayer.volume = currentVolume / 100;
             audioPlayer.muted = isMuted;
-            
+
             updateTrackUI(currentTrack);
             updateVolumeSliderFill(currentVolume);
 
@@ -135,13 +135,13 @@ function musicToggle() {
 
 function musicPlayTrack(index) {
     if (TRACKS.length === 0) return;
-    
+
     currentTrack = index;
     localStorage.setItem('ark_music_track_index', currentTrack);
     localStorage.setItem('ark_music_timestamp', 0); // Reset tiempo si es track nuevo
-    
+
     updateTrackUI(index);
-    
+
     audioPlayer.src = TRACKS[index].url;
     audioPlayer.currentTime = 0;
     audioPlayer.play().catch(e => console.log("Play blocked", e));
@@ -167,7 +167,7 @@ function musicToggleMute() {
 function musicSetVolume(val) {
     currentVolume = parseInt(val);
     localStorage.setItem('ark_music_vol', currentVolume);
-    
+
     if (audioPlayer) {
         audioPlayer.volume = currentVolume / 100;
         if (isMuted && currentVolume > 0) {
@@ -182,8 +182,8 @@ function musicSetVolume(val) {
 // ── UI helpers ────────────────────────────────────────────────────────────────
 function updateTrackUI(index) {
     const tName = document.getElementById('musicTrackName');
-    if(tName) tName.textContent = TRACKS[index] ? TRACKS[index].title : 'Cargando...';
-    
+    if (tName) tName.textContent = TRACKS[index] ? TRACKS[index].title : 'Cargando...';
+
     document.querySelectorAll('.music-playlist-item').forEach((el, i) => {
         el.classList.toggle('active', i === index);
     });
@@ -199,7 +199,7 @@ function updateVolumeSliderFill(val) {
 // Eventos globales DOM
 document.addEventListener('DOMContentLoaded', function () {
     initMusicPlayer();
-    
+
     // UI Tooltip
     const mi = document.getElementById('musicNoteIcon');
     if (mi) mi.title = "Escuchando BSO ARK";
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Cerrar playlist al clicar fuera
     document.addEventListener('click', function (e) {
         const panel = document.getElementById('musicPanel');
-        const pl    = document.getElementById('musicPlaylist');
+        const pl = document.getElementById('musicPlaylist');
         if (pl && pl.classList.contains('open') && !panel?.contains(e.target)) {
             pl.classList.remove('open');
         }

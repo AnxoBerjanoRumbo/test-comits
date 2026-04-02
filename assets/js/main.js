@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Resaltar selects del buscador con valor activo
     document.querySelectorAll('.buscador-select').forEach(sel => {
         if (sel.value) sel.classList.add('has-value');
-        sel.addEventListener('change', function() {
+        sel.addEventListener('change', function () {
             this.classList.toggle('has-value', !!this.value);
         });
     });
@@ -59,21 +59,21 @@ document.addEventListener('DOMContentLoaded', function () {
         // Actualizar radares si existen
         // Mapa de colores por tema para no depender de getComputedStyle (puede no actualizarse a tiempo)
         const TEMA_COLORES = {
-            'ragnarok':   '0,255,204',
+            'ragnarok': '0,255,204',
             'aberration': '179,0,255',
             'extinction': '255,204,0',
-            'scorched':   '255,102,0',
-            'daltonico':  '255,255,0',
+            'scorched': '255,102,0',
+            'daltonico': '255,255,0',
         };
         const accentRgb = TEMA_COLORES[themeName] || '0,255,204';
         if (window.radarChart && window.radarChart.data && window.radarChart.data.datasets && window.radarChart.data.datasets[0]) {
             window.radarChart.data.datasets[0].backgroundColor = `rgba(${accentRgb},0.10)`;
-            window.radarChart.data.datasets[0].borderColor     = `rgba(${accentRgb},0.85)`;
+            window.radarChart.data.datasets[0].borderColor = `rgba(${accentRgb},0.85)`;
             window.radarChart.update('none');
         }
         if (window.radarComparar && window.radarComparar.data && window.radarComparar.data.datasets && window.radarComparar.data.datasets[0]) {
-            window.radarComparar.data.datasets[0].backgroundColor      = `rgba(${accentRgb},0.15)`;
-            window.radarComparar.data.datasets[0].borderColor          = `rgba(${accentRgb},1)`;
+            window.radarComparar.data.datasets[0].backgroundColor = `rgba(${accentRgb},0.15)`;
+            window.radarComparar.data.datasets[0].borderColor = `rgba(${accentRgb},1)`;
             window.radarComparar.data.datasets[0].pointBackgroundColor = `rgba(${accentRgb},1)`;
             window.radarComparar.update('none');
         }
@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         const msgLower = notif.mensaje.toLowerCase();
                         let icon = 'notifications';
-                        if (notif.mensaje.startsWith('[Mensaje]'))     icon = 'mail';
+                        if (notif.mensaje.startsWith('[Mensaje]')) icon = 'mail';
                         else if (msgLower.includes('dino') || msgLower.includes('criatura')) icon = 'cruelty_free';
                         else if (msgLower.includes('comentario') || msgLower.includes('respondid')) icon = 'chat';
                         else if (msgLower.includes('restriccion') || msgLower.includes('levantad')) icon = 'lock_open';
@@ -287,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         // Usar textContent para el mensaje para evitar XSS
                         item.querySelector('.notif-msg-text').textContent = msgMostrar;
 
-                        item.addEventListener('click', function(e) {
+                        item.addEventListener('click', function (e) {
                             if (linkHref !== '#') {
                                 e.preventDefault();
                             }
@@ -303,10 +303,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         btnBorrar.className = 'btn-borrar-notif';
                         btnBorrar.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">close</span>';
                         btnBorrar.title = 'Borrar notificación';
-                        btnBorrar.addEventListener('click', function(e) {
+                        btnBorrar.addEventListener('click', function (e) {
                             e.preventDefault();
                             e.stopPropagation();
-                            
+
                             const formData = new URLSearchParams();
                             formData.append('id', notif.id);
 
@@ -317,27 +317,27 @@ document.addEventListener('DOMContentLoaded', function () {
                                 },
                                 body: formData
                             })
-                            .then(response => response.json())
-                            .then(res => {
-                                if (res.status === 'success') {
-                                    itemContainer.remove();
-                                    
-                                    // Actualizar badge inmediatamente
-                                    const badge = btnNotif.querySelector('.badge-notif');
-                                    if (badge) {
-                                        const currentCount = parseInt(badge.textContent);
-                                        if (currentCount > 1) {
-                                            badge.textContent = currentCount - 1;
-                                        } else {
-                                            badge.remove();
+                                .then(response => response.json())
+                                .then(res => {
+                                    if (res.status === 'success') {
+                                        itemContainer.remove();
+
+                                        // Actualizar badge inmediatamente
+                                        const badge = btnNotif.querySelector('.badge-notif');
+                                        if (badge) {
+                                            const currentCount = parseInt(badge.textContent);
+                                            if (currentCount > 1) {
+                                                badge.textContent = currentCount - 1;
+                                            } else {
+                                                badge.remove();
+                                            }
+                                        }
+
+                                        if (listaNotif.children.length === 0) {
+                                            listaNotif.innerHTML = '<div class="sin-notificaciones">No tienes notificaciones.</div>';
                                         }
                                     }
-
-                                    if (listaNotif.children.length === 0) {
-                                        listaNotif.innerHTML = '<div class="sin-notificaciones">No tienes notificaciones.</div>';
-                                    }
-                                }
-                            });
+                                });
                         });
 
                         itemContainer.appendChild(item);
@@ -355,8 +355,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 const btnClearAll = document.createElement('button');
                 btnClearAll.className = 'btn-clear-all-notif';
                 btnClearAll.textContent = 'Limpiar todas';
-                
-                btnClearAll.addEventListener('click', function(e) {
+
+                btnClearAll.addEventListener('click', function (e) {
                     e.stopPropagation();
                     fetch(basePath + 'actions/borrar_notificaciones.php', {
                         method: 'POST',
@@ -365,16 +365,16 @@ document.addEventListener('DOMContentLoaded', function () {
                         },
                         body: 'id=all'
                     })
-                    .then(response => response.json())
-                    .then(res => {
-                        if (res.status === 'success') {
-                            listaNotif.innerHTML = '<div class="sin-notificaciones">No tienes notificaciones.</div>';
-                            const badge = btnNotif.querySelector('.badge-notif');
-                            if (badge) badge.remove();
-                        }
-                    });
+                        .then(response => response.json())
+                        .then(res => {
+                            if (res.status === 'success') {
+                                listaNotif.innerHTML = '<div class="sin-notificaciones">No tienes notificaciones.</div>';
+                                const badge = btnNotif.querySelector('.badge-notif');
+                                if (badge) badge.remove();
+                            }
+                        });
                 });
-                
+
                 headerDiv.appendChild(btnClearAll);
             }
         }
@@ -417,58 +417,58 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 5000);
 
         // Limpiar polling al salir de la página para evitar memory leaks
-        window.addEventListener('beforeunload', function() {
+        window.addEventListener('beforeunload', function () {
             clearInterval(_notifPollingId);
         });
     }
     // 7. Envío de Comunicados vía AJAX (Panel Superadmin)
     const formComunicado = document.getElementById('formulario-comunicado');
     if (formComunicado) {
-        formComunicado.addEventListener('submit', function(e) {
+        formComunicado.addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             const btnSubmit = this.querySelector('button[type="submit"]');
             const originalText = btnSubmit.textContent;
             btnSubmit.disabled = true;
             btnSubmit.textContent = 'Enviando...';
-            
+
             const formData = new FormData(this);
-            
+
             fetch(this.action, {
                 method: 'POST',
                 body: formData
             })
-            .then(response => {
-                // Como el PHP redirige, detectamos el final
-                if (response.ok) {
-                    // Resetear todo el formulario (asunto, destinatario, mensaje)
-                    this.reset();
-                    
-                    // Actualizar el contador de caracteres si existe
-                    const contadorTxt = this.querySelector('.contador-caracteres');
-                    if (contadorTxt) {
-                        const maxChars = 10000;
-                        contadorTxt.textContent = `0 / ${maxChars} caracteres`;
-                        contadorTxt.classList.remove('limite-cerca', 'limite-excedido');
+                .then(response => {
+                    // Como el PHP redirige, detectamos el final
+                    if (response.ok) {
+                        // Resetear todo el formulario (asunto, destinatario, mensaje)
+                        this.reset();
+
+                        // Actualizar el contador de caracteres si existe
+                        const contadorTxt = this.querySelector('.contador-caracteres');
+                        if (contadorTxt) {
+                            const maxChars = 10000;
+                            contadorTxt.textContent = `0 / ${maxChars} caracteres`;
+                            contadorTxt.classList.remove('limite-cerca', 'limite-excedido');
+                        }
+
+                        // Mostrar feedback visual temporal
+                        btnSubmit.textContent = '¡Enviado con éxito!';
+                        btnSubmit.style.backgroundColor = 'var(--success-color)';
+
+                        setTimeout(() => {
+                            btnSubmit.disabled = false;
+                            btnSubmit.textContent = originalText;
+                            btnSubmit.style.backgroundColor = '';
+                        }, 3000);
                     }
-                    
-                    // Mostrar feedback visual temporal
-                    btnSubmit.textContent = '¡Enviado con éxito!';
-                    btnSubmit.style.backgroundColor = 'var(--success-color)';
-                    
-                    setTimeout(() => {
-                        btnSubmit.disabled = false;
-                        btnSubmit.textContent = originalText;
-                        btnSubmit.style.backgroundColor = '';
-                    }, 3000);
-                }
-            })
-            .catch(err => {
-                console.error('Error al enviar comunicado:', err);
-                btnSubmit.disabled = false;
-                btnSubmit.textContent = 'Error al enviar';
-                btnSubmit.style.backgroundColor = 'var(--error-color)';
-            });
+                })
+                .catch(err => {
+                    console.error('Error al enviar comunicado:', err);
+                    btnSubmit.disabled = false;
+                    btnSubmit.textContent = 'Error al enviar';
+                    btnSubmit.style.backgroundColor = 'var(--error-color)';
+                });
         });
     }
 });
