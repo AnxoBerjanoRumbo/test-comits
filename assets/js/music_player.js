@@ -6,12 +6,12 @@
  * para máxima seguridad y rendimiento. No depende de Youtube.
  */
 
-let TRACKS = [];
-let audioPlayer   = new Audio();
-let currentTrack  = 0;
-let isPlaying     = false;
-let isMuted       = false;
-let rawVol        = parseInt(localStorage.getItem('ark_music_vol'));
+let TRACKS      = [];
+let audioPlayer = new Audio();
+let currentTrack = parseInt(localStorage.getItem('ark_music_track_index')) || 0;
+let isPlaying    = localStorage.getItem('ark_music_playing') === 'true';
+let isMuted      = localStorage.getItem('ark_music_muted') === 'true';
+let rawVol       = parseInt(localStorage.getItem('ark_music_vol'));
 let currentVolume = isNaN(rawVol) ? 40 : rawVol;
 
 // ── Cargar tracks desde la base de datos y construir playlist ────────────────
@@ -30,28 +30,61 @@ async function initMusicPlayer() {
             buildPlaylist();
             setupAudioEvents();
             
-            // Precargar primera canción (sin reproducir)
-            audioPlayer.src = TRACKS[0].url;
+            // Cargar track guardado o el primero
+            if (currentTrack >= TRACKS.length) currentTrack = 0;
+            
+            audioPlayer.src = TRACKS[currentTrack].url;
             audioPlayer.volume = currentVolume / 100;
+            audioPlayer.muted = isMuted;
+            
+            updateTrackUI(currentTrack);
             updateVolumeSliderFill(currentVolume);
-        } else {
-            console.error('Error cargando la música:', result.message);
+
+            // Reanudar tiempo
+            const savedTime = parseFloat(localStorage.getItem('ark_music_timestamp'));
+            if (!isNaN(savedTime)) {
+                audioPlayer.currentTime = savedTime;
+            }
+
+            // Intentar reanudar reproducción si estaba activo
+            if (isPlaying) {
+                attemptAutoPlay();
+            }
         }
     } catch (error) {
         console.error('Error fetching music:', error);
     }
 }
 
+// ── Lógica de Auto-reanudación (AutoPlay Bypass) ──────────────────────────────
+function attemptAutoPlay() {
+    audioPlayer.play().then(() => {
+        console.log("Musica reanudada correctamente.");
+    }).catch(e => {
+        console.log("Autoplay bloqueado. Esperando primera interacción...");
+        // Si falla, esperamos a que el usuario haga click en cualquier parte
+        const resumeOnInteract = () => {
+            audioPlayer.play();
+            document.removeEventListener('click', resumeOnInteract);
+            document.removeEventListener('keydown', resumeOnInteract);
+        };
+        document.addEventListener('click', resumeOnInteract);
+        document.addEventListener('keydown', resumeOnInteract);
+    });
+}
+
 // ── Eventos del Reproductor de Audio Nativo ──────────────────────────────────
 function setupAudioEvents() {
     audioPlayer.addEventListener('play', () => {
         isPlaying = true;
+        localStorage.setItem('ark_music_playing', 'true');
         document.getElementById('musicPlayIcon').textContent = 'pause';
         document.getElementById('musicNoteIcon').classList.add('music-note-playing');
     });
 
     audioPlayer.addEventListener('pause', () => {
         isPlaying = false;
+        localStorage.setItem('ark_music_playing', 'false');
         document.getElementById('musicPlayIcon').textContent = 'play_arrow';
         document.getElementById('musicNoteIcon').classList.remove('music-note-playing');
     });
@@ -60,9 +93,15 @@ function setupAudioEvents() {
         musicNext();
     });
 
+    // Guardar progreso cada segundo (throttle)
+    audioPlayer.addEventListener('timeupdate', () => {
+        if (Math.floor(audioPlayer.currentTime) % 2 === 0) { // Cada 2 segundos para no saturear
+            localStorage.setItem('ark_music_timestamp', audioPlayer.currentTime);
+        }
+    });
+
     audioPlayer.addEventListener('error', (e) => {
-        console.error("Error reproduciendo archivo local, saltando...", e);
-        // Descomentar para desarrollo: alert("Falta el archivo: " + TRACKS[currentTrack].url);
+        console.error("Error reproduciendo archivo local", e);
         musicNext();
     });
 }
@@ -74,7 +113,7 @@ function buildPlaylist() {
     list.innerHTML = '';
     TRACKS.forEach((t, i) => {
         const item = document.createElement('div');
-        item.className = 'music-playlist-item' + (i === 0 ? ' active' : '');
+        item.className = 'music-playlist-item' + (i === currentTrack ? ' active' : '');
         item.dataset.index = i;
         item.textContent = t.title;
         item.addEventListener('click', () => musicPlayTrack(i));
@@ -87,14 +126,10 @@ function buildPlaylist() {
 // ── Controles ─────────────────────────────────────────────────────────────────
 function musicToggle() {
     if (TRACKS.length === 0) return;
-    
-    if (isPlaying) {
-        audioPlayer.pause();
+    if (audioPlayer.paused) {
+        audioPlayer.play();
     } else {
-        const playPromise = audioPlayer.play();
-        if (playPromise !== undefined) {
-            playPromise.catch(e => console.error("Autoplay prevent flag triggered.", e));
-        }
+        audioPlayer.pause();
     }
 }
 
@@ -102,11 +137,14 @@ function musicPlayTrack(index) {
     if (TRACKS.length === 0) return;
     
     currentTrack = index;
+    localStorage.setItem('ark_music_track_index', currentTrack);
+    localStorage.setItem('ark_music_timestamp', 0); // Reset tiempo si es track nuevo
+    
     updateTrackUI(index);
     
     audioPlayer.src = TRACKS[index].url;
-    audioPlayer.volume = currentVolume / 100;
-    audioPlayer.play().catch(e => console.log("Play interrupted / missing file", e));
+    audioPlayer.currentTime = 0;
+    audioPlayer.play().catch(e => console.log("Play blocked", e));
 }
 
 function musicNext() {
@@ -122,6 +160,7 @@ function musicPrev() {
 function musicToggleMute() {
     isMuted = !isMuted;
     audioPlayer.muted = isMuted;
+    localStorage.setItem('ark_music_muted', isMuted);
     document.getElementById('musicMuteIcon').textContent = isMuted ? 'volume_off' : 'volume_up';
 }
 
@@ -143,7 +182,7 @@ function musicSetVolume(val) {
 // ── UI helpers ────────────────────────────────────────────────────────────────
 function updateTrackUI(index) {
     const tName = document.getElementById('musicTrackName');
-    if(tName) tName.textContent = TRACKS[index].title;
+    if(tName) tName.textContent = TRACKS[index] ? TRACKS[index].title : 'Cargando...';
     
     document.querySelectorAll('.music-playlist-item').forEach((el, i) => {
         el.classList.toggle('active', i === index);
@@ -161,12 +200,9 @@ function updateVolumeSliderFill(val) {
 document.addEventListener('DOMContentLoaded', function () {
     initMusicPlayer();
     
-    const trackNameContainer = document.querySelector('.music-track-info');
-    if (trackNameContainer) {
-        trackNameContainer.style.cursor = 'pointer';
-        trackNameContainer.title = 'Ver lista de canciones';
-    }
-    updateVolumeSliderFill(currentVolume);
+    // UI Tooltip
+    const mi = document.getElementById('musicNoteIcon');
+    if (mi) mi.title = "Escuchando BSO ARK";
 
     // Cerrar playlist al clicar fuera
     document.addEventListener('click', function (e) {
@@ -177,3 +213,4 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
