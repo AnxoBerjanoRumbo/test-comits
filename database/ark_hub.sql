@@ -64,26 +64,24 @@ CREATE TABLE `dinosaurios` (
   `especie` varchar(100) DEFAULT NULL,
   `dieta` varchar(50) DEFAULT NULL,
   `imagen` varchar(255) DEFAULT 'default_dino.jpg',
+  `audio_url` varchar(500) DEFAULT NULL,
   `descripcion` text DEFAULT NULL,
-  -- Stats base (nivel 1 salvaje)
-  `stat_health` decimal(10,2) DEFAULT 0,
-  `stat_stamina` decimal(10,2) DEFAULT 0,
-  `stat_oxygen` decimal(10,2) DEFAULT 0,
-  `stat_food` decimal(10,2) DEFAULT 0,
-  `stat_weight` decimal(10,2) DEFAULT 0,
-  `stat_melee` decimal(10,2) DEFAULT 0,
-  `stat_speed` decimal(10,2) DEFAULT 0,
-  `stat_torpidity` decimal(10,2) DEFAULT 0,
-  -- Stats de incremento salvaje (Iw)
-  `iw_health` decimal(5,3) DEFAULT 0.2,
-  `iw_stamina` decimal(5,3) DEFAULT 0.1,
-  `iw_oxygen` decimal(5,3) DEFAULT 0.1,
-  `iw_food` decimal(5,3) DEFAULT 0.15,
-  `iw_weight` decimal(5,3) DEFAULT 0.02,
-  `iw_melee` decimal(5,3) DEFAULT 0.05,
-  `iw_speed` decimal(5,3) DEFAULT 0.0,
-  `iw_torpidity` decimal(5,3) DEFAULT 0.06,
-  -- Características especiales
+  `stat_health` int(11) DEFAULT 0,
+  `stat_stamina` int(11) DEFAULT 0,
+  `stat_oxygen` int(11) DEFAULT 0,
+  `stat_food` int(11) DEFAULT 0,
+  `stat_weight` int(11) DEFAULT 0,
+  `stat_melee` int(11) DEFAULT 0,
+  `stat_speed` int(11) DEFAULT 0,
+  `stat_torpidity` int(11) DEFAULT 0,
+  `iw_health` decimal(5,3) DEFAULT 0.200,
+  `iw_stamina` decimal(5,3) DEFAULT 0.100,
+  `iw_oxygen` decimal(5,3) DEFAULT 0.100,
+  `iw_food` decimal(5,3) DEFAULT 0.150,
+  `iw_weight` decimal(5,3) DEFAULT 0.020,
+  `iw_melee` decimal(5,3) DEFAULT 0.050,
+  `iw_speed` decimal(5,3) DEFAULT 0.000,
+  `iw_torpidity` decimal(5,3) DEFAULT 0.060,
   `es_tanque` tinyint(1) DEFAULT 0,
   `es_buff` tinyint(1) DEFAULT 0,
   `es_recolector` tinyint(1) DEFAULT 0,
@@ -91,16 +89,13 @@ CREATE TABLE `dinosaurios` (
   `es_volador` tinyint(1) DEFAULT 0,
   `es_acuatico` tinyint(1) DEFAULT 0,
   `es_subterraneo` tinyint(1) DEFAULT 0,
-  -- Buffs y habilidades especiales
   `buff_descripcion` text DEFAULT NULL,
-  `buff_damage` decimal(5,2) DEFAULT 0,
-  `buff_armor` decimal(5,2) DEFAULT 0,
-  `buff_speed` decimal(5,2) DEFAULT 0,
+  `buff_damage` decimal(5,2) DEFAULT 0.00,
+  `buff_armor` decimal(5,2) DEFAULT 0.00,
+  `buff_speed` decimal(5,2) DEFAULT 0.00,
   `buff_otro` text DEFAULT NULL,
-  -- Formas especiales (Stego, etc.)
   `tiene_formas` tinyint(1) DEFAULT 0,
   `formas_descripcion` text DEFAULT NULL,
-  -- Utilidad de recolección
   `recolecta_carne` tinyint(1) DEFAULT 0,
   `recolecta_pescado` tinyint(1) DEFAULT 0,
   `recolecta_madera` tinyint(1) DEFAULT 0,
@@ -110,19 +105,33 @@ CREATE TABLE `dinosaurios` (
   `recolecta_paja` tinyint(1) DEFAULT 0,
   `recolecta_fibra` tinyint(1) DEFAULT 0,
   `recolecta_texugo` tinyint(1) DEFAULT 0,
-  -- Información de domesticación
-  `nivel_max_salvaje` int(11) DEFAULT 150,
   `domable` tinyint(1) DEFAULT 1,
   `metodo_domado` varchar(50) DEFAULT NULL,
   `comida_favorita` varchar(50) DEFAULT NULL,
-  -- Información de reproducción
+  `nivel_max_salvaje` int(11) DEFAULT 150,
   `tiempo_incubacion` int(11) DEFAULT 0,
   `tiempo_madurez` int(11) DEFAULT 0,
-  `espacio_necesario` int(11) DEFAULT 0,
   `ayuda_cria` tinyint(1) DEFAULT 0,
   `ayuda_cria_descripcion` text DEFAULT NULL,
+  `region_0_nombre` varchar(60) DEFAULT NULL,
+  `region_0_colores` varchar(255) DEFAULT NULL,
+  `region_1_nombre` varchar(60) DEFAULT NULL,
+  `region_1_colores` varchar(255) DEFAULT NULL,
+  `region_2_nombre` varchar(60) DEFAULT NULL,
+  `region_2_colores` varchar(255) DEFAULT NULL,
+  `region_3_nombre` varchar(60) DEFAULT NULL,
+  `region_3_colores` varchar(255) DEFAULT NULL,
+  `region_4_nombre` varchar(60) DEFAULT NULL,
+  `region_4_colores` varchar(255) DEFAULT NULL,
+  `region_5_nombre` varchar(60) DEFAULT NULL,
+  `region_5_colores` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `nombre` (`nombre`)
+  KEY `idx_nombre` (`nombre`),
+  KEY `idx_roles` (`es_tanque`,`es_buff`,`es_recolector`,`es_montura`,`es_volador`,`es_acuatico`,`es_subterraneo`),
+  KEY `idx_dieta` (`dieta`),
+  KEY `idx_stat_health` (`stat_health`),
+  KEY `idx_stat_weight` (`stat_weight`),
+  KEY `idx_stat_melee` (`stat_melee`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 -- 4. Tabla: dino_mapas
@@ -162,5 +171,27 @@ CREATE TABLE `emails_bloqueados` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 7. Tabla: musica
+DROP TABLE IF EXISTS `musica`;
+CREATE TABLE `musica` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `archivo` varchar(255) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+INSERT INTO `musica` (`archivo`, `title`) VALUES
+('ARK - Main Theme [rYyi_vvH2F8].mp3', 'Main Theme'),
+('ARK - Scorched Earth Theme.mp3', 'Scorched Earth'),
+('ARK - Aberration Theme.mp3', 'Aberration'),
+('ARK - Extinction Theme.mp3', 'Extinction'),
+('ARK - Genesis (Part 1) Theme.mp3', 'Genesis (Part 1)'),
+('ARK - Genesis (Part 2) Theme.mp3', 'Genesis (Part 2)'),
+('ARK - Loading Screen.mp3', 'Loading Screen'),
+('ARK - Character Creation & Respawn Screen [KTK-zzK1fxg].mp3', 'Character Creation'),
+('ARK - Boss Battle Theme - Broodmother Lysrix [aM6a-2cfl9E].mp3', 'Boss: Broodmother'),
+('ARK - Battle Theme - Scorched Earth Night [iqmHMq6qnnE].mp3', 'Battle: Scorched Night'),
+('ARK - Winter Wonderland Theme.mp3', 'Winter Wonderland');
 
 SET FOREIGN_KEY_CHECKS = 1;
