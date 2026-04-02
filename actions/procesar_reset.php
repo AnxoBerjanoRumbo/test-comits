@@ -7,17 +7,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Error de validación CSRF.");
     }
 
-    $token = $_POST['token'];
-    $nueva_password = $_POST['nueva_password'];
+    $token             = $_POST['token'];
+    $nueva_password    = $_POST['nueva_password'];
     $confirmar_password = $_POST['confirmar_password'];
 
     if ($nueva_password !== $confirmar_password) {
-        header("Location: ../reset_password.php?token=$token&error=mismatch");
+        // Token se guarda en sesión temporal para no exponerlo en URL
+        $_SESSION['reset_token_tmp'] = $token;
+        header("Location: ../reset_password.php?error=mismatch");
         exit();
     }
 
     if (strlen($nueva_password) < 8) {
-        header("Location: ../reset_password.php?token=$token&error=corta");
+        $_SESSION['reset_token_tmp'] = $token;
+        header("Location: ../reset_password.php?error=corta");
         exit();
     }
 

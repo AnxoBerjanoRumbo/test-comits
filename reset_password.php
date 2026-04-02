@@ -3,6 +3,13 @@ session_start();
 include 'config/db.php';
 
 $token = isset($_GET['token']) ? $_GET['token'] : '';
+
+// Si viene de un error de validación, recuperar el token de la sesión
+if (empty($token) && !empty($_SESSION['reset_token_tmp'])) {
+    $token = $_SESSION['reset_token_tmp'];
+    unset($_SESSION['reset_token_tmp']);
+}
+
 $error = false;
 $user_id = null;
 

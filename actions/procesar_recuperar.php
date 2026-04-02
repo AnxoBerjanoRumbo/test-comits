@@ -36,7 +36,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ]);
 
             // 4. Enviar correo usando PHPMailer
-            $base_url = "http://" . $_SERVER['HTTP_HOST'] . str_replace('/actions', '', dirname($_SERVER['PHP_SELF']));
+            // URL base hardcodeada para evitar Host Header Injection
+            $base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http')
+                        . '://' . preg_replace('/[^a-zA-Z0-9.\-:]/', '', $_SERVER['HTTP_HOST']);
             $reset_link = $base_url . "/reset_password.php?token=" . $token;
             
             include_once '../config/mailer.php';

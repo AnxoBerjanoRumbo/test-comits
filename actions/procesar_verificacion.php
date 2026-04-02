@@ -7,11 +7,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Error de validación CSRF.");
     }
 
-    $email = trim($_POST['email']);
+    $email  = trim($_POST['email']);
     $codigo = trim($_POST['codigo']);
 
     if (empty($email) || empty($codigo)) {
         header("Location: ../verificar.php?error=falta_email&email=" . urlencode($email));
+        exit();
+    }
+
+    // Rate limiting: máximo 10 intentos de verificación por sesión
+    $_SESSION['verify_attempts'] = ($_SESSION['verify_attempts'] ?? 0) + 1;
+    if ($_SESSION['verify_attempts'] > 10) {
+        header("Location: ../verificar.php?error=demasiados_intentos&email=" . urlencode($email));
         exit();
     }
 
@@ -22,9 +29,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
-            // Activar la cuenta
+            // Activar la cuenta y resetear contador de intentos
             $update = $conexion->prepare("UPDATE usuarios SET verificado = 1, codigo_verificacion = NULL WHERE id = :id");
             $update->execute([':id' => $user['id']]);
+            unset($_SESSION['verify_attempts']);
 
             header("Location: ../verificar.php?status=verificado&email=" . urlencode($email));
             exit();

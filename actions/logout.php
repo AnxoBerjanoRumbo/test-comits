@@ -1,16 +1,5 @@
 <?php
 session_start();
-include '../config/db.php';
-
-// Borrar todas las notificaciones del usuario al cerrar sesión
-if (isset($_SESSION['usuario_id'])) {
-    try {
-        $stmt = $conexion->prepare("DELETE FROM notificaciones WHERE id_usuario = :u");
-        $stmt->execute([':u' => $_SESSION['usuario_id']]);
-    } catch (PDOException $e) {
-        error_log("Error al limpiar notificaciones: " . $e->getMessage());
-    }
-}
 
 $_SESSION = array();
 if (ini_get("session.use_cookies")) {
