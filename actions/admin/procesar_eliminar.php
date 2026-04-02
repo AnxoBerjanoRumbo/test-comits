@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         die("Error de validación CSRF.");
     }
-    $id = $_POST['id'];
+    $id = (int)$_POST['id'];
 
     try {
         // 0. Obtener el nombre de la imagen y el nombre del dino antes de borrar

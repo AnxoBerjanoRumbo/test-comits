@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Error de validación CSRF.");
     }
 
-    $id_moderado = $_POST['usuario_id'];
+    $id_moderado = (int)$_POST['usuario_id'];
     $motivo = trim($_POST['motivo']);
     $tipo = $_POST['tipo_ban'];
 

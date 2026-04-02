@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Error de validación CSRF.");
     }
 
-    $usuario_id = $_POST['usuario_id'];
+    $usuario_id = (int)$_POST['usuario_id'];
     $accion = $_POST['accion'];
 
     try {

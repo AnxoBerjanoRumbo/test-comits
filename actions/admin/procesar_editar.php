@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         die("Error de validación CSRF.");
     }
-    $id = $_POST['id'];
+    $id = (int)$_POST['id'];
     $nombre = trim($_POST['nombre']);
     $especie = $_POST['especie'];
     $dieta = $_POST['dieta'];
@@ -144,7 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sqlMapa = "INSERT INTO dino_mapas (dino_id, mapa_id) VALUES (:dino_id, :mapa_id)";
             $stmtMapa = $conexion->prepare($sqlMapa);
             foreach ($mapas_ids as $m_id) {
-                $stmtMapa->execute([':dino_id' => $id, ':mapa_id' => $m_id]);
+                $stmtMapa->execute([':dino_id' => $id, ':mapa_id' => (int)$m_id]);
             }
         }
 

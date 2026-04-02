@@ -30,6 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $usuarios = $conexion->query($sqlUsuarios)->fetchAll(PDO::FETCH_COLUMN);
             $log_detalle = "Enviado mensaje a todos los admins: " . htmlspecialchars($asunto);
         } else {
+            $destinatario = (int)$destinatario;
             // Validar que el destinatario sea realmente un admin
             $stmtVerif = $conexion->prepare("SELECT id, nick, email FROM usuarios WHERE id = :id AND rol = 'admin'");
             $stmtVerif->execute([':id' => $destinatario]);
