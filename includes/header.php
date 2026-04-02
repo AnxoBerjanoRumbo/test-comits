@@ -31,6 +31,17 @@ if (isset($_SESSION['usuario_id'])) {
 }
 ?>
 <header class="header-principal">
+    <!-- Botón Toggle Sidebar (Filtros) - Solo en index.php -->
+    <?php if (basename($_SERVER['PHP_SELF']) === 'index.php'): ?>
+    <button id="btn-toggle-filters" class="btn-toggle-sidebar" onclick="toggleFilterSidebar()" title="Abrir filtros">
+        <svg class="hamburger-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+    </button>
+    <?php endif; ?>
+
     <div class="logo-titulo">
         <a href="<?php echo $path_prefix; ?>index.php" class="no-decoration">
             <h1><?php echo $header_titulo ?? 'ARK Survival Hub'; ?></h1>
@@ -39,6 +50,11 @@ if (isset($_SESSION['usuario_id'])) {
 
     <nav class="navegacion-usuario">
         <?php if (isset($_SESSION['nick'])): ?>
+            <!-- Icono Favoritos -->
+            <a href="<?php echo $path_prefix; ?>favoritos.php" class="btn-notif btn-favoritos-header" title="Mis favoritos">
+                <span class="material-symbols-outlined">favorite</span>
+            </a>
+
             <!-- Sistema de Notificaciones -->
             <div class="contenedor-notificaciones" id="notif-dropdown">
                 <button class="btn-notif" id="btn-notif">
