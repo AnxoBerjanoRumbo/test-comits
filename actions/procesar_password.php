@@ -26,7 +26,7 @@ if ($nueva_password !== $confirmar_password) {
     exit();
 }
 
-if (strlen($nueva_password) < 4) {
+if (strlen($nueva_password) < 8) {
     header("Location: ../perfil.php?error=pass_corta");
     exit();
 }

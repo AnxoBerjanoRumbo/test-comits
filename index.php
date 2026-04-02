@@ -141,25 +141,49 @@ $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
     <?php include 'includes/header.php'; ?>
-    <section class="buscador">
-        <form action="index.php" method="GET" id="form-buscador">
-            <div class="buscador-fila">
-                <div class="buscador-input-wrap">
-                    <span class="material-symbols-outlined buscador-icon">search</span>
-                    <input type="text" name="buscar" placeholder="Busca una criatura..."
-                        value="<?php echo isset($_GET['buscar']) ? htmlspecialchars($_GET['buscar']) : ''; ?>">
-                </div>
+    <!-- Overlay oscuro detrás del sidebar -->
+    <div id="filter-overlay" class="filter-overlay" onclick="closeFilterSidebar()"></div>
 
-                <select name="dieta" class="buscador-select">
-                    <option value="">🍽️ Dieta</option>
+    <!-- Sidebar de Filtros -->
+    <div id="filters-sidebar" class="filters-sidebar">
+        <div class="filters-sidebar-header">
+            <h2 style="margin:0; display:flex; align-items:center; gap:10px; color:var(--text-main); font-size:1.2rem;">
+                <span class="material-symbols-outlined">menu</span>
+                Filtros Avanzados
+            </h2>
+            <button class="filters-sidebar-close" onclick="closeFilterSidebar()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <form action="index.php" method="GET" id="form-buscador" class="filters-sidebar-content">
+            <!-- Búsqueda principal -->
+            <div class="filter-group">
+                <label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Buscar Criatura</label>
+                <div class="buscador-input-wrap" style="margin-top:6px;">
+                    <span class="material-symbols-outlined buscador-icon">search</span>
+                    <input type="text" name="buscar" placeholder="Nombre o especie..."
+                        value="<?php echo isset($_GET['buscar']) ? htmlspecialchars($_GET['buscar']) : ''; ?>" style="border-radius:8px;">
+                </div>
+            </div>
+
+            <!-- Dieta -->
+            <div class="filter-group">
+                <label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Dieta</label>
+                <select name="dieta" class="buscador-select" style="margin-top:6px; width:100%;">
+                    <option value="">— Todas —</option>
                     <option value="Carnívoro"  <?php echo($dieta=='Carnívoro') ?'selected':''; ?>>🥩 Carnívoro</option>
                     <option value="Herbívoro"  <?php echo($dieta=='Herbívoro') ?'selected':''; ?>>🌿 Herbívoro</option>
                     <option value="Omnívoro"   <?php echo($dieta=='Omnívoro')  ?'selected':''; ?>>🍽️ Omnívoro</option>
                     <option value="Piscívoro"  <?php echo($dieta=='Piscívoro') ?'selected':''; ?>>🐟 Piscívoro</option>
                 </select>
+            </div>
 
-                <select name="rol" class="buscador-select">
-                    <option value="">⚔️ Rol</option>
+            <!-- Rol -->
+            <div class="filter-group">
+                <label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Rol / Utilidad</label>
+                <select name="rol" class="buscador-select" style="margin-top:6px; width:100%;">
+                    <option value="">— Todos —</option>
                     <option value="es_tanque"      <?php echo $rol_filtro==='es_tanque'      ?'selected':''; ?>>🛡️ Tanque</option>
                     <option value="es_buff"        <?php echo $rol_filtro==='es_buff'        ?'selected':''; ?>>📈 Buff</option>
                     <option value="es_recolector"  <?php echo $rol_filtro==='es_recolector'  ?'selected':''; ?>>📦 Recolector</option>
@@ -168,110 +192,154 @@ $dinos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <option value="es_acuatico"    <?php echo $rol_filtro==='es_acuatico'    ?'selected':''; ?>>🐳 Acuático</option>
                     <option value="es_subterraneo" <?php echo $rol_filtro==='es_subterraneo' ?'selected':''; ?>>🦇 Cueva</option>
                 </select>
+            </div>
 
-                <select name="mapa" class="buscador-select">
-                    <option value="">🗺️ Mapa</option>
+            <!-- Mapa -->
+            <div class="filter-group">
+                <label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Mapa</label>
+                <select name="mapa" class="buscador-select" style="margin-top:6px; width:100%;">
+                    <option value="">— Todos —</option>
                     <?php foreach ($todos_mapas as $m): ?>
                         <option value="<?php echo $m['id']; ?>" <?php echo ($mapa_id==$m['id'])?'selected':''; ?>>
-                            <?php echo htmlspecialchars($m['nombre_mapa']); ?>
+                            🗺️ <?php echo htmlspecialchars($m['nombre_mapa']); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
+            </div>
 
-                <select name="cat" class="buscador-select">
-                    <option value="">🏷️ Categoría</option>
+            <!-- Categoría -->
+            <div class="filter-group">
+                <label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Categoría</label>
+                <select name="cat" class="buscador-select" style="margin-top:6px; width:100%;">
+                    <option value="">— Todas —</option>
                     <?php foreach ($todos_cats as $c): ?>
                         <option value="<?php echo $c['id']; ?>" <?php echo ($cat_id==$c['id'])?'selected':''; ?>>
-                            <?php echo htmlspecialchars($c['nombre']); ?>
+                            🏷️ <?php echo htmlspecialchars($c['nombre']); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
+            </div>
 
-                <button type="submit" class="buscador-btn-submit">Filtrar</button>
+            <!-- Filtro por Stat -->
+            <div class="filter-group">
+                <label style="font-size:0.85rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Filtrar por Stat</label>
+                <select name="stat" class="buscador-select" style="margin-top:6px; width:100%;">
+                    <option value="">— Selecciona stat —</option>
+                    <?php
+                    $stat_opts = ['stat_health'=>'❤️ Vida','stat_stamina'=>'⚡ Energía','stat_weight'=>'⚖️ Peso','stat_melee'=>'⚔️ Melée','stat_food'=>'🍖 Comida','stat_torpidity'=>'😴 Torpor'];
+                    foreach ($stat_opts as $val => $lbl): ?>
+                    <option value="<?php echo $val; ?>" <?php echo $stat_filtro===$val?'selected':''; ?>><?php echo $lbl; ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+                    <div>
+                        <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:4px;">Mínimo</label>
+                        <input type="number" name="stat_min" min="0" value="<?php echo $stat_min ?: ''; ?>" placeholder="0"
+                            style="width:100%; padding:10px 12px; background:var(--input-bg); border:1px solid var(--border-color); color:var(--input-text); border-radius:8px; font-family:inherit; font-size:0.9rem; outline:none; transition:border 0.2s;"
+                            onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-color)'">
+                    </div>
+                    <div>
+                        <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:4px;">Máximo</label>
+                        <input type="number" name="stat_max" min="0" value="<?php echo $stat_max ?: ''; ?>" placeholder="∞"
+                            style="width:100%; padding:10px 12px; background:var(--input-bg); border:1px solid var(--border-color); color:var(--input-text); border-radius:8px; font-family:inherit; font-size:0.9rem; outline:none; transition:border 0.2s;"
+                            onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-color)'">
+                    </div>
+                </div>
+                <p style="font-size:0.7rem; color:var(--text-muted); margin-top:6px;">Filtra por valor base a nivel 1 salvaje.</p>
+            </div>
 
+            <!-- Botones de acción -->
+            <div style="display:flex; gap:10px; margin-top:20px; padding-top:15px; border-top:1px solid var(--border-color);">
+                <button type="submit" class="btn-apply-filters" style="flex:1;">
+                    <span class="material-symbols-outlined">search</span>
+                    Buscar
+                </button>
                 <?php if ($busqueda!='' || $dieta!='' || $mapa_id>0 || $cat_id>0 || $rol_filtro!='' || $stat_filtro!=''): ?>
-                    <a href="index.php" class="buscador-btn-limpiar" title="Limpiar filtros">
+                    <a href="index.php" class="btn-clear-filters" style="flex:1; text-align:center; display:flex; align-items:center; justify-content:center;">
                         <span class="material-symbols-outlined">filter_alt_off</span>
+                        Limpiar
                     </a>
                 <?php endif; ?>
             </div>
+        </form>
+    </div>
 
-            <!-- Filtro avanzado por stat (colapsable) -->
-            <div id="filtro-stat-panel" style="<?php echo $stat_filtro !== '' ? '' : 'display:none;'; ?> padding-top:12px; border-top:1px solid var(--border-color); margin-top:10px;">
-                <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end;">
-                    <div>
-                        <label style="display:block; font-size:0.72rem; color:var(--text-muted); margin-bottom:4px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">Stat</label>
-                        <select name="stat" class="buscador-select" style="min-width:130px;">
-                            <option value="">— Selecciona —</option>
-                            <?php
-                            $stat_opts = ['stat_health'=>'❤️ Vida','stat_stamina'=>'⚡ Energía','stat_weight'=>'⚖️ Peso','stat_melee'=>'⚔️ Melée','stat_food'=>'🍖 Comida','stat_torpidity'=>'😴 Torpor'];
-                            foreach ($stat_opts as $val => $lbl): ?>
-                            <option value="<?php echo $val; ?>" <?php echo $stat_filtro===$val?'selected':''; ?>><?php echo $lbl; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div>
-                        <label style="display:block; font-size:0.72rem; color:var(--text-muted); margin-bottom:4px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">Mínimo</label>
-                        <input type="number" name="stat_min" min="0" value="<?php echo $stat_min ?: ''; ?>" placeholder="0"
-                            style="width:90px; padding:10px 12px; background:var(--input-bg); border:1px solid var(--border-color); color:var(--input-text); border-radius:8px; font-family:inherit; font-size:0.9rem; outline:none;"
-                            onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-color)'">
-                    </div>
-                    <div>
-                        <label style="display:block; font-size:0.72rem; color:var(--text-muted); margin-bottom:4px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">Máximo</label>
-                        <input type="number" name="stat_max" min="0" value="<?php echo $stat_max ?: ''; ?>" placeholder="∞"
-                            style="width:90px; padding:10px 12px; background:var(--input-bg); border:1px solid var(--border-color); color:var(--input-text); border-radius:8px; font-family:inherit; font-size:0.9rem; outline:none;"
-                            onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border-color)'">
-                    </div>
-                    <p style="margin:0; font-size:0.72rem; color:var(--text-muted); align-self:center;">Filtra por valor base del stat a nivel 1 salvaje.</p>
-                </div>
-            </div>
-
-            <button type="button" id="btn-toggle-stat" onclick="toggleStatFilter()"
-                style="margin-top:8px; background:none; border:none; color:var(--text-muted); font-size:0.78rem; cursor:pointer; display:flex; align-items:center; gap:4px; padding:0; font-family:inherit; transition:color 0.2s;"
-                onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">
-                <span class="material-symbols-outlined" style="font-size:0.95rem;">tune</span>
-                <?php echo $stat_filtro !== '' ? 'Ocultar filtro por stat' : 'Filtrar por stat base'; ?>
-            </button>
-            <script>
-            function toggleStatFilter() {
-                const panel = document.getElementById('filtro-stat-panel');
-                const btn   = document.getElementById('btn-toggle-stat');
-                const visible = panel.style.display !== 'none';
-                panel.style.display = visible ? 'none' : 'block';
-                btn.querySelector('span:last-child') && (btn.lastChild.textContent = visible ? ' Filtrar por stat base' : ' Ocultar filtro por stat');
+    <!-- Chips de filtros activos (solo mostrar si hay filtros activos) -->
+    <?php
+    $filtros_activos = [];
+    if ($busqueda != '') $filtros_activos[] = [htmlspecialchars("Búsqueda: $busqueda"), 'buscar'];
+    if ($mapa_id > 0) {
+        foreach ($todos_mapas as $m) {
+            if ($m['id'] == $mapa_id) {
+                $filtros_activos[] = [$m['nombre_mapa'], 'mapa'];
+                break;
             }
-            </script>
-
-            <?php
-            // Mostrar chips de filtros activos
-            $filtros_activos = [];
-            if ($busqueda != '') $filtros_activos[] = ['Búsqueda: "'.htmlspecialchars($busqueda).'"', 'buscar'];
-            if ($dieta != '') $filtros_activos[] = [$dieta, 'dieta'];
-            if ($mapa_id > 0) $filtros_activos[] = [$nombre_mapa_sel, 'mapa'];
-            if ($cat_id > 0) $filtros_activos[] = [$nombre_cat_sel, 'cat'];
-            if ($rol_filtro != '') {
-                $rol_nombres = ['es_tanque'=>'Tanque','es_buff'=>'Buff','es_recolector'=>'Recolector','es_montura'=>'Montura','es_volador'=>'Volador','es_acuatico'=>'Acuático','es_subterraneo'=>'Cueva'];
-                $filtros_activos[] = [$rol_nombres[$rol_filtro] ?? $rol_filtro, 'rol'];
+        }
+    }
+    if ($cat_id > 0) {
+        foreach ($todos_cats as $c) {
+            if ($c['id'] == $cat_id) {
+                $filtros_activos[] = [$c['nombre'], 'cat'];
+                break;
             }
-            if ($stat_filtro !== '' && in_array($stat_filtro, $stats_filtrables)) {
-                $stat_nombres = ['stat_health'=>'Vida','stat_stamina'=>'Energía','stat_weight'=>'Peso','stat_melee'=>'Melée','stat_food'=>'Comida','stat_torpidity'=>'Torpor'];
-                $label_stat = ($stat_nombres[$stat_filtro] ?? $stat_filtro);
-                if ($stat_min > 0 && $stat_max > 0) $label_stat .= ": $stat_min–$stat_max";
-                elseif ($stat_min > 0) $label_stat .= " ≥ $stat_min";
-                elseif ($stat_max > 0) $label_stat .= " ≤ $stat_max";
-                $filtros_activos[] = [$label_stat, 'stat'];
-            }
-            if (!empty($filtros_activos)): ?>
-            <div class="buscador-activos">
+        }
+    }
+    if ($rol_filtro != '') {
+        $rol_nombres = ['es_tanque'=>'Tanque','es_buff'=>'Buff','es_recolector'=>'Recolector','es_montura'=>'Montura','es_volador'=>'Volador','es_acuatico'=>'Acuático','es_subterraneo'=>'Cueva'];
+        $filtros_activos[] = [$rol_nombres[$rol_filtro] ?? $rol_filtro, 'rol'];
+    }
+    if ($dieta != '') $filtros_activos[] = [$dieta, 'dieta'];
+    if ($stat_filtro !== '' && in_array($stat_filtro, $stats_filtrables)) {
+        $stat_nombres = ['stat_health'=>'Vida','stat_stamina'=>'Energía','stat_weight'=>'Peso','stat_melee'=>'Melée','stat_food'=>'Comida','stat_torpidity'=>'Torpor'];
+        $label_stat = ($stat_nombres[$stat_filtro] ?? $stat_filtro);
+        $s_min = (int)$stat_min;
+        $s_max = (int)$stat_max;
+        if ($s_min > 0 && $s_max > 0) $label_stat .= ": " . $s_min . "-" . $s_max;
+        elseif ($s_min > 0) $label_stat .= " mayor o igual a " . $s_min;
+        elseif ($s_max > 0) $label_stat .= " menor o igual a " . $s_max;
+        $filtros_activos[] = [$label_stat, 'stat'];
+    }
+    ?>
+    <?php if (!empty($filtros_activos)): ?>
+    <section class="buscador">
+        <div class="buscador-activos" id="filtros-activos-container">
+            <div id="filtros-activos" style="display:flex; flex-wrap:wrap; gap:6px; padding:10px; background:rgba(var(--accent-rgb),0.05); border-radius:8px; border:1px solid rgba(var(--accent-rgb),0.1);">
                 <?php foreach ($filtros_activos as [$label, $param]): ?>
                 <a href="index.php?<?php echo http_build_query(array_diff_key($_GET, [$param=>'','p'=>''])); ?>" class="filtro-activo-chip">
-                    <?php echo $label; ?> <span class="material-symbols-outlined">close</span>
+                    <?php echo $label; ?> <span class="material-symbols-outlined" style="font-size:0.8rem;">close</span>
                 </a>
                 <?php endforeach; ?>
             </div>
-            <?php endif; ?>
-        </form>
+        </div>
     </section>
+    <?php endif; ?>
+
+    <script>
+    function toggleFilterSidebar() {
+        const sidebar = document.getElementById('filters-sidebar');
+        const overlay = document.getElementById('filter-overlay');
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+    }
+    
+    function closeFilterSidebar() {
+        const sidebar = document.getElementById('filters-sidebar');
+        const overlay = document.getElementById('filter-overlay');
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+    }
+    
+    function toggleStatFilter() {
+        const panel = document.getElementById('filtro-stat-panel');
+        const btn   = document.getElementById('btn-toggle-stat');
+        const visible = panel.style.display !== 'none';
+        panel.style.display = visible ? 'none' : 'block';
+        if (btn.querySelector('span:last-child')) {
+            btn.lastChild.textContent = visible ? ' Filtrar por stat base' : ' Ocultar filtro por stat';
+        }
+    }
+    </script>
+
     <main>
         <h2 class="titulo-seccion">
             <?php if ($nombre_mapa_sel): ?>
@@ -293,6 +361,12 @@ endif; ?>
         <div class="contenedor-dinos">
             <?php if (count($dinos) > 0): ?>
                 <?php foreach ($dinos as $dino): ?>
+                    <?php
+                    $query_detalle = $_GET;
+                    unset($query_detalle['status'], $query_detalle['error']);
+                    $query_detalle['id'] = $dino['id'];
+                    $link_detalle = 'detalle.php?' . http_build_query($query_detalle);
+                    ?>
                     <div class="dino-card">
                         <?php if(!empty($dino['imagen'])): ?>
                             <div class="dino-img-container">
@@ -308,13 +382,7 @@ endif; ?>
                             </div>
                         <?php endif; ?>
                         <h3>
-                            <?php
-                            $query_detalle = $_GET;
-                            unset($query_detalle['status'], $query_detalle['error']);
-                            $query_detalle['id'] = $dino['id'];
-                            $link_detalle = 'detalle.php?' . http_build_query($query_detalle);
-                            ?>
-                            <a href="<?php echo htmlspecialchars($link_detalle); ?>" class="enlace-dino">
+                            <a href="<?php echo htmlspecialchars($link_detalle); ?>" class="enlace-dino card-stretched-link">
                                 <?php echo htmlspecialchars($dino['nombre']); ?>
                             </a>
                         </h3>
