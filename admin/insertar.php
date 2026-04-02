@@ -83,6 +83,18 @@ $categorias = $stmt_cats->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <div class="campo">
+                <label>URL de Audio del Dossier: <span style="font-weight:400; color:var(--text-muted); font-size:0.85rem;">(opcional)</span></label>
+                <input type="url" name="audio_url" placeholder="https://ark.wiki.gg/images/.../Dossier_NombreDino_VO.ogg">
+                <small class="texto-auxiliar">
+                    URL del audio del dossier oficial. Consúltalo en 
+                    <a href="https://ark.wiki.gg" target="_blank" style="color:var(--accent);">ark.wiki.gg</a> 
+                    o busca el nombre de la criatura en el 
+                    <a href="../assets/data/ark_creatures.json" target="_blank" style="color:var(--accent);">JSON de referencia</a> 
+                    (campo <code style="background:rgba(255,255,255,0.08);padding:1px 4px;border-radius:3px;">"audio"</code>).
+                </small>
+            </div>
+
+            <div class="campo">
                 <label>Mapas de avistamiento:</label>
                 <div class="grid-checkboxes">
                     <?php foreach ($mapas as $mapa): ?>

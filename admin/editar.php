@@ -120,6 +120,12 @@ $cats_seleccionadas = $stmt_dc->fetchAll(PDO::FETCH_COLUMN);
             </div>
 
             <div class="campo">
+                <label>URL de Audio (Dossier):</label>
+                <input type="url" name="audio_url" value="<?php echo htmlspecialchars($dino['audio_url'] ?? ''); ?>" placeholder="https://ark.wiki.gg/images/.../Dossier_Rex_VO.ogg">
+                <small class="texto-auxiliar">URL del audio del dossier de <a href="https://ark.wiki.gg" target="_blank" style="color:var(--accent);">ark.wiki.gg</a>. Se puede consultar el <a href="../assets/data/ark_creatures.json" target="_blank" style="color:var(--accent);">JSON de referencia</a>.</small>
+            </div>
+
+            <div class="campo">
                 <label>Mapas de avistamiento:</label>
                 <div class="grid-checkboxes">
                     <?php foreach ($mapas as $mapa): ?>
