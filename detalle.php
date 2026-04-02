@@ -475,10 +475,10 @@ if (count($comentarios) > 0) {
             <?php if (!empty($dino['descripcion'])): ?>
                 <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_insertar'] ?? 0) == 1): ?>
                 <div style="display:flex; justify-content:flex-end; gap:8px; margin-bottom:10px;">
-                    <button onclick="window.print()" title="Imprimir / Exportar ficha"
+                    <button onclick="window.open('ficha_pdf.php?id=<?php echo $dino['id']; ?>','_blank')" title="Exportar ficha como PDF"
                         style="display:inline-flex; align-items:center; gap:6px; padding:7px 16px; background:rgba(255,255,255,0.05); color:var(--text-muted); font-weight:700; border-radius:8px; border:1px solid var(--border-color); font-size:0.82rem; cursor:pointer; font-family:inherit; transition:all 0.2s;"
                         onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='var(--text-main)'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='var(--text-muted)'">
-                        <span class="material-symbols-outlined" style="font-size:0.95rem;">print</span>
+                        <span class="material-symbols-outlined" style="font-size:0.95rem;">picture_as_pdf</span>
                         Exportar
                     </button>
                     <a href="admin/editar.php?id=<?php echo $dino['id']; ?>"
@@ -490,10 +490,10 @@ if (count($comentarios) > 0) {
                 </div>
                 <?php else: ?>
                 <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
-                    <button onclick="window.print()" title="Imprimir / Exportar ficha"
+                    <button onclick="window.open('ficha_pdf.php?id=<?php echo $dino['id']; ?>','_blank')" title="Exportar ficha como PDF"
                         style="display:inline-flex; align-items:center; gap:6px; padding:7px 16px; background:rgba(255,255,255,0.05); color:var(--text-muted); font-weight:700; border-radius:8px; border:1px solid var(--border-color); font-size:0.82rem; cursor:pointer; font-family:inherit; transition:all 0.2s;"
                         onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='var(--text-main)'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='var(--text-muted)'">
-                        <span class="material-symbols-outlined" style="font-size:0.95rem;">print</span>
+                        <span class="material-symbols-outlined" style="font-size:0.95rem;">picture_as_pdf</span>
                         Exportar ficha
                     </button>
                 </div>
@@ -510,7 +510,6 @@ if (count($comentarios) > 0) {
                         <?php echo nl2br(htmlspecialchars($dino['descripcion'])); ?>
                     </div>
                 </div>
-            <?php endif; ?>
 
             <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true && ($_SESSION['p_insertar'] ?? 0) == 1 && empty($dino['descripcion'])): ?>
                 <div style="display:flex; justify-content:flex-end; margin-bottom:20px;">
@@ -1167,7 +1166,10 @@ if (count($comentarios) > 0) {
                             placeholder="Añade tu experiencia con <?php echo htmlspecialchars($dino['nombre']); ?>: estrategias de taming, uso en PvP/PvE..."
                             rows="4" style="width:100%;border-radius:var(--radius);"></textarea>
                     </div>
-                    <button type="submit" class="boton-insertar">Publicar comentario</button>
+                    <button type="submit" class="boton-insertar" style="margin-top:8px;">
+                        <span class="material-symbols-outlined" style="font-size:1.1rem;">send</span>
+                        Publicar comentario
+                    </button>
                 </form>
             <?php else: ?>
                 <div
