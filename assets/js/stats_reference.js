@@ -132,7 +132,6 @@ function autofillForm(c) {
     // Campos de texto/número simples
     const simple = {
         nombre: c.nombre, especie: c.especie,
-        audio_url: c.audio || '',
         ...s,
         buff_damage: b.buff_damage, buff_armor: b.buff_armor,
         buff_speed: b.buff_speed, buff_otro: b.buff_otro,

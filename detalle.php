@@ -407,9 +407,7 @@ if (count($comentarios) > 0) {
 
             <div style="display:flex; align-items:center; gap:20px;">
                 <h1 class="dino-hero-nombre" style="margin:0;"><?php echo htmlspecialchars($dino['nombre']); ?></h1>
-                <button id="btn-dino-sound" onclick="toggleDinoSound('<?php echo addslashes(htmlspecialchars($dino['audio_url'] ?? '')); ?>')" title="Escuchar dossier de <?php echo htmlspecialchars($dino['nombre']); ?>" style="background:rgba(var(--accent-rgb), 0.2); border:1px solid rgba(var(--accent-rgb), 0.5); color:var(--accent); width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.25s; flex-shrink:0; backdrop-filter:blur(5px); outline:none;" onmouseover="this.style.background='rgba(var(--accent-rgb), 0.4)'" onmouseout="this.style.background='rgba(var(--accent-rgb), 0.2)'">
-                    <span class="material-symbols-outlined" id="btn-dino-sound-icon" style="font-size:1.5rem;">volume_up</span>
-                </button>
+
             </div>
             <p class="dino-hero-especie" style="margin-top:8px;"><?php echo htmlspecialchars($dino['especie']); ?></p>
 
@@ -2108,56 +2106,7 @@ if (count($comentarios) > 0) {
             };
         })();
 
-        // ── Sonido del dossier (URL almacenada en BD por el admin) ──────────────
-        let _dinoAudio   = null;
-        let _dinoPlaying = false;
 
-        function toggleDinoSound(audioUrl) {
-            const btn  = document.getElementById('btn-dino-sound');
-            const icon = document.getElementById('btn-dino-sound-icon');
-
-            // Si ya está sonando → PARAR
-            if (_dinoAudio && _dinoPlaying) {
-                _dinoAudio.pause();
-                _dinoAudio.currentTime = 0;
-                _dinoPlaying = false;
-                if (icon) icon.textContent = 'volume_up';
-                if (btn)  btn.style.background = 'rgba(var(--accent-rgb), 0.2)';
-                return;
-            }
-
-            if (!audioUrl) {
-                // Mostrar tooltip en el botón en vez de un alert molesto
-                const btn2 = document.getElementById('btn-dino-sound');
-                if (btn2) {
-                    const orig = btn2.title;
-                    btn2.title = '⚠️ Sin audio disponible aún';
-                    btn2.style.opacity = '0.5';
-                    btn2.style.cursor = 'not-allowed';
-                    setTimeout(() => { btn2.title = orig; btn2.style.opacity = ''; btn2.style.cursor = ''; }, 2500);
-                }
-                return;
-            }
-
-            if (btn) { btn.style.transform = 'scale(0.9)'; setTimeout(() => btn.style.transform = 'scale(1)', 150); }
-
-            _dinoAudio = new Audio(audioUrl);
-            _dinoAudio.volume = 0.85;
-
-            _dinoAudio.addEventListener('ended', () => {
-                _dinoPlaying = false;
-                if (icon) icon.textContent = 'volume_up';
-                if (btn)  btn.style.background = 'rgba(var(--accent-rgb), 0.2)';
-            });
-
-            _dinoAudio.play().then(() => {
-                _dinoPlaying = true;
-                if (icon) icon.textContent = 'stop';
-                if (btn)  btn.style.background = 'rgba(var(--accent-rgb), 0.5)';
-            }).catch(() => {
-                alert('⚠️ No se pudo reproducir el audio.\nComprueba que la URL sea válida.');
-            });
-        }
     </script>
 
     <?php include 'includes/footer.php'; ?>

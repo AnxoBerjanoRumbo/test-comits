@@ -1,4 +1,4 @@
-{
+﻿{
     "_info": "Datos de referencia ARK. Fuente: ARK Wiki / ARKBreedingStats. Edita para añadir criaturas.",
     "criaturas": [
         {
@@ -69,8 +69,7 @@
                 "tiempo_incubacion": 300,
                 "tiempo_madurez": 7200,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Ankylosaurus",
@@ -141,8 +140,7 @@
                 "tiempo_incubacion": 240,
                 "tiempo_madurez": 5760,
                 "ayuda_cria": 0
-            },
-            "audio": "https://ark.wiki.gg/images/1/14/Dossier_Ankylosaurus_VO.ogg"
+            }
         },
         {
             "nombre": "Argentavis",
@@ -213,8 +211,7 @@
                 "tiempo_incubacion": 150,
                 "tiempo_madurez": 3840,
                 "ayuda_cria": 0
-            },
-            "audio": "https://ark.wiki.gg/images/f/fe/Dossier_Argentavis_VO.ogg"
+            }
         },
         {
             "nombre": "Baryonyx",
@@ -285,8 +282,7 @@
                 "tiempo_incubacion": 120,
                 "tiempo_madurez": 3360,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Brontosaurus",
@@ -356,8 +352,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 14400,
                 "ayuda_cria": 0
-            },
-            "audio": "https://ark.wiki.gg/images/6/6e/Dossier_Brontosaurus_VO.ogg"
+            }
         },
         {
             "nombre": "Carnotaurus",
@@ -428,8 +423,7 @@
                 "tiempo_incubacion": 120,
                 "tiempo_madurez": 3360,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Castoroides",
@@ -500,8 +494,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 2880,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Daeodon",
@@ -572,8 +565,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 3360,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Doedicurus",
@@ -644,8 +636,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 3360,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Giganotosaurus",
@@ -715,8 +706,7 @@
                 "tiempo_incubacion": 480,
                 "tiempo_madurez": 20160,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Iguanodon",
@@ -787,8 +777,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 1920,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Mammoth",
@@ -859,8 +848,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 3360,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Megalosaurus",
@@ -931,8 +919,7 @@
                 "tiempo_incubacion": 240,
                 "tiempo_madurez": 5760,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Mosasaurus",
@@ -1003,8 +990,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 14400,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Pachycephalosaurus",
@@ -1075,8 +1061,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 1920,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Parasaur",
@@ -1147,8 +1132,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 1920,
                 "ayuda_cria": 0
-            },
-            "audio": "https://ark.wiki.gg/images/4/48/Dossier_Parasaurolophus_VO.ogg"
+            }
         },
         {
             "nombre": "Pteranodon",
@@ -1219,8 +1203,7 @@
                 "tiempo_incubacion": 80,
                 "tiempo_madurez": 1920,
                 "ayuda_cria": 0
-            },
-            "audio": "https://ark.wiki.gg/images/0/07/Dossier_Pteranodon_VO.ogg"
+            }
         },
         {
             "nombre": "Quetzal",
@@ -1291,8 +1274,7 @@
                 "tiempo_incubacion": 300,
                 "tiempo_madurez": 7200,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Raptor",
@@ -1363,8 +1345,7 @@
                 "tiempo_incubacion": 85,
                 "tiempo_madurez": 1920,
                 "ayuda_cria": 0
-            },
-            "audio": "https://ark.wiki.gg/images/4/4b/Dossier_Raptor_VO.ogg"
+            }
         },
         {
             "nombre": "Rex",
@@ -1435,8 +1416,7 @@
                 "tiempo_incubacion": 300,
                 "tiempo_madurez": 7200,
                 "ayuda_cria": 0
-            },
-            "audio": "https://ark.wiki.gg/images/c/c5/Dossier_Rex_VO.ogg"
+            }
         },
         {
             "nombre": "Rock Drake",
@@ -1505,8 +1485,7 @@
                 "tiempo_incubacion": 300,
                 "tiempo_madurez": 7200,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Sarco",
@@ -1577,8 +1556,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 3360,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Spino",
@@ -1649,8 +1627,7 @@
                 "tiempo_incubacion": 300,
                 "tiempo_madurez": 7200,
                 "ayuda_cria": 0
-            },
-            "audio": "https://ark.wiki.gg/images/a/ab/Dossier_Spinosaurus_VO.ogg"
+            }
         },
         {
             "nombre": "Stegosaurus",
@@ -1721,8 +1698,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 3360,
                 "ayuda_cria": 0
-            },
-            "audio": "https://ark.wiki.gg/images/c/c9/Dossier_Stegosaurus_VO.ogg"
+            }
         },
         {
             "nombre": "Tapejara",
@@ -1793,8 +1769,7 @@
                 "tiempo_incubacion": 120,
                 "tiempo_madurez": 3360,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Therizinosaur",
@@ -1865,8 +1840,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 7200,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Thylacoleo",
@@ -1936,8 +1910,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 3360,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Trike",
@@ -2008,8 +1981,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 3360,
                 "ayuda_cria": 0
-            },
-            "audio": "https://ark.wiki.gg/images/8/82/Dossier_Triceratops_VO.ogg"
+            }
         },
         {
             "nombre": "Wyvern (Fire)",
@@ -2079,8 +2051,7 @@
                 "tiempo_incubacion": 300,
                 "tiempo_madurez": 7200,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Yutyrannus",
@@ -2151,8 +2122,7 @@
                 "tiempo_incubacion": 300,
                 "tiempo_madurez": 7200,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Dodo",
@@ -2223,8 +2193,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 480,
                 "ayuda_cria": 0
-            },
-            "audio": "https://ark.wiki.gg/images/6/6f/Dossier_Dodo_VO.ogg"
+            }
         },
         {
             "nombre": "Equus",
@@ -2295,8 +2264,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 2880,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Karkinos",
@@ -2364,8 +2332,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 0,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Managarmr",
@@ -2434,8 +2401,7 @@
                 "tiempo_incubacion": 300,
                 "tiempo_madurez": 7200,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Megalodon",
@@ -2506,8 +2472,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 5760,
                 "ayuda_cria": 0
-            },
-            "audio": "https://ark.wiki.gg/images/9/9f/Dossier_Megalodon_VO.ogg"
+            }
         },
         {
             "nombre": "Paraceratherium",
@@ -2578,8 +2543,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 14400,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Pulmonoscorpius",
@@ -2651,8 +2615,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 0,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Tusoteuthis",
@@ -2723,8 +2686,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 14400,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Wyvern (Lightning)",
@@ -2794,8 +2756,7 @@
                 "tiempo_incubacion": 300,
                 "tiempo_madurez": 7200,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Wyvern (Poison)",
@@ -2865,8 +2826,7 @@
                 "tiempo_incubacion": 300,
                 "tiempo_madurez": 7200,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Diplodocus",
@@ -2936,8 +2896,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 21600,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Pachyrhinosaurus",
@@ -3008,8 +2967,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 0,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Procoptodon",
@@ -3080,8 +3038,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 0,
                 "ayuda_cria": 1
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Ovis",
@@ -3152,8 +3109,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 0,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Lymantria",
@@ -3224,8 +3180,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 0,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Basilisk",
@@ -3294,8 +3249,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 0,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Gasbags",
@@ -3362,8 +3316,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 0,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Snow Owl",
@@ -3432,8 +3385,7 @@
                 "tiempo_incubacion": 120,
                 "tiempo_madurez": 3360,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Magmasaur",
@@ -3500,8 +3452,7 @@
                 "tiempo_incubacion": 300,
                 "tiempo_madurez": 7200,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Shadowmane",
@@ -3568,8 +3519,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 7200,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Gigantopithecus",
@@ -3640,8 +3590,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 2880,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Kentrosaurus",
@@ -3712,8 +3661,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 3360,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Oso Polar (Dire Bear)",
@@ -3784,8 +3732,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 3360,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Pegomastax",
@@ -3857,8 +3804,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 960,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Ravager",
@@ -3927,8 +3873,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 3360,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Megatherium",
@@ -3999,8 +3944,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 7200,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Velonasaur",
@@ -4068,8 +4012,7 @@
                 "tiempo_incubacion": 120,
                 "tiempo_madurez": 3360,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Woolly Rhino",
@@ -4140,8 +4083,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 3360,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Yeti (Gigant Ape)",
@@ -4212,8 +4154,7 @@
                 "tiempo_incubacion": 0,
                 "tiempo_madurez": 0,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         },
         {
             "nombre": "Yi Ling",
@@ -4281,8 +4222,7 @@
                 "tiempo_incubacion": 80,
                 "tiempo_madurez": 1920,
                 "ayuda_cria": 0
-            },
-            "audio": ""
+            }
         }
     ]
 }
