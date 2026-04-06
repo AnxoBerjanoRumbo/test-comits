@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conexion->beginTransaction();
 
         // Insertar en tabla 'dinosaurios'
-        $sqlDino = "INSERT INTO dinosaurios (nombre, especie, dieta, descripcion, imagen, audio_url,
+        $sqlDino = "INSERT INTO dinosaurios (nombre, especie, dieta, descripcion, imagen,
             stat_health, stat_stamina, stat_oxygen, stat_food, stat_weight, stat_melee, stat_speed, stat_torpidity,
             iw_health, iw_stamina, iw_oxygen, iw_food, iw_weight, iw_melee, iw_speed, iw_torpidity,
             es_tanque, es_buff, es_recolector, es_montura, es_volador, es_acuatico, es_subterraneo,
@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             region_0_nombre, region_0_colores, region_1_nombre, region_1_colores,
             region_2_nombre, region_2_colores, region_3_nombre, region_3_colores,
             region_4_nombre, region_4_colores, region_5_nombre, region_5_colores
-            ) VALUES (:n, :e, :d, :desc, :img, :aud, :sh, :ss, :so, :sf, :sw, :sm, :sp, :st,
+            ) VALUES (:n, :e, :d, :desc, :img, :sh, :ss, :so, :sf, :sw, :sm, :sp, :st,
             :iwh, :iws, :iwo, :iwf, :iww, :iwm, :iwsp, :iwt,
             :et, :eb, :er, :em, :ev, :ea, :es, :bd, :bda, :bar, :bs, :bo, :tf, :fd,
             :rc, :rpe, :rma, :rpi, :rme, :rba, :rpa, :rfi, :rte,
@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             :r0n, :r0c, :r1n, :r1c, :r2n, :r2c, :r3n, :r3c, :r4n, :r4c, :r5n, :r5c)";
         $stmtDino = $conexion->prepare($sqlDino);
         $stmtDino->execute([
-            ':n' => $nombre, ':e' => $especie, ':d' => $dieta, ':desc' => $descripcion, ':img' => $imagen, ':aud' => $_POST['audio_url'] ?? null,
+            ':n' => $nombre, ':e' => $especie, ':d' => $dieta, ':desc' => $descripcion, ':img' => $imagen,
             ':sh' => (int)($_POST['stat_health']   ?? 0),
             ':ss' => (int)($_POST['stat_stamina']  ?? 0),
             ':so' => (int)($_POST['stat_oxygen']   ?? 0),

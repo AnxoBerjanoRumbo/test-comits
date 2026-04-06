@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Actualizar en tabla 'dinosaurios'
         $sqlUpdate = "UPDATE dinosaurios SET 
-            nombre = :n, especie = :e, dieta = :d, descripcion = :desc, imagen = :img, audio_url = :aud,
+            nombre = :n, especie = :e, dieta = :d, descripcion = :desc, imagen = :img,
             stat_health = :sh, stat_stamina = :ss, stat_oxygen = :so, stat_food = :sf,
             stat_weight = :sw, stat_melee = :sm, stat_speed = :sp, stat_torpidity = :st,
             iw_health = :iwh, iw_stamina = :iws, iw_oxygen = :iwo, iw_food = :iwf,
@@ -79,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             WHERE id = :id";
         $stmtUpdate = $conexion->prepare($sqlUpdate);
         $stmtUpdate->execute([
-            ':n' => $nombre, ':e' => $especie, ':d' => $dieta, ':desc' => $descripcion, ':img' => $imagen, ':aud' => $_POST['audio_url'] ?? null, ':id' => $id,
+            ':n' => $nombre, ':e' => $especie, ':d' => $dieta, ':desc' => $descripcion, ':img' => $imagen, ':id' => $id,
             ':sh' => (int)($_POST['stat_health']    ?? 0),
             ':ss' => (int)($_POST['stat_stamina']   ?? 0),
             ':so' => (int)($_POST['stat_oxygen']    ?? 0),
